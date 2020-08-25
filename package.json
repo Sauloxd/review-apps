@@ -14,7 +14,6 @@
   },
   "devDependencies": {
     "@zeit/ncc": "^0.22.3",
-    "eslint-config-sxd": "^1.0.6"
-  },
-  "type": "module"
+    "eslint-config-sxd": "^1.0.7"
+  }
 }
