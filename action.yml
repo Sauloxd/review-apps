@@ -1,13 +1,51 @@
-name: 'Hello World'
-description: 'Greet someone and record the time'
+name: 'Deploy review apps to gh-pages'
+description: |
+  Automatically deploy static apps to gh-pages, so you're able to easily QA it
 inputs:
-  who-to-greet:  # id of input
-    description: 'Who to greet'
-    required: true
-    default: 'World'
-outputs:
-  time: # id of output
-    description: 'The time we greeted you'
+  gh-pages-source-branch:  # id of input
+    description: 'The branch you configured in github to be the source for gh-pages. defaults to "gh-pages run"'
+    default: 'gh-pages'
+  public-assets-dir:  # id of input
+    description: 'The directory where you build artifacts will live'
+    default: 'dist'
+  output-dir:
+    description: |
+      'Dir is related to URL path in github pages.
+      If you want something like: https://githubname.github.io/repo/storybooks/branch-name, pass string "storybook"'
+    default: 'review-apps'
 runs:
   using: 'node12'
-  main: 'dist/index.js'
+  steps:
+    - name: 'Configure git author'
+      run: |
+        git config --global user.name ${{github.event.pusher.name}}
+        git config --global email ${{github.event.pusher.email}}
+      shell: bash
+    - name: 'Move dist to correct place'
+      run: |
+        mkdir ${{inputs.output-dir}}
+        BRANCH_NAME=$(echo $GITHUB_REF | awk 'BEGIN { FS = "/" } ; { print $3 }')
+        mv ${{public-assets-dir}} ${{inputs.output-dir}}/$BRANCH_NAME
+      shell: bash
+    - name: 'Commit udpated review app'
+      run: |
+        git fetch
+        git checkout ${{inputs.gh-pages-source-branch}}
+        git add ${{inputs.output-dir}}/$BRANCH_NAME
+        git commit -m "ref to ${{github.event.head_commit.id}}"
+    - name: 'Try to push with updated review app'
+      run: |
+        counter=0
+        function retry() {
+          echo "Retry to push until succeeds, just in case there another push just happened"
+          git pull origin ${{inputs.gh-pages-source-branch}}
+          git push origin ${{inputs.gh-pages-source-branch}}
+          if [ $? -ne 0 ]; then
+            if [ $counter -lt 5 ]; then
+              retry
+              ((counter=counter+1))
+            fi
+          fi
+        }
+        retry
+      shell: bash
