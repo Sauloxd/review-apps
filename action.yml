@@ -28,7 +28,7 @@ runs:
         mv ${{inputs.public-assets-dir}} .tmp && echo "Deu bom b"
         git fetch
         git checkout ${{inputs.gh-pages-source-branch}} && echo "Deu bom c"
-        mkdir ${{inputs.output-dir}}
+        mkdir ${{inputs.output-dir}} || echo "Creating dir ${{inputs.output-dir}} can fail safely"
         rm -r ${{inputs.output-dir}}/$BRANCH_NAME && echo "Deu bom d"
         mv .tmp ${{inputs.output-dir}}/$BRANCH_NAME && echo "Deu bom e"
         git status
