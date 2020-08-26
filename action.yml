@@ -19,7 +19,7 @@ runs:
     - name: 'Configure git author'
       run: |
         git config --global user.name ${{github.event.pusher.name}}
-        git config --global email ${{github.event.pusher.email}}
+        git config --global user.email ${{github.event.pusher.email}}
       shell: bash
     - name: 'Move dist to correct place'
       run: |
