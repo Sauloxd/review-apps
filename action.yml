@@ -15,6 +15,7 @@ inputs:
     default: 'review-apps'
 runs:
   using: 'node12'
+  main: dist/index.js
   steps:
     - name: 'Configure git author'
       run: |
