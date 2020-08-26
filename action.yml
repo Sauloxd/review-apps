@@ -20,6 +20,7 @@ runs:
       run: |
         git config --global user.name ${{github.event.pusher.name}}
         git config --global user.email ${{github.event.pusher.email}}
+        git config pull.rebase true
       shell: bash
     - name: 'Move dist to correct place'
       run: |
@@ -32,7 +33,7 @@ runs:
         git fetch
         git checkout ${{inputs.gh-pages-source-branch}}
         git add ${{inputs.output-dir}}/$BRANCH_NAME
-        git commit -m "ref to ${{github.event.head_commit.id}}"
+        git commit -m "[skip ci] ref to ${{github.event.head_commit.id}}"
       shell: bash
     - name: 'Try to push with updated review app'
       run: |
@@ -41,7 +42,7 @@ runs:
           echo "Retry to push until succeeds, just in case there another push just happened"
           git pull origin ${{inputs.gh-pages-source-branch}}
           git push origin ${{inputs.gh-pages-source-branch}}
-          if [ $? -ne 0 ]; then
+          if [ $? -eq 0 ]; then
             if [ $counter -lt 5 ]; then
               retry
               ((counter=counter+1))
