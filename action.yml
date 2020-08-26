@@ -24,13 +24,15 @@ runs:
       shell: bash
     - name: 'Commit udpated review app'
       run: |
-        BRANCH_NAME=$(echo $GITHUB_REF | awk 'BEGIN { FS = "/" } ; { print $3 }')
-        mv ${{inputs.public-assets-dir}} .tmp
-        git checkout ${{inputs.gh-pages-source-branch}}
-        rm -r ${{inputs.public-assets-dir}}/$BRANCH_NAME
-        mv .tmp ${{inputs.public-assets-dir}}/$BRANCH_NAME
+        BRANCH_NAME=$(echo $GITHUB_REF | awk 'BEGIN { FS = "/" } ; { print $3 }') && echo "Deu bom A"
+        mv ${{inputs.public-assets-dir}} .tmp && echo "Deu bom b"
+        git checkout ${{inputs.gh-pages-source-branch}} && echo "Deu bom c"
+        rm -r ${{inputs.public-assets-dir}}/$BRANCH_NAME && echo "Deu bom d"
+        mv .tmp ${{inputs.public-assets-dir}}/$BRANCH_NAME && echo "Deu bom e"
+        git status
         git status | grep ${{inputs.output-dir}}
         if [ #? -eq 0 ]; then
+          echo "GREP?"
           git add ${{inputs.output-dir}}/$BRANCH_NAME
           git commit -m "[skip ci]  ref to ${{github.event.head_commit.id}}"
         fi
