@@ -22,18 +22,18 @@ runs:
         git config --global user.email ${{github.event.pusher.email}}
         git config pull.rebase true
       shell: bash
-    - name: 'Move dist to correct place'
-      run: |
-        mkdir ${{inputs.output-dir}}
-        BRANCH_NAME=$(echo $GITHUB_REF | awk 'BEGIN { FS = "/" } ; { print $3 }')
-        mv ${{inputs.public-assets-dir}} ${{inputs.output-dir}}/$BRANCH_NAME
-      shell: bash
     - name: 'Commit udpated review app'
       run: |
-        git fetch
+        BRANCH_NAME=$(echo $GITHUB_REF | awk 'BEGIN { FS = "/" } ; { print $3 }')
+        mv ${{inputs.public-assets-dir}} .tmp
         git checkout ${{inputs.gh-pages-source-branch}}
-        git add ${{inputs.output-dir}}/$BRANCH_NAME
-        git commit -m "[skip ci] ref to ${{github.event.head_commit.id}}"
+        rm -r ${{inputs.public-assets-dir}}/$BRANCH_NAME
+        mv .tmp ${{inputs.public-assets-dir}}/$BRANCH_NAME
+        git status | grep ${{inputs.output-dir}}
+        if [ #? -eq 0 ]; then
+          git add ${{inputs.output-dir}}/$BRANCH_NAME
+          git commit -m "[skip ci]  ref to ${{github.event.head_commit.id}}"
+        fi
       shell: bash
     - name: 'Try to push with updated review app'
       run: |
