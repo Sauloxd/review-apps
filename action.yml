@@ -14,8 +14,7 @@ inputs:
       If you want something like: https://githubname.github.io/repo/storybooks/branch-name, pass string "storybook"'
     default: 'review-apps'
 runs:
-  using: 'node12'
-  main: dist/index.js
+  using: "composite"
   steps:
     - name: 'Configure git author'
       run: |
