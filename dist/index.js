@@ -4579,12 +4579,13 @@ async function stories() {
   const publicAssetsDir = core.getInput('public-assets-dir');
   const outputDir = core.getInput('output-dir');
   const ghPagesSourceBranch = core.getInput('gh-pages-source-branch');
-  const payload = github.context.payload;
-  const userName = payload.sender && payload.sender.name;
-  const userEmail = payload.sender && payload.sender.email;
-  const headCommitId = payload.head_commit.id;
-  const branchName = payload.ref.split('/').pop();
-  const repository = payload.repository;
+  const {
+    userName,
+    userEmail,
+    headCommitId,
+    branchName,
+    repositoryName
+  } = getParamsFromPayload();
 
   core.debug(`Setting config options - name:${userName}, email:${userEmail}`);
   await exec('git', ['config', '--global', 'user.name', userName]);
@@ -4620,7 +4621,7 @@ async function stories() {
       name: branchName,
       headCommitId,
       updatedAt: new Date(),
-      href: `/${repository && repository.name || 'saulo.dev'}/${outputDir}/${branchName}`,
+      href: `/${repositoryName || 'saulo.dev'}/${outputDir}/${branchName}`,
       pullRequest: ''
     })
   };
@@ -4660,6 +4661,39 @@ function retryGen(times) {
         console.log('Exausted retryies: ', count);
       }
     }
+  };
+}
+
+function getParamsFromPayload() {
+  const payload = github.context.payload;
+  let userName;
+  let userEmail;
+  let headCommitId;
+  let branchName;
+  let repositoryName;
+
+  if (payload.action === 'synchronize') {
+    userName = payload.sender && payload.sender.name;
+    userEmail = payload.sender && payload.sender.email;
+    headCommitId = payload.head.sha;
+    branchName = payload.ref.split('/').pop();
+    repositoryName = payload.repository.name;
+  }
+
+  if (payload.action === 'push') {
+    userName = payload.pusher.name;
+    userEmail = payload.pusher.email;
+    headCommitId = payload.head_commit.id;
+    branchName = payload.ref.split('/').pop();
+    repositoryName = payload.repository.name;
+  }
+
+  return {
+    userName,
+    userEmail,
+    headCommitId,
+    branchName,
+    repositoryName
   };
 }
 
