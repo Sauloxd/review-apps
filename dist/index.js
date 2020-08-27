@@ -4580,6 +4580,7 @@ async function stories() {
   const outputDir = core.getInput('output-dir');
   const ghPagesSourceBranch = core.getInput('gh-pages-source-branch');
   const payload = github.context.payload;
+  console.log(JSON.stringify(payload));
   const userName = payload.pusher.name;
   const userEmail = payload.pusher.email;
   const headCommitId = payload.head_commit.id;
@@ -4632,7 +4633,7 @@ async function stories() {
       headCommitId,
       updatedAt: new Date(),
       href: `/${outputDir}/${branchName}`,
-      pullRequest: payload.pull_request.html_url
+      pullRequest: ''
     })
   };
 
