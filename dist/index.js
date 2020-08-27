@@ -4579,16 +4579,14 @@ async function stories() {
   const userName = payload.pusher.name;
   const userEmail = payload.pusher.email;
   const headCommitId = payload.head_commit.id;
+  const branchName = payload.ref.split('/').pop();
 
   core.debug(`Setting config options - name:${userName}, email:${userEmail}`);
   await exec('git', ['config', '--global', 'user.name', userName]);
   await exec('git', ['config', '--global', 'user.email', userEmail]);
   await exec('git', ['config', 'pull.rebase', true]);
-  const branchName = await exec('echo', ['$GITHUB_REF']);
   const fullPathDir = `${outputDir}/${branchName}`;
   const commitMessage = `[skip ci] ref to ${headCommitId}`;
-  console.log('BRANCH NAME-->', branchName);
-  console.log('BRANCH NAME-->', branchName.length);
 
   core.debug(`
     -> Current working branch: ${branchName}"
@@ -4601,12 +4599,14 @@ async function stories() {
   await exec('mv', [outputDir, '.tmp']);
   await exec('git', ['fetch']);
   await exec('git', ['checkout', ghPagesSourceBranch]);
-  if (!fs.existsSync(outputDir)) fs.mkdirSync(outputDir);
-  fs.rmdirSync(fullPathDir, { recursive: true });
-  await exec('mv', ['.tmp', fullPathDir]);
+  await io.mv('.tmp', fullPathDir);
   const gitStatus = await exec('git', 'status');
   console.log('---------');
   console.log(gitStatus);
+  console.log('=========');
+  const bleus = await exec('git', ['push', 'origin', ghPagesSourceBranch]);
+  console.log('---------');
+  console.log(bleus);
   console.log('=========');
 
   // await exec(`
