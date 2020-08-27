@@ -4585,6 +4585,7 @@ async function stories() {
   const headCommitId = payload.head_commit.id;
   const branchName = payload.ref.split('/').pop();
   const respository = payload.repository;
+  console.log(JSON.stringify(payload, null, 2));
 
   core.debug(`Setting config options - name:${userName}, email:${userEmail}`);
   await exec('git', ['config', '--global', 'user.name', userName]);
@@ -4620,7 +4621,7 @@ async function stories() {
       name: branchName,
       headCommitId,
       updatedAt: new Date(),
-      href: `/${respository.name}/${outputDir}/${branchName}`,
+      href: `/${respository && repository.name || 'saulo.dev'}/${outputDir}/${branchName}`,
       pullRequest: ''
     })
   };
