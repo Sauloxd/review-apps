@@ -3977,7 +3977,7 @@ const IndexPage = (reviewApps, styles = '') => `
   <head>
     <meta charset="utf-8">
     <title>Review apps</title>
-    <meta name="description" content="This is an example of a meta description.">
+    <meta name="description" content="QA every PR effortlessly">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
     <style>
       body { font-family: Roboto; }
@@ -4027,7 +4027,7 @@ const IndexPage = (reviewApps, styles = '') => `
 `;
 
 function Card(app) {
-  const { name, headCommitId, updatedAt, href, pullRequest } = app;
+  const { name, headCommitId, updatedAt, href, pullRequestUrl } = app;
   return `
     <div class="card" style="width: 18rem;">
       <div class="card-body">
@@ -4035,7 +4035,7 @@ function Card(app) {
         <h6 class="card-subtitle mb-2 text-muted">#${headCommitId.substr(0, 12)}</h6>
         <h6 class="card-subtitle mb-2 text-muted">${updatedAt.toLocaleString()}</h6>
         <a href="${href}" class="card-link">App</a>
-        <a href="${pullRequest}" class="card-link">Pull Request</a>
+        ${pullRequestUrl ? `<a href="${pullRequestUrl}" class="card-link">Pull Request</a>` : ''}
       </div>
     </div>
   `;
@@ -4584,8 +4584,11 @@ async function stories() {
     userEmail,
     headCommitId,
     branchName,
-    repositoryName
+    repositoryName,
+    pullRequestUrl,
+    isClosePrEvent
   } = getParamsFromPayload();
+  let manifest;
 
   core.debug(`Setting config options - name:${userName}, email:${userEmail}`);
   await exec('git', ['config', '--global', 'user.name', userName]);
@@ -4601,30 +4604,36 @@ async function stories() {
     -> ${commitMessage}"
   `);
 
-  console.log('---> ', process.cwd());
-  await exec('mv', [publicAssetsDir, '.tmp']);
-  await exec('git', ['fetch']);
-  await exec('git', ['checkout', ghPagesSourceBranch]);
-  await io.cp('.tmp/.', fullPathDir, { recursive: true, force: true });
+  if (isClosePrEvent) {
+    await io.rmRF(fullPathDir);
+    const apps = (manifest[outputDir] && manifest[outputDir].apps || []).filter(app => app.name !== branchName);
+    manifest[outputDir] = {
+      ...manifest[outputDir],
+      apps
+    };
+  } else {
+    await exec('mv', [publicAssetsDir, '.tmp']);
+    await exec('git', ['fetch']);
+    await exec('git', ['checkout', ghPagesSourceBranch]);
+    await io.cp('.tmp/.', fullPathDir, { recursive: true, force: true });
 
-  let manifest;
-  try {
-    manifest = JSON.parse(fs.readFileSync('manifest.json', 'utf-8'));
-  } catch (e) {
-    manifest = {};
+    try {
+      manifest = JSON.parse(fs.readFileSync('manifest.json', 'utf-8'));
+    } catch (e) {
+      manifest = {};
+    }
+    const apps = (manifest[outputDir] && manifest[outputDir].apps || []).filter(app => app.name !== branchName);
+    manifest[outputDir] = {
+      ...manifest[outputDir],
+      apps: apps.concat({
+        name: branchName,
+        headCommitId,
+        updatedAt: new Date(),
+        href: `/${repositoryName}/${outputDir}/${branchName}`,
+        pullRequestUrl
+      })
+    };
   }
-
-  const apps = (manifest[outputDir] && manifest[outputDir].apps || []).filter(app => app.name !== branchName);
-  manifest[outputDir] = {
-    ...manifest[outputDir],
-    apps: apps.concat({
-      name: branchName,
-      headCommitId,
-      updatedAt: new Date(),
-      href: `/${repositoryName || 'saulo.dev'}/${outputDir}/${branchName}`,
-      pullRequest: ''
-    })
-  };
 
   console.log(JSON.stringify(manifest, null, 2));
 
@@ -4633,32 +4642,26 @@ async function stories() {
   fs.writeFileSync('debug.json', JSON.stringify(github, null, 2), 'utf-8');
 
   try {
-    console.log('tentando funcionar');
     await exec('git', ['add', fullPathDir, 'index.html', 'manifest.json']);
     await exec('git', ['commit', '-m', commitMessage]);
   } catch (e) {
-    console.log('Ignoring errors', e);
+    core.debug(e);
   }
 
-  await retry5(async () => {
+  await retryGen(5)(async () => {
     await exec('git', ['pull', 'origin', ghPagesSourceBranch]);
     await exec('git', ['push', 'origin', ghPagesSourceBranch]);
   });
-
 }
-
-const retry5 = retryGen(5);
 
 function retryGen(times) {
   return async function retry(cb, count = 0) {
-    try {
-      await cb();
-    } catch (e) {
+    try { await cb(); } catch (e) {
       if (count < times) {
         console.log('Retrying... ', count);
         await retry(cb, count + 1);
       } else {
-        console.log('Exausted retryies: ', count);
+        console.log('Exhausted retries: ', count);
       }
     }
   };
@@ -4671,6 +4674,7 @@ function getParamsFromPayload() {
   let headCommitId;
   let branchName;
   let repositoryName;
+  let pullRequestUrl;
   try {
     if (['opened', 'closed', 'synchronize', 'labeled'].includes(payload.action)) {
       userName = payload.sender && payload.sender.name;
@@ -4678,6 +4682,7 @@ function getParamsFromPayload() {
       headCommitId = payload.pull_request.head.sha;
       branchName = payload.pull_request.head.ref.split('/').pop();
       repositoryName = payload.repository.name;
+      pullRequestUrl = payload.pull_request.url;
     }
     if (['push'].includes(payload.action)) {
       userName = payload.pusher.name;
@@ -4685,6 +4690,7 @@ function getParamsFromPayload() {
       headCommitId = payload.head_commit.id;
       branchName = payload.ref.split('/').pop();
       repositoryName = payload.repository.name;
+      pullRequestUrl = undefined;
     }
   } catch (e) {
     console.log(e);
@@ -4697,7 +4703,8 @@ function getParamsFromPayload() {
     userEmail,
     headCommitId,
     branchName,
-    repositoryName
+    repositoryName,
+    pullRequestUrl
   };
 }
 
