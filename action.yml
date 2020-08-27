@@ -48,10 +48,11 @@ runs:
         rm -r $FULL_PATH_DIR || \
           echo " -> Removing '$FULL_PATH_DIR' can fail safely"
         mv .tmp $FULL_PATH_DIR
+        git status
         git status | grep "$FULL_PATH_DIR" && \
           echo " -> Changes detected in new build" && \
-          git add $FULL_PATH_DIR && \
-          git commit -m $COMMIT_MESSAGE || \
+          git add "$FULL_PATH_DIR" && \
+          git commit -m "$COMMIT_MESSAGE" || \
           echo "No changes on $FULL_PATH_DIR to commit! Moving on"
       shell: bash
     - name: 'Try to push with updated review app'
