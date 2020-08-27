@@ -4600,7 +4600,7 @@ async function stories() {
   `);
 
   console.log('---> ', process.cwd());
-  await exec('mv', [outputDir, '.tmp']);
+  await exec('mv', [publicAssetsDir, '.tmp']);
   await exec('git', ['fetch']);
   await exec('git', ['checkout', ghPagesSourceBranch]);
   await io.cp('.tmp', fullPathDir, { recursive: true, force: true });
