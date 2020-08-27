@@ -210,13 +210,6 @@ exports.getApiBaseUrl = getApiBaseUrl;
 
 /***/ }),
 
-/***/ 129:
-/***/ (function(module) {
-
-module.exports = require("child_process");
-
-/***/ }),
-
 /***/ 141:
 /***/ (function(__unusedmodule, exports, __webpack_require__) {
 
@@ -3655,11 +3648,11 @@ module.exports.Collection = Hook.Collection
 /***/ (function(__unusedmodule, __unusedexports, __webpack_require__) {
 
 const fs = __webpack_require__(747);
-const path = __webpack_require__(622);
+const io = __webpack_require__(679);
 const core = __webpack_require__(470);
 const github = __webpack_require__(469);
 const htmlTemplate = __webpack_require__(459);
-const exec = __webpack_require__(559);
+const { exec } = __webpack_require__(952);
 
 try {
   stories();
@@ -3676,60 +3669,60 @@ async function stories() {
   const userEmail = payload.pusher.email;
   const headCommitId = payload.head_commit.id;
 
-  await exec(`
-    NAME=${userName}
-    EMAIL=${userEmail}
-    echo "Configuring git config name: $NAME, email: $EMAIL"
-    git config --global user.name $NAME
-    git config --global user.email $EMAIL
-    git config pull.rebase true
+  core.debug(`Setting config options - name:${userName}, email:${userEmail}`);
+  await exec('git', ['config', '--global', 'user.name', userName]);
+  await exec('git', ['config', '--global', 'user.email', userEmail]);
+  await exec('git', ['config', 'pull.rebase', true]);
+  const branchName = await exec('echo', ['$GITHUB_REF']);
+  const fullPathDir = `${outputDir}/${branchName}`;
+  const commitMessage = `[skip ci] ref to ${headCommitId}`;
+  console.log('BRANCH NAME-->', branchName);
+  console.log('BRANCH NAME-->', branchName.length);
 
-    BRANCH_NAME=$(echo $GITHUB_REF | awk 'BEGIN { FS = "/" } ; { print $3 }')
-    DIST_DIR=${publicAssetsDir}
-    OUTPUT_ROOT_DIR=${outputDir}
-    FULL_PATH_DIR="$OUTPUT_ROOT_DIR/$BRANCH_NAME"
-    STATIC_APP_BRANCH=${ghPagesSourceBranch}
-    HEAD_COMMIT_ID=${headCommitId}
-    COMMIT_MESSAGE="[skip ci] ref to $HEAD_COMMIT_ID"
+  core.debug(`
+    -> Current working branch: ${branchName}"
+    -> Will move (and override) the build result on '${publicAssetsDir}' to '${fullPathDir}' in ${ghPagesSourceBranch}"
+    -> Finally, will commit and push with the following message:"
+    -> ${commitMessage}"
+  `);
 
-    echo " -> Current working branch: $BRANCH_NAME"
-    echo " -> Will move (and override) the build result on '$DIST_DIR' to '$FULL_PATH_DIR' in $STATIC_APP_BRANCH"
-    echo " -> Finally, will commit and push with the following message:"
-    echo " -> $COMMIT_MESSAGE"
+  console.log('---> ', process.cwd());
+  await exec('mv', [outputDir, '.tmp']);
+  await exec('git', ['fetch']);
+  await exec('git', ['checkout', ghPagesSourceBranch]);
+  if (!fs.existsSync(outputDir)) fs.mkdirSync(outputDir);
+  fs.rmdirSync(fullPathDir, { recursive: true });
+  await exec('mv', ['.tmp', fullPathDir]);
+  const gitStatus = await exec('git', 'status');
+  console.log('---------');
+  console.log(gitStatus);
+  console.log('=========');
 
-    mv $DIST_DIR .tmp
-    git fetch
-    git checkout $STATIC_APP_BRANCH
-    mkdir $OUTPUT_ROOT_DIR || \
-      echo " -> Creating dir '$OUTPUT_ROOT_DIR' can fail safely"
-    rm -r $FULL_PATH_DIR || \
-      echo " -> Removing '$FULL_PATH_DIR' can fail safely"
-    mv .tmp $FULL_PATH_DIR
-    git status
-    git status | grep "$FULL_PATH_DIR" && \
-      echo " -> Changes detected in new build" && \
-      git add "$FULL_PATH_DIR" && \
-      git commit -m "$COMMIT_MESSAGE" || \
-      echo "No changes on $FULL_PATH_DIR to commit! Moving on"
+  // await exec(`
+  //   git status | grep "$FULL_PATH_DIR" && \
+  //     echo " -> Changes detected in new build" && \
+  //     git add "$FULL_PATH_DIR" && \
+  //     git commit -m "$COMMIT_MESSAGE" || \
+  //     echo "No changes on $FULL_PATH_DIR to commit! Moving on"
 
-    echo "Trying to push new changes to $STATIC_APP_BRANCH"
-    COUNTER=0
-    function retry() {
-      echo "Retrying... count: $COUNTER"
-      git pull origin $STATIC_APP_BRANCH
-      git push origin $STATIC_APP_BRANCH
-      if [ $? -ne 0 ]; then
-        if [ $COUNTER -lt 5 ]; then
-          ((COUNTER=COUNTER+1))
-          retry
-        fi
-      fi
-    }
-    retry
-  `).then(() => {
-    console.log('Succefully set things up', __dirname);
-    console.log(fs.readdirSync(path.join(__dirname, './')));
-  });
+  //   echo "Trying to push new changes to $STATIC_APP_BRANCH"
+  //   COUNTER=0
+  //   function retry() {
+  //     echo "Retrying... count: $COUNTER"
+  //     git pull origin $STATIC_APP_BRANCH
+  //     git push origin $STATIC_APP_BRANCH
+  //     if [ $? -ne 0 ]; then
+  //       if [ $COUNTER -lt 5 ]; then
+  //         ((COUNTER=COUNTER+1))
+  //         retry
+  //       fi
+  //     fi
+  //   }
+  //   retry
+  // `).then(() => {
+  //   console.log('Succefully set things up', __dirname);
+  //   console.log(fs.readdirSync(path.join(__dirname, './')));
+  // });
 }
 
 
@@ -4274,48 +4267,6 @@ exports.HttpClient = HttpClient;
 
 /***/ }),
 
-/***/ 559:
-/***/ (function(module, __unusedexports, __webpack_require__) {
-
-module.exports = function exec(
-  command,
-  { capture = false, echo = false } = {},
-) {
-  if (echo) {
-    console.log(command);
-  }
-
-  const { spawn } = __webpack_require__(129);
-  const childProcess = spawn('bash', ['-c', command], {
-    stdio: capture ? 'pipe' : 'inherit'
-  });
-
-  return new Promise((resolve, reject) => {
-    let stdout = '';
-
-    if (capture) {
-      childProcess.stdout.on('data', data => {
-        stdout += data;
-      });
-    }
-
-    childProcess.on('error', function (error) {
-      reject({ code: 1, error });
-    });
-
-    childProcess.on('close', function (code) {
-      if (code > 0) {
-        reject({ code, error: `Command failed with code ${code}` });
-      } else {
-        resolve({ code, data: stdout });
-      }
-    });
-  });
-};
-
-
-/***/ }),
-
 /***/ 605:
 /***/ (function(module) {
 
@@ -4348,6 +4299,14 @@ module.exports = require("net");
 /***/ (function(module) {
 
 module.exports = require("util");
+
+/***/ }),
+
+/***/ 679:
+/***/ (function(module) {
+
+module.exports = eval("require")("@actions/io");
+
 
 /***/ }),
 
@@ -6094,6 +6053,14 @@ function checkBypass(reqUrl) {
     return false;
 }
 exports.checkBypass = checkBypass;
+
+
+/***/ }),
+
+/***/ 952:
+/***/ (function(module) {
+
+module.exports = eval("require")("@actions/exec");
 
 
 /***/ })
