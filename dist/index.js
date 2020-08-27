@@ -3966,10 +3966,12 @@ exports.FetchError = FetchError;
 /***/ }),
 
 /***/ 459:
-/***/ (function() {
+/***/ (function(module, __unusedexports, __webpack_require__) {
 
 /* eslint-disable indent */
-const indexPage = (reviewApps, styles = '') => `
+const fs = __webpack_require__(747);
+
+const IndexPage = (reviewApps, styles = '') => `
 <!DOCTYPE html>
 <html>
   <head>
@@ -4038,6 +4040,8 @@ function Card(app) {
     </div>
   `;
 }
+
+module.exports = IndexPage;
 
 
 /***/ }),
@@ -4562,7 +4566,7 @@ const fs = __webpack_require__(747);
 const io = __webpack_require__(1);
 const core = __webpack_require__(470);
 const github = __webpack_require__(469);
-const htmlTemplate = __webpack_require__(459);
+const indexPage = __webpack_require__(459);
 const { exec } = __webpack_require__(986);
 
 try {
@@ -4599,41 +4603,55 @@ async function stories() {
   await exec('mv', [outputDir, '.tmp']);
   await exec('git', ['fetch']);
   await exec('git', ['checkout', ghPagesSourceBranch]);
-  await io.mv('.tmp', fullPathDir);
-  const gitStatus = await exec('git', 'status');
-  console.log('---------');
-  console.log(gitStatus);
-  console.log('=========');
-  const bleus = await exec('git', ['push', 'origin', ghPagesSourceBranch]);
-  console.log('---------');
-  console.log(bleus);
-  console.log('=========');
+  await io.cp('.tmp', fullPathDir, { recursive: true, force: true });
+  try {
+    console.log('tentando funcionar');
+    await exec('git', ['add', fullPathDir]);
+    await exec('git', ['commit', '-m', commitMessage]);
+  } catch (e) {
+    console.log('Ignoring errors', e);
+  }
 
-  // await exec(`
-  //   git status | grep "$FULL_PATH_DIR" && \
-  //     echo " -> Changes detected in new build" && \
-  //     git add "$FULL_PATH_DIR" && \
-  //     git commit -m "$COMMIT_MESSAGE" || \
-  //     echo "No changes on $FULL_PATH_DIR to commit! Moving on"
+  await retry5(async () => {
+    await exec('git', ['pull', 'origin', ghPagesSourceBranch]);
+    await exec('git', ['push', 'origin', ghPagesSourceBranch]);
+  });
 
-  //   echo "Trying to push new changes to $STATIC_APP_BRANCH"
-  //   COUNTER=0
-  //   function retry() {
-  //     echo "Retrying... count: $COUNTER"
-  //     git pull origin $STATIC_APP_BRANCH
-  //     git push origin $STATIC_APP_BRANCH
-  //     if [ $? -ne 0 ]; then
-  //       if [ $COUNTER -lt 5 ]; then
-  //         ((COUNTER=COUNTER+1))
-  //         retry
-  //       fi
-  //     fi
-  //   }
-  //   retry
-  // `).then(() => {
-  //   console.log('Succefully set things up', __dirname);
-  //   console.log(fs.readdirSync(path.join(__dirname, './')));
-  // });
+  const manifest = await fs.readFile('manifest.json').catch(() =>
+    fs.writeFile('manifest.json', {})
+  );
+
+  const apps = (manifest[outputDir] && manifest[outputDir].apps || []).filter(app => app.name !== branchName);
+  manifest[outputDir] = {
+    ...manifest[outputDir],
+    apps: apps.concat({
+      name: branchName,
+      headCommitId,
+      updatedAt: new Date()
+    })
+  };
+
+  console.log(JSON.stringify(manifest, null, 2));
+
+  fs.writeFileSync('manifest.json', JSON.stringify(manifest, null, 2), 'utf-8');
+  fs.writeFileSync('index.html', indexPage(manifest), 'utf-8');
+}
+
+const retry5 = retryGen(5);
+
+function retryGen(times) {
+  return async function retry(cb, count = 0) {
+    try {
+      await cb();
+    } catch (e) {
+      if (count < times) {
+        console.log('Retrying... ', count);
+        await retry(cb, count + 1);
+      } else {
+        console.log('Exausted retryies: ', count);
+      }
+    }
+  };
 }
 
 
