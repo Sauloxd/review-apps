@@ -33,7 +33,8 @@ runs:
         mv .tmp ${{inputs.output-dir}}/$BRANCH_NAME && echo "Deu bom e"
         git status && echo "Deu bom f"
         echo "--------------------"
-        git status | grep "${{inputs.output-dir}}" | echo "hell yeah"
+        which grep
+        git status | grep "${{inputs.output-dir}}" || echo "hell yeah"
         echo "THIS BREKAKING?"
         git status | grep "${{inputs.output-dir}}"
         if [ #? -eq 0 ]; then
