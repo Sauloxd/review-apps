@@ -4027,12 +4027,12 @@ const IndexPage = (reviewApps, styles = '') => `
 `;
 
 function Card(app) {
-  const { name, headCommit, updatedAt, href, pullRequest } = app;
+  const { name, headCommitId, updatedAt, href, pullRequest } = app;
   return `
     <div class="card" style="width: 18rem;">
       <div class="card-body">
         <h5 class="card-title">${name}</h5>
-        <h6 class="card-subtitle mb-2 text-muted">#${headCommit.substr(0, 12)}</h6>
+        <h6 class="card-subtitle mb-2 text-muted">#${headCommitId.substr(0, 12)}</h6>
         <h6 class="card-subtitle mb-2 text-muted">${updatedAt.toLocaleString()}</h6>
         <a href="${href}" class="card-link">App</a>
         <a href="${pullRequest}" class="card-link">Pull Request</a>
@@ -4630,7 +4630,9 @@ async function stories() {
     apps: apps.concat({
       name: branchName,
       headCommitId,
-      updatedAt: new Date()
+      updatedAt: new Date(),
+      href: `/${outputDir}/${branchName}`,
+      pullRequest: payload.pull_request.html_url
     })
   };
 
