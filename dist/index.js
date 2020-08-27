@@ -596,7 +596,7 @@ function register (state, name, method, options) {
 
 Object.defineProperty(exports, '__esModule', { value: true });
 
-const VERSION = "2.3.0";
+const VERSION = "2.3.1";
 
 /**
  * Some “list” response that can be paginated have a different response structure
@@ -3061,6 +3061,83 @@ exports.FetchError = FetchError;
 
 /***/ }),
 
+/***/ 459:
+/***/ (function() {
+
+/* eslint-disable indent */
+const indexPage = (reviewApps, styles = '') => `
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Review apps</title>
+    <meta name="description" content="This is an example of a meta description.">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
+    <style>
+      body { font-family: Roboto; }
+      ${styles}
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="row">
+        <div class="col-sm">
+          <h1 style="margin-top: 30px; margin-bottom: 15px;">
+            Static review apps collection
+          </h1>
+        </div>
+      </div>
+      ${
+        Object.entries(reviewApps).map(([name, reviewApp]) => {
+          return `
+            <div class="row">
+              <div class="col-sm">
+                <h2 style="margin-top: 30px;">
+                  ${name}
+                </h2>
+              </div>
+            </div>
+            <div class="row">
+              ${reviewApp.apps.map((app, index) => {
+                return `
+                  <div class="col-sm">
+                    ${Card(app)}
+                  </div>
+                  ${index % 4 === 3 ?
+                   `
+                     <div class="w-100"></div>
+                   ` : ''}
+                `;
+
+              }).join('\n')}
+            </div>
+          `;
+        })
+.join('\n')
+      }
+    </div>
+  </body>
+</html>
+`;
+
+function Card(app) {
+  const { name, headCommit, updatedAt, href, pullRequest } = app;
+  return `
+    <div class="card" style="width: 18rem;">
+      <div class="card-body">
+        <h5 class="card-title">${name}</h5>
+        <h6 class="card-subtitle mb-2 text-muted">#${headCommit.substr(0, 12)}</h6>
+        <h6 class="card-subtitle mb-2 text-muted">${updatedAt.toLocaleString()}</h6>
+        <a href="${href}" class="card-link">App</a>
+        <a href="${pullRequest}" class="card-link">Pull Request</a>
+      </div>
+    </div>
+  `;
+}
+
+
+/***/ }),
+
 /***/ 463:
 /***/ (function(__unusedmodule, exports, __webpack_require__) {
 
@@ -3577,8 +3654,11 @@ module.exports.Collection = Hook.Collection
 /***/ 526:
 /***/ (function(__unusedmodule, __unusedexports, __webpack_require__) {
 
+const fs = __webpack_require__(747);
+const path = __webpack_require__(622);
 const core = __webpack_require__(470);
 const github = __webpack_require__(469);
+const htmlTemplate = __webpack_require__(459);
 const exec = __webpack_require__(559);
 
 try {
@@ -3647,7 +3727,8 @@ async function stories() {
     }
     retry
   `).then(() => {
-    console.log('Succefully set things up');
+    console.log('Succefully set things up', __dirname);
+    console.log(fs.readdirSync(path.join(__dirname, './')));
   });
 }
 
@@ -5719,7 +5800,7 @@ const Endpoints = {
   }
 };
 
-const VERSION = "4.1.2";
+const VERSION = "4.1.3";
 
 function endpointsToMethods(octokit, endpointsMap) {
   const newMethods = {};
