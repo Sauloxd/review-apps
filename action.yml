@@ -32,16 +32,11 @@ runs:
         rm -r ${{inputs.output-dir}}/$BRANCH_NAME && echo "Deu bom d"
         mv .tmp ${{inputs.output-dir}}/$BRANCH_NAME && echo "Deu bom e"
         git status && echo "Deu bom f"
-        echo "--------------------"
-        which grep
-        git status | grep "${{inputs.output-dir}}" || echo "hell yeah"
-        echo "THIS BREKAKING?"
-        git status | grep "${{inputs.output-dir}}"
-        if [ #? -eq 0 ]; then
-          echo "GREP?"
-          git add ${{inputs.output-dir}}/$BRANCH_NAME
-          git commit -m "[skip ci]  ref to ${{github.event.head_commit.id}}"
-        fi
+        git status | grep "${{inputs.output-dir}}/$BRANCH_NAME" && \
+          echo "Something changed in output dir" && \
+          git add ${{inputs.output-dir}}/$BRANCH_NAME && \
+          git commit -m "[skip ci]  ref to ${{github.event.head_commit.id}}" || \
+          echo "No change on ${{inputs.output-dir}}/$BRANCH_NAME to commit! Moving on"
         echo "Finish"
       shell: bash
     - name: 'Try to push with updated review app'
