@@ -4566,16 +4566,16 @@ const fs = __webpack_require__(747);
 const io = __webpack_require__(1);
 const core = __webpack_require__(470);
 const github = __webpack_require__(469);
-const indexPage = __webpack_require__(459);
 const { exec } = __webpack_require__(986);
+const indexPage = __webpack_require__(459);
 
 try {
-  stories();
+  createReviewApps();
 } catch (error) {
   core.setFailed(error.message);
 }
 
-async function stories() {
+async function createReviewApps() {
   const publicAssetsDir = core.getInput('public-assets-dir');
   const outputDir = core.getInput('output-dir');
   const ghPagesSourceBranch = core.getInput('gh-pages-source-branch');
@@ -4594,8 +4594,8 @@ async function stories() {
   await exec('git', ['config', '--global', 'user.name', userName]);
   await exec('git', ['config', '--global', 'user.email', userEmail]);
   await exec('git', ['config', 'pull.rebase', true]);
-  const fullPathDir = `${outputDir}/${branchName}`;
   const commitMessage = `[skip ci] ref to ${headCommitId}`;
+  const fullPathDir = `${outputDir}/${branchName}-${headCommitId.substr(0, 6)}`;
 
   core.debug(`
     -> Current working branch: ${branchName}"
@@ -4611,6 +4611,8 @@ async function stories() {
   }
 
   if (isClosePrEvent) {
+    await exec('git', ['fetch', 'origin', ghPagesSourceBranch]);
+    await exec('git', ['checkout', ghPagesSourceBranch]);
     await io.rmRF(fullPathDir);
     const apps = (manifest[outputDir] && manifest[outputDir].apps || []).filter(app => app.name !== branchName);
     manifest[outputDir] = {
@@ -4630,17 +4632,16 @@ async function stories() {
         name: branchName,
         headCommitId,
         updatedAt: new Date(),
-        href: `/${repositoryName}/${outputDir}/${branchName}`,
+        href: `/${repositoryName}/${fullPathDir}`,
         pullRequestUrl
       })
     };
   }
 
-  console.log(JSON.stringify(manifest, null, 2));
+  core.debug(JSON.stringify(manifest, null, 2));
 
   fs.writeFileSync('manifest.json', JSON.stringify(manifest, null, 2), 'utf-8');
   fs.writeFileSync('index.html', indexPage(manifest), 'utf-8');
-  fs.writeFileSync('debug.json', JSON.stringify(github, null, 2), 'utf-8');
 
   try {
     await exec('git', ['add', fullPathDir, 'index.html', 'manifest.json']);
@@ -4649,20 +4650,23 @@ async function stories() {
     core.debug(e);
   }
 
-  await retryGen(5)(async () => {
+  await retry(5)(async () => {
     await exec('git', ['pull', 'origin', ghPagesSourceBranch]);
     await exec('git', ['push', 'origin', ghPagesSourceBranch]);
   });
+
+  await exec('git', ['fetch', 'origin', branchName]);
+  await exec('git', ['checkout', branchName]);
 }
 
-function retryGen(times) {
-  return async function retry(cb, count = 0) {
+function retry(times) {
+  return async function r(cb, count = 0) {
     try { await cb(); } catch (e) {
       if (count < times) {
-        console.log('Retrying... ', count);
-        await retry(cb, count + 1);
+        core.debug('Retrying... ', count);
+        await r(cb, count + 1);
       } else {
-        console.log('Exhausted retries: ', count);
+        core.debug('Exhausted retries: ', count);
       }
     }
   };
@@ -4694,8 +4698,8 @@ function getParamsFromPayload() {
       pullRequestUrl = undefined;
     }
   } catch (e) {
-    console.log(e);
-    console.log(JSON.stringify(payload, null, 2));
+    core.debug(e);
+    core.debug(JSON.stringify(payload, null, 2));
     throw new Error('Failed to get basic parameters');
   }
 
