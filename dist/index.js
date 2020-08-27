@@ -4580,12 +4580,12 @@ async function stories() {
   const outputDir = core.getInput('output-dir');
   const ghPagesSourceBranch = core.getInput('gh-pages-source-branch');
   const payload = github.context.payload;
-  const userName = payload.pusher.name;
-  const userEmail = payload.pusher.email;
+  console.log(JSON.stringify(payload, null, 2));
+  const userName = payload.pusher && payload.pusher.name;
+  const userEmail = payload.pusher && payload.pusher.email;
   const headCommitId = payload.head_commit.id;
   const branchName = payload.ref.split('/').pop();
   const respository = payload.repository;
-  console.log(JSON.stringify(payload, null, 2));
 
   core.debug(`Setting config options - name:${userName}, email:${userEmail}`);
   await exec('git', ['config', '--global', 'user.name', userName]);
