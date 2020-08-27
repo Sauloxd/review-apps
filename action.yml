@@ -49,8 +49,8 @@ runs:
           git push origin ${{inputs.gh-pages-source-branch}}
           if [ $? -eq 0 ]; then
             if [ $counter -lt 5 ]; then
-              retry
               ((counter=counter+1))
+              retry
             fi
           fi
         }
