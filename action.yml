@@ -61,7 +61,7 @@ runs:
           echo "Retrying... count: $COUNTER"
           git pull origin $STATIC_APP_BRANCH
           git push origin $STATIC_APP_BRANCH
-          if [ $? -eq 0 ]; then
+          if [ $? -ne 0 ]; then
             if [ $COUNTER -lt 5 ]; then
               ((COUNTER=COUNTER+1))
               retry
