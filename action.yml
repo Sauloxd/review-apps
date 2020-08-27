@@ -45,7 +45,8 @@ runs:
         git checkout $STATIC_APP_BRANCH
         mkdir $OUTPUT_ROOT_DIR || \
           echo " -> Creating dir '$OUTPUT_ROOT_DIR' can fail safely"
-        rm -r $FULL_PATH_DIR
+        rm -r $FULL_PATH_DIR || \
+          echo " -> Removing '$FULL_PATH_DIR' can fail safely"
         mv .tmp $FULL_PATH_DIR
         git status | grep "$FULL_PATH_DIR" && \
           echo " -> Changes detected in new build" && \
