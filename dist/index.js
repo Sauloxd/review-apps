@@ -4604,6 +4604,12 @@ async function stories() {
     -> ${commitMessage}"
   `);
 
+  try {
+    manifest = JSON.parse(fs.readFileSync('manifest.json', 'utf-8'));
+  } catch (e) {
+    manifest = {};
+  }
+
   if (isClosePrEvent) {
     await io.rmRF(fullPathDir);
     const apps = (manifest[outputDir] && manifest[outputDir].apps || []).filter(app => app.name !== branchName);
@@ -4613,15 +4619,10 @@ async function stories() {
     };
   } else {
     await exec('mv', [publicAssetsDir, '.tmp']);
-    await exec('git', ['fetch']);
+    await exec('git', ['fetch', 'origin', ghPagesSourceBranch]);
     await exec('git', ['checkout', ghPagesSourceBranch]);
     await io.cp('.tmp/.', fullPathDir, { recursive: true, force: true });
 
-    try {
-      manifest = JSON.parse(fs.readFileSync('manifest.json', 'utf-8'));
-    } catch (e) {
-      manifest = {};
-    }
     const apps = (manifest[outputDir] && manifest[outputDir].apps || []).filter(app => app.name !== branchName);
     manifest[outputDir] = {
       ...manifest[outputDir],
@@ -4704,7 +4705,8 @@ function getParamsFromPayload() {
     headCommitId,
     branchName,
     repositoryName,
-    pullRequestUrl
+    pullRequestUrl,
+    isClosePrEvent: payload.action === 'closed'
   };
 }
 
