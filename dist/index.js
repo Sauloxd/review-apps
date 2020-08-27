@@ -4608,7 +4608,7 @@ async function stories() {
 
   let manifest;
   try {
-    manifest = fs.readFileSync('manifest.json');
+    manifest = fs.readFileSync('manifest.json', 'utf-8');
   } catch (e) {
     manifest = {};
   }
