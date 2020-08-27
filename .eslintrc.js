@@ -1,3 +1,6 @@
 module.exports = {
-  extends: ['sxd']
+  extends: ['sxd'],
+  globals: {
+    Promise: 'readonly'
+  }
 };
