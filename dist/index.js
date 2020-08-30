@@ -4575,6 +4575,7 @@ try {
   createReviewApps();
 } catch (error) {
   core.setFailed(error.message);
+  throw new error;
 }
 
 async function createReviewApps() {
@@ -4609,6 +4610,7 @@ async function createReviewApps() {
   try {
     manifest = JSON.parse(fs.readFileSync('manifest.json', 'utf-8'));
   } catch (e) {
+    core.debug(e);
     manifest = {};
   }
 
