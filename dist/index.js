@@ -4611,7 +4611,7 @@ async function createReviewApps() {
     await exec('git', ['fetch', 'origin', ghPagesSourceBranch]);
     await exec('git', ['checkout', ghPagesSourceBranch]);
     await io.rmRF(fullPathDir);
-    const manifest = getManifest();
+    manifest = getManifest();
     const apps = (manifest[outputDir] && manifest[outputDir].apps || []).filter(app => app.name !== branchName);
     manifest[outputDir] = {
       ...manifest[outputDir],
@@ -4622,7 +4622,7 @@ async function createReviewApps() {
     await exec('git', ['fetch', 'origin', ghPagesSourceBranch]);
     await exec('git', ['checkout', ghPagesSourceBranch]);
     await io.cp('.tmp/.', fullPathDir, { recursive: true, force: true });
-    const manifest = getManifest();
+    manifest = getManifest();
 
     const apps = (manifest[outputDir] && manifest[outputDir].apps || []).filter(app => app.name !== branchName);
     manifest[outputDir] = {
