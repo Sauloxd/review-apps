@@ -4575,7 +4575,7 @@ try {
   createReviewApps();
 } catch (error) {
   core.setFailed(error.message);
-  throw new error;
+  throw error;
 }
 
 async function createReviewApps() {
@@ -4597,8 +4597,9 @@ async function createReviewApps() {
   await exec('git', ['config', '--global', 'user.name', userName]);
   await exec('git', ['config', '--global', 'user.email', userEmail]);
   await exec('git', ['config', 'pull.rebase', true]);
-  const commitMessage = `[skip ci] ref to ${headCommitId}`;
-  const fullPathDir = `${outputDir}/${branchName}-${headCommitId.substr(0, 6)}`;
+  const commitMessage = `[skip ci] ref to ${headCommitId} for - ${outputDir}`;
+  const basePathDir = `${outputDir}/${branchName}`;
+  const fullPathDir = `${basePathDir}/${headCommitId.substr(0, 6)}`;
 
   core.debug(`
     -> Current working branch: ${branchName}"
@@ -4610,7 +4611,7 @@ async function createReviewApps() {
   if (isClosePrEvent) {
     await exec('git', ['fetch', 'origin', ghPagesSourceBranch]);
     await exec('git', ['checkout', ghPagesSourceBranch]);
-    await io.rmRF(fullPathDir);
+    await io.rmRF(basePathDir);
     manifest = getManifest();
     const apps = (manifest[outputDir] && manifest[outputDir].apps || []).filter(app => app.name !== branchName);
     manifest[outputDir] = {
@@ -4622,6 +4623,7 @@ async function createReviewApps() {
     await exec('git', ['fetch', 'origin', ghPagesSourceBranch]);
     await exec('git', ['checkout', ghPagesSourceBranch]);
     await io.cp('.tmp/.', fullPathDir, { recursive: true, force: true });
+    await io.rmRF('.tmp');
     manifest = getManifest();
 
     const apps = (manifest[outputDir] && manifest[outputDir].apps || []).filter(app => app.name !== branchName);
