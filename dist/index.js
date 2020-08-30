@@ -4607,17 +4607,11 @@ async function createReviewApps() {
     -> ${commitMessage}"
   `);
 
-  try {
-    manifest = JSON.parse(fs.readFileSync('manifest.json', 'utf-8'));
-  } catch (e) {
-    core.debug(e);
-    manifest = {};
-  }
-
   if (isClosePrEvent) {
     await exec('git', ['fetch', 'origin', ghPagesSourceBranch]);
     await exec('git', ['checkout', ghPagesSourceBranch]);
     await io.rmRF(fullPathDir);
+    const manifest = getManifest();
     const apps = (manifest[outputDir] && manifest[outputDir].apps || []).filter(app => app.name !== branchName);
     manifest[outputDir] = {
       ...manifest[outputDir],
@@ -4628,6 +4622,7 @@ async function createReviewApps() {
     await exec('git', ['fetch', 'origin', ghPagesSourceBranch]);
     await exec('git', ['checkout', ghPagesSourceBranch]);
     await io.cp('.tmp/.', fullPathDir, { recursive: true, force: true });
+    const manifest = getManifest();
 
     const apps = (manifest[outputDir] && manifest[outputDir].apps || []).filter(app => app.name !== branchName);
     manifest[outputDir] = {
@@ -4716,6 +4711,18 @@ function getParamsFromPayload() {
     pullRequestUrl,
     isClosePrEvent: payload.action === 'closed'
   };
+}
+
+function getManifest () {
+  let manifest;
+  try {
+    manifest = JSON.parse(fs.readFileSync('manifest.json', 'utf-8'));
+  } catch (e) {
+    core.debug(e);
+    manifest = {};
+  }
+
+  return manifest;
 }
 
 
