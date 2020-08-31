@@ -3,6 +3,7 @@
   "workspaces": [
     "packages/*"
   ],
+  "private": "true",
   "version": "0.0.1",
   "main": "dist/index.js",
   "repository": "git@github.com:Sauloxd/stories.git",
@@ -10,5 +11,10 @@
   "license": "MIT",
   "scripts": {
     "build": "yarn workspace @sxd/review-apps-action run build"
+  },
+  "dependencies": {
+    "eslint": "^7.7.0",
+    "eslint-config-sxd": "^1.0.7",
+    "typescript": "^4.0.2"
   }
 }
