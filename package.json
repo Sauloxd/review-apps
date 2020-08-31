@@ -1,23 +1,14 @@
 {
-  "name": "stories",
+  "name": "review-apps",
+  "workspaces": [
+    "packages/*"
+  ],
   "version": "0.0.1",
   "main": "dist/index.js",
   "repository": "git@github.com:Sauloxd/stories.git",
   "author": "sauloxd <saulotoshi@gmail.com>",
   "license": "MIT",
   "scripts": {
-    "build": "ncc build lib/index.js",
-    "dev:tmpl": "nodemon template/html-template.js"
-  },
-  "dependencies": {
-    "@actions/core": "^1.2.4",
-    "@actions/exec": "^1.0.4",
-    "@actions/github": "^4.0.0",
-    "@actions/io": "^1.0.2"
-  },
-  "devDependencies": {
-    "@zeit/ncc": "^0.22.3",
-    "eslint-config-sxd": "^1.0.7",
-    "nodemon": "^2.0.4"
+    "build": "yarn workspace @sxd/review-apps-action run build"
   }
 }

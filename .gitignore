@@ -101,3 +101,7 @@ typings/
 
 # TernJS port file
 .tern-port
+
+# Yarn 2
+
+.yarn
