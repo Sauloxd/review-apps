@@ -3,7 +3,7 @@
   "version": "0.0.1",
   "main": "dist/index.js",
   "scripts": {
-    "build": "ncc build lib/index.js",
+    "build": "ncc build src/index.js",
     "dev:tmpl": "nodemon template/html-template.js"
   },
   "dependencies": {

@@ -19,7 +19,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
     ],
     "dependencyTreeRoots": [
       {
-        "name": "review-apps",
+        "name": "sxd",
         "reference": "workspace:."
       },
       {
@@ -31,7 +31,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
     "ignorePatternData": "(^(?:\\.yarn\\/sdks(?:\\/(?!\\.)(?:(?:(?!(?:^|\\/)\\.).)*?)|$))$)",
     "fallbackExclusionList": [
       ["@sxd/review-apps-action", ["workspace:packages/action"]],
-      ["review-apps", ["workspace:."]]
+      ["sxd", ["workspace:."]]
     ],
     "fallbackPool": [
     ],
@@ -1203,6 +1203,16 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "linkType": "HARD",
         }]
       ]],
+      ["encoding", [
+        ["npm:0.1.13", {
+          "packageLocation": "./.yarn/cache/encoding-npm-0.1.13-82a1837d30-282d5696a4.zip/node_modules/encoding/",
+          "packageDependencies": [
+            ["encoding", "npm:0.1.13"],
+            ["iconv-lite", "npm:0.6.2"]
+          ],
+          "linkType": "HARD",
+        }]
+      ]],
       ["end-of-stream", [
         ["npm:1.4.4", {
           "packageLocation": "./.yarn/cache/end-of-stream-npm-1.4.4-497fc6dee1-7da60e458b.zip/node_modules/end-of-stream/",
@@ -1868,6 +1878,16 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "linkType": "HARD",
         }]
       ]],
+      ["iconv-lite", [
+        ["npm:0.6.2", {
+          "packageLocation": "./.yarn/cache/iconv-lite-npm-0.6.2-13e85ec7dc-0785670120.zip/node_modules/iconv-lite/",
+          "packageDependencies": [
+            ["iconv-lite", "npm:0.6.2"],
+            ["safer-buffer", "npm:2.1.2"]
+          ],
+          "linkType": "HARD",
+        }]
+      ]],
       ["ignore", [
         ["npm:4.0.6", {
           "packageLocation": "./.yarn/cache/ignore-npm-4.0.6-66c0d6543e-8f7b7f7c26.zip/node_modules/ignore/",
@@ -2464,7 +2484,8 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         ["npm:2.6.0", {
           "packageLocation": "./.yarn/cache/node-fetch-npm-2.6.0-29c7a53447-dd9f586a9f.zip/node_modules/node-fetch/",
           "packageDependencies": [
-            ["node-fetch", "npm:2.6.0"]
+            ["node-fetch", "npm:2.6.0"],
+            ["encoding", "npm:0.1.13"]
           ],
           "linkType": "HARD",
         }]
@@ -3044,15 +3065,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "linkType": "HARD",
         }]
       ]],
-      ["review-apps", [
-        ["workspace:.", {
-          "packageLocation": "./",
-          "packageDependencies": [
-            ["review-apps", "workspace:."]
-          ],
-          "linkType": "SOFT",
-        }]
-      ]],
       ["rimraf", [
         ["npm:2.6.3", {
           "packageLocation": "./.yarn/cache/rimraf-npm-2.6.3-f34c6c72ec-c9ce1854f1.zip/node_modules/rimraf/",
@@ -3353,6 +3365,15 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["has-flag", "npm:4.0.0"]
           ],
           "linkType": "HARD",
+        }]
+      ]],
+      ["sxd", [
+        ["workspace:.", {
+          "packageLocation": "./",
+          "packageDependencies": [
+            ["sxd", "workspace:."]
+          ],
+          "linkType": "SOFT",
         }]
       ]],
       ["table", [

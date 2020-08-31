@@ -1,5 +1,5 @@
 {
-  "name": "review-apps",
+  "name": "sxd",
   "workspaces": [
     "packages/*"
   ],
