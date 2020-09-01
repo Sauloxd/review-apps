@@ -10075,11 +10075,11 @@ const fs = __webpack_require__(5747);
 const indexPage = __webpack_require__(9445);
 
 module.exports = {
-  createReviewApps,
+  createReviewApp,
   getParamsFromPayload
 };
 
-async function createReviewApps() {
+async function createReviewApp() {
   const distDir = core.getInput('dist');
   const slug = core.getInput('slug');
   const branch = core.getInput('branch');

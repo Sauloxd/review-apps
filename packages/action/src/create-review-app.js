@@ -7,11 +7,11 @@ const fs = require('fs');
 const indexPage = require('./template/index-page');
 
 module.exports = {
-  createReviewApps,
+  createReviewApp,
   getParamsFromPayload
 };
 
-async function createReviewApps() {
+async function createReviewApp() {
   const distDir = core.getInput('dist');
   const slug = core.getInput('slug');
   const branch = core.getInput('branch');
