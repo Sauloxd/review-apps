@@ -142,15 +142,21 @@ function getParamsFromPayload() {
     throw new Error('Failed to get basic parameters');
   }
 
-  return {
+  const result = {
     userName,
     userEmail,
     headCommitId,
     branchName,
     repositoryName,
     pullRequestUrl,
-    isClosePrEvent: payload.action === 'closed'
+    isClosePrEvent: payload.action === 'closed',
+    actionEvent: payload.action
   };
+
+  core.debug('-> Metadata:');
+  core.debug(JSON.stringify(result, null, 2));
+
+  return result;
 }
 
 function getManifest () {
