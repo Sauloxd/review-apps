@@ -6,7 +6,12 @@ const { exec } = require('@actions/exec');
 const fs = require('fs');
 const indexPage = require('./template/index-page');
 
-module.exports = async function createReviewApps() {
+module.exports = {
+  createReviewApps,
+  getParamsFromPayload
+};
+
+async function createReviewApps() {
   const distDir = core.getInput('dist');
   const slug = core.getInput('slug');
   const branch = core.getInput('branch');
@@ -20,7 +25,7 @@ module.exports = async function createReviewApps() {
     repositoryName,
     pullRequestUrl,
     isClosePrEvent
-  } = getParamsFromPayload();
+  } = getParamsFromPayload(github.context.payload);
   let manifest;
 
   core.debug(`Setting config options - name:${userName}, email:${userEmail}`);
@@ -96,7 +101,7 @@ module.exports = async function createReviewApps() {
 
   await exec('git', ['fetch', 'origin', branchName]);
   await exec('git', ['checkout', branchName]);
-};
+}
 
 function retry(times) {
   return async function r(cb, count = 0) {
@@ -111,14 +116,14 @@ function retry(times) {
   };
 }
 
-function getParamsFromPayload() {
-  const payload = github.context.payload;
+function getParamsFromPayload(payload) {
   let userName;
   let userEmail;
   let headCommitId;
   let branchName;
   let repositoryName;
   let pullRequestUrl;
+
   try {
     if (['opened', 'closed', 'synchronize', 'labeled'].includes(payload.action)) {
       userName = payload.sender && payload.sender.name;
@@ -128,7 +133,7 @@ function getParamsFromPayload() {
       repositoryName = payload.repository.name;
       pullRequestUrl = payload.pull_request.html_url;
     }
-    if (['push'].includes(payload.action)) {
+    if (['push'].includes(payload.action) || typeof payload.action === 'undefined' ) {
       userName = payload.pusher.name;
       userEmail = payload.pusher.email;
       headCommitId = payload.head_commit.id;
@@ -148,9 +153,9 @@ function getParamsFromPayload() {
     headCommitId,
     branchName,
     repositoryName,
-    pullRequestUrl,
     isClosePrEvent: payload.action === 'closed',
-    actionEvent: payload.action
+    ...(pullRequestUrl?{ pullRequestUrl }:{}),
+    ...(payload.action?{ action: payload.action }:{})
   };
 
   if (Object.values(result).filter(r => typeof r === 'undefined').length !== 0) {
