@@ -15,7 +15,7 @@ async function createReviewApp() {
   const distDir = core.getInput('dist');
   const slug = core.getInput('slug');
   const branch = core.getInput('branch');
-  let buildCmd = core.getInput('build-cmg');
+  let buildCmd = core.getInput('build-cmd');
   const publicUrl = core.getInput('public-url');
   const {
     userName,

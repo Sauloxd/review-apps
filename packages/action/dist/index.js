@@ -10083,7 +10083,7 @@ async function createReviewApp() {
   const distDir = core.getInput('dist');
   const slug = core.getInput('slug');
   const branch = core.getInput('branch');
-  let buildCmd = core.getInput('build-cmg');
+  let buildCmd = core.getInput('build-cmd');
   const publicUrl = core.getInput('public-url');
   const {
     userName,
@@ -10262,6 +10262,7 @@ const { createReviewApp } = __webpack_require__(3327);
 try {
   createReviewApp();
 } catch (error) {
+  core.debug('-> Program failed');
   core.setFailed(error.message);
   throw error;
 }
