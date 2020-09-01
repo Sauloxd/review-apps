@@ -20,6 +20,9 @@ jobs:
       - name: Install deps checking cache hit
         run: yarn install --frozen-lockfile
 
+      - name: Setup tmate session
+        uses: mxschmitt/action-tmate@v2
+
       # This is how you'll use the action
       - name: Building create-react-app example
         uses: ./ # Replace here with sauloxd/review-apps@X.X.X
@@ -38,7 +41,6 @@ jobs:
           branch: 'review-apps'
           dist: 'packages/cra-example/storybook-static'
           slug: 'cra-sb'
-          public-url: true
 
       # This is how you'll use the action
       - name: Replace with next line with - 'sauloxd/review-apps@X.X.X'
