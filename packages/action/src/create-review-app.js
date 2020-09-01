@@ -15,7 +15,7 @@ async function createReviewApp() {
   const distDir = core.getInput('dist');
   const slug = core.getInput('slug');
   const branch = core.getInput('branch');
-  const buildCmd = core.getInput('build-cmg');
+  let buildCmd = core.getInput('build-cmg');
   const publicUrl = core.getInput('public-url');
   const {
     userName,
@@ -40,7 +40,7 @@ async function createReviewApp() {
     -> Building app
   `);
   if (publicUrl) {
-    await exec(`export PUBLIC_URL=${fullPathDir}`);
+    buildCmd = (publicUrl ? `PUBLIC_URL=${fullPathDir} ` : '') + buildCmd;
   }
   await exec(buildCmd);
 
