@@ -10,6 +10,7 @@
   "author": "sauloxd <saulotoshi@gmail.com>",
   "license": "MIT",
   "scripts": {
+    "build": "yarn workspace @sxd/review-apps-action run build",
     "cra:build": "yarn workspace @sxd/review-apps-action-cra-example run build",
     "cra:storybook": "yarn workspace @sxd/review-apps-action-cra-example run build",
     "gatsby:build": "yarn workspace @sxd/review-apps-action-gatsby-example run build"
