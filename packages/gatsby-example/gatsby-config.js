@@ -7,5 +7,5 @@
 module.exports = {
   /* Your site config here */
   plugins: [],
-  pathPrefix: process.env.PUBLIC_URL || '/'
+  pathPrefix: process.env.PATH_PREFIX || '/'
 };

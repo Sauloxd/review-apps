@@ -16,7 +16,6 @@ async function createReviewApp() {
   const slug = core.getInput('slug');
   const branch = core.getInput('branch');
   const buildCmd = core.getInput('build-cmd');
-  const publicUrl = core.getInput('public-url');
   const {
     userName,
     userEmail,
@@ -39,12 +38,8 @@ async function createReviewApp() {
   core.debug(`
     -> Building app
   `);
-  if (publicUrl) {
-    core.exportVariable('PUBLIC_URL', fullPathDir);
-  }
-  core.debug(`
-    -> Running ${buildCmd}
-  `);
+
+  core.exportVariable('PATH_PREFIX', fullPathDir);
   await exec(buildCmd);
 
   core.debug(`

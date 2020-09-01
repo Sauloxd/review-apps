@@ -13,7 +13,7 @@ import combo1 from './assets/fox-combo-1.gif';
 function App() {
   return (
     <>
-      <Router basename={process.env.PUBLIC_URL}>
+      <Router basename={process.env.PATH_PREFIX}>
         <div style={{ display: 'flex', alignItems: 'center', flexDirection: 'column' }}>
           <div style={{ marginTop: 24, marginBottom: 24 }}>
             <Navbar />

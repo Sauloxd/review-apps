@@ -10,8 +10,8 @@ inputs:
     description: |
       This is the build command to generate a production version of your application.
       For example, if you use "create-react-app", this would be "yarn build".
-      IMPORTANT: If your app doesn't use HashRouting (the #/ in url), use the `public-url: true` so we compile your app passing the proper PUBLIC_URL environment var.
-      See: https://www.gatsbyjs.com/docs/path-prefix/ for more info.
+      IMPORTANT: If your app doesn't use HashRouting (the #/ in url), use process.env.PATH_PREFIX to correctly configure it.
+      See FAQ and https://www.gatsbyjs.com/docs/path-prefix/ for more info.
     default: 'yarn build'
 
   branch:
@@ -34,7 +34,7 @@ inputs:
       Example: If you want something like: https://sauloxd.github.io/my-app/storybooks/ft-home-1231bdhb, pass string "storybooks"
     default: 'review-apps'
 
-  public-url:
+  path-prefix:
     description: |
       Since each app will live in a prefixed base url (se we can have a single host and multiple apps), your application may need some adjustments.
       If your app doesnt use HashRouting, i.e. your app doesn't use the # to emulate url navigation (see https://reactrouter.com/web/api/HashRouter),
