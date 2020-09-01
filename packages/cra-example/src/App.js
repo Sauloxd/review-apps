@@ -20,13 +20,13 @@ function App() {
           </div>
           <Switch>
             <Route path={['/wave-shine']}>
-              <img src={waveshine}/>
+              <img alt="waveshine" src={waveshine}/>
             </Route>
             <Route path="/multi-shine">
-              <img src={multishine}/>
+              <img alt="multishine" src={multishine}/>
             </Route>
             <Route path="/combos">
-              <img src={combo1}/>
+              <img alt="combo1" src={combo1}/>
             </Route>
           </Switch>
         </div>
@@ -38,13 +38,13 @@ function App() {
           </div>
           <Switch>
             <Route path={['/wave-shine']}>
-              <img src={waveshine}/>
+              <img alt="waveshine" src={waveshine}/>
             </Route>
             <Route path="/multi-shine">
-              <img src={multishine}/>
+              <img alt="multishine" src={multishine}/>
             </Route>
             <Route path="/combos">
-              <img src={combo1}/>
+              <img alt="combo1" src={combo1}/>
             </Route>
           </Switch>
         </div>
