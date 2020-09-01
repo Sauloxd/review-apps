@@ -1,0 +1,25 @@
+{
+  "files": {
+    "main.css": "cra/refactor-monorepo/9407b2/static/css/main.5ecd60fb.chunk.css",
+    "main.js": "cra/refactor-monorepo/9407b2/static/js/main.c621a3e9.chunk.js",
+    "main.js.map": "cra/refactor-monorepo/9407b2/static/js/main.c621a3e9.chunk.js.map",
+    "runtime-main.js": "cra/refactor-monorepo/9407b2/static/js/runtime-main.1473fab2.js",
+    "runtime-main.js.map": "cra/refactor-monorepo/9407b2/static/js/runtime-main.1473fab2.js.map",
+    "static/js/2.a2a6c264.chunk.js": "cra/refactor-monorepo/9407b2/static/js/2.a2a6c264.chunk.js",
+    "static/js/2.a2a6c264.chunk.js.map": "cra/refactor-monorepo/9407b2/static/js/2.a2a6c264.chunk.js.map",
+    "index.html": "cra/refactor-monorepo/9407b2/index.html",
+    "precache-manifest.0a6fddc45e3ce12c7b3c2b29fdb75f30.js": "cra/refactor-monorepo/9407b2/precache-manifest.0a6fddc45e3ce12c7b3c2b29fdb75f30.js",
+    "service-worker.js": "cra/refactor-monorepo/9407b2/service-worker.js",
+    "static/css/main.5ecd60fb.chunk.css.map": "cra/refactor-monorepo/9407b2/static/css/main.5ecd60fb.chunk.css.map",
+    "static/js/2.a2a6c264.chunk.js.LICENSE.txt": "cra/refactor-monorepo/9407b2/static/js/2.a2a6c264.chunk.js.LICENSE.txt",
+    "static/media/fox-combo-1.gif": "cra/refactor-monorepo/9407b2/static/media/fox-combo-1.b8000ebc.gif",
+    "static/media/fox-multishine.gif": "cra/refactor-monorepo/9407b2/static/media/fox-multishine.90b071d4.gif",
+    "static/media/fox-waveshine.gif": "cra/refactor-monorepo/9407b2/static/media/fox-waveshine.7ec8b809.gif"
+  },
+  "entrypoints": [
+    "static/js/runtime-main.1473fab2.js",
+    "static/js/2.a2a6c264.chunk.js",
+    "static/css/main.5ecd60fb.chunk.css",
+    "static/js/main.c621a3e9.chunk.js"
+  ]
+}
