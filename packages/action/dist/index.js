@@ -10221,6 +10221,12 @@ function getParamsFromPayload() {
     actionEvent: payload.action
   };
 
+  if (Object.values(result).find(r => typeof r === 'undefined')) {
+    core.debug('-> A VALUE IS UNDEFINED');
+    core.debug(JSON.stringify(payload, null, 2));
+    core.debug('-> END LOGS');
+  }
+
   core.debug('-> Metadata:');
   core.debug(JSON.stringify(result, null, 2));
 
