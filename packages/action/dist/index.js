@@ -10063,27 +10063,23 @@ function wrappy (fn, cb) {
 
 /***/ }),
 
-/***/ 5036:
-/***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
+/***/ 3327:
+/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
 
-const fs = __webpack_require__(5747);
+/* eslint-disable @typescript-eslint/no-use-before-define */
 const io = __webpack_require__(6890);
-const core = __webpack_require__(7117);
 const github = __webpack_require__(4005);
+const core = __webpack_require__(7117);
 const { exec } = __webpack_require__(6473);
+const fs = __webpack_require__(5747);
 const indexPage = __webpack_require__(9445);
 
-try {
-  createReviewApps();
-} catch (error) {
-  core.setFailed(error.message);
-  throw error;
-}
-
-async function createReviewApps() {
-  const publicAssetsDir = core.getInput('public-assets-dir');
-  const outputDir = core.getInput('output-dir');
-  const ghPagesSourceBranch = core.getInput('gh-pages-source-branch');
+module.exports = async function createReviewApps() {
+  const distDir = core.getInput('dist');
+  const slug = core.getInput('slug');
+  const branch = core.getInput('branch');
+  const buildCmd = core.getInput('build-cmg');
+  const publicUrl = core.getInput('public-url');
   const {
     userName,
     userEmail,
@@ -10099,38 +10095,46 @@ async function createReviewApps() {
   await exec('git', ['config', '--global', 'user.name', userName]);
   await exec('git', ['config', '--global', 'user.email', userEmail]);
   await exec('git', ['config', 'pull.rebase', true]);
-  const commitMessage = `[skip ci] ref to ${headCommitId} for - ${outputDir}`;
-  const basePathDir = `${outputDir}/${branchName}`;
+  const commitMessage = `[skip ci] ref to ${headCommitId} for - ${slug}`;
+  const basePathDir = `${slug}/${branchName}`;
   const fullPathDir = `${basePathDir}/${headCommitId.substr(0, 6)}`;
 
   core.debug(`
+    -> Building app
+  `);
+  if (publicUrl) {
+    await exec(`export PUBLIC_URL=${fullPathDir}`);
+  }
+  await exec(buildCmd);
+
+  core.debug(`
     -> Current working branch: ${branchName}"
-    -> Will move (and override) the build result on '${publicAssetsDir}' to '${fullPathDir}' in ${ghPagesSourceBranch}"
+    -> Will move (and override) the build result on '${distDir}' to '${fullPathDir}' in ${branch}"
     -> Finally, will commit and push with the following message:"
     -> ${commitMessage}"
   `);
 
   if (isClosePrEvent) {
-    await exec('git', ['fetch', 'origin', ghPagesSourceBranch]);
-    await exec('git', ['checkout', ghPagesSourceBranch]);
+    await exec('git', ['fetch', 'origin', branch]);
+    await exec('git', ['checkout', branch]);
     await io.rmRF(basePathDir);
     manifest = getManifest();
-    const apps = (manifest[outputDir] && manifest[outputDir].apps || []).filter(app => app.name !== branchName);
-    manifest[outputDir] = {
-      ...manifest[outputDir],
+    const apps = (manifest[slug] && manifest[slug].apps || []).filter(app => app.name !== branchName);
+    manifest[slug] = {
+      ...manifest[slug],
       apps
     };
   } else {
-    await exec('mv', [publicAssetsDir, '.tmp']);
-    await exec('git', ['fetch', 'origin', ghPagesSourceBranch]);
-    await exec('git', ['checkout', ghPagesSourceBranch]);
+    await exec('mv', [distDir, '.tmp']);
+    await exec('git', ['fetch', 'origin', branch]);
+    await exec('git', ['checkout', branch]);
     await io.cp('.tmp/.', fullPathDir, { recursive: true, force: true });
     await io.rmRF('.tmp');
     manifest = getManifest();
 
-    const apps = (manifest[outputDir] && manifest[outputDir].apps || []).filter(app => app.name !== branchName);
-    manifest[outputDir] = {
-      ...manifest[outputDir],
+    const apps = (manifest[slug] && manifest[slug].apps || []).filter(app => app.name !== branchName);
+    manifest[slug] = {
+      ...manifest[slug],
       apps: apps.concat({
         name: branchName,
         headCommitId,
@@ -10154,13 +10158,13 @@ async function createReviewApps() {
   }
 
   await retry(5)(async () => {
-    await exec('git', ['pull', 'origin', ghPagesSourceBranch]);
-    await exec('git', ['push', 'origin', ghPagesSourceBranch]);
+    await exec('git', ['pull', 'origin', branch]);
+    await exec('git', ['push', 'origin', branch]);
   });
 
   await exec('git', ['fetch', 'origin', branchName]);
   await exec('git', ['checkout', branchName]);
-}
+};
 
 function retry(times) {
   return async function r(cb, count = 0) {
@@ -10227,6 +10231,22 @@ function getManifest () {
   }
 
   return manifest;
+}
+
+
+/***/ }),
+
+/***/ 5036:
+/***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
+
+const core = __webpack_require__(7117);
+const createReviewApp = __webpack_require__(3327);
+
+try {
+  createReviewApp();
+} catch (error) {
+  core.setFailed(error.message);
+  throw error;
 }
 
 
