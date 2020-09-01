@@ -34,7 +34,7 @@ async function createReviewApp() {
   await exec('git', ['config', 'pull.rebase', true]);
   const commitMessage = `[skip ci] ref to ${headCommitId} for - ${slug}`;
   const basePathDir = `${slug}/${branchName}`;
-  const fullPathDir = `${basePathDir}/${headCommitId.substr(0, 6)}`;
+  const fullPathDir = `${repositoryName}/${basePathDir}/${headCommitId.substr(0, 6)}`;
 
   core.debug(`
     -> Building app
@@ -79,7 +79,7 @@ async function createReviewApp() {
         name: branchName,
         headCommitId,
         updatedAt: new Date(),
-        href: `/${repositoryName}/${fullPathDir}`,
+        href: fullPathDir,
         pullRequestUrl
       })
     };
