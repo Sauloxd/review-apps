@@ -34,7 +34,7 @@ jobs:
           public-url: true
 
       # This is how you'll use the action
-      - name: Building
+      - name: Building storybook example
         uses: ./ # Replace here with sauloxd/review-apps@X.X.X
         with:
           build-cmd: 'yarn run cra:storybook'
@@ -43,11 +43,11 @@ jobs:
           slug: 'cra-sb'
 
       # This is how you'll use the action
-      - name: Replace with next line with - 'sauloxd/review-apps@X.X.X'
+      - name: Building gatsby example
         uses: ./ # Replace here with sauloxd/review-apps@X.X.X
         with:
           build-cmd: 'yarn run gatsby:build'
           branch: 'review-apps'
-          dist: 'packages/gatsby/public'
+          dist: 'packages/gatsby-example/public'
           slug: 'gatsby'
           public-url: true
