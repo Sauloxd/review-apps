@@ -10221,7 +10221,7 @@ function getParamsFromPayload() {
     actionEvent: payload.action
   };
 
-  if (Object.values(result).find(r => typeof r === 'undefined')) {
+  if (Object.values(result).filter(r => typeof r === 'undefined').length !== 0) {
     core.debug('-> A VALUE IS UNDEFINED');
     core.debug(JSON.stringify(payload, null, 2));
     core.debug('-> END LOGS');
