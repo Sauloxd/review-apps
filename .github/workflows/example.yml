@@ -1,5 +1,5 @@
 name: 'Build and deploy create react app to review apps, so you can safely QA it'
-on: push
+on: [push]
 jobs:
   stories:
     runs-on: ubuntu-latest

@@ -10257,7 +10257,7 @@ function getManifest () {
 /***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
 
 const core = __webpack_require__(7117);
-const createReviewApp = __webpack_require__(3327);
+const { createReviewApp } = __webpack_require__(3327);
 
 try {
   createReviewApp();

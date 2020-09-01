@@ -1,5 +1,5 @@
 const core = require('@actions/core');
-const createReviewApp = require('./create-review-app');
+const { createReviewApp } = require('./create-review-app');
 
 try {
   createReviewApp();
