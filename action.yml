@@ -1,18 +1,46 @@
-name: 'Deploy review apps to gh-pages'
+name: 'Deploy static app in branch to gh-pages'
 description: |
-  Automatically deploy static apps to gh-pages, so you're able to easily QA it
+  Automatically deploy static apps to gh-pages, so you're able to easily QA it.
+  When working on features that has UI impact, you'll probably want to work in sync with a the design team.
+  Having a quick way to generate the result before merging (or even WIP) to validate (or iterate quicker) is essential in this modern days.
+  I hope this action will help detect problems before they hit the main branch!
+
 inputs:
-  gh-pages-source-branch:  # id of input
-    description: 'The branch you configured in github to be the source for gh-pages. defaults to "gh-pages run"'
-    default: 'gh-pages'
-  public-assets-dir:  # id of input
-    description: 'The directory where you build artifacts will live'
-    default: 'dist'
-  output-dir:
+  build-cmd:
     description: |
-      'Dir is related to URL path in github pages.
-      If you want something like: https://githubname.github.io/repo/storybooks/branch-name, pass string "storybook"'
+      This is the build command to generate a production version of your application.
+      For example, if you use "create-react-app", this would be "yarn build".
+      IMPORTANT: If your app doesn't use HashRouting (the #/ in url), use the `public-url: true` so we compile your app passing the proper PUBLIC_URL environment var.
+      See: https://www.gatsbyjs.com/docs/path-prefix/ for more info.
+    default: 'yarn build'
+
+  branch:
+    description: |
+      The branch you configured in github to be the source for gh-pages.
+      Defaults to "gh-pages".
+      See https://pages.github.com/ for more info.
+    default: 'gh-pages'
+
+  dist:
+    description: |
+      The directory where you build artifacts will live.
+      For example, if you use create-react-app, it will be the "dist" directory. If you use a monorepo setup, please add the relative the path relative from the project root or an absolute path'
+    default: 'dist'
+
+  slug:
+    description: |
+      The default URL for every app is: https://{ GH_USER_NAME }.github.io/{ REPOSITORY }/{ SLUG }/{ BRANCH_NAME }/{ HEAD_COMMIT }
+      Where SLUG defaults to `review-apps`. For multiple types of apps inside the same repository (i.e. APP & STORYBOOK), provide an uniq slug.
+      Example: If you want something like: https://sauloxd.github.io/my-app/storybooks/ft-home-1231bdhb, pass string "storybooks"
     default: 'review-apps'
+
+  public-url:
+    description: |
+      Since each app will live in a prefixed base url (se we can have a single host and multiple apps), your application may need some adjustments.
+      If your app doesnt use HashRouting, i.e. your app doesn't use the # to emulate url navigation (see https://reactrouter.com/web/api/HashRouter),
+      Please follow the FAQ to correctly configure you app to work with this action
+    default: false
+
 runs:
   using: 'node12'
   main: 'packages/action/dist/index.js'
