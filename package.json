@@ -11,7 +11,7 @@
   "license": "MIT",
   "scripts": {
     "build": "yarn workspace @sxd/review-apps-action run build",
-    "cra:build": "SKIP_PREFLIGHT_CHECK=true yarn workspace @sxd/review-apps-action-cra-example run build",
+    "cra:build": "SKIP_PREFLIGHT_CHECK=true yarn workspace @sxd/review-apps-action-cra-example run build-storybook",
     "cra:storybook": "yarn workspace @sxd/review-apps-action-cra-example run build",
     "gatsby:build": "yarn workspace @sxd/review-apps-action-gatsby-example run build"
   }
