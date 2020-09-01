@@ -10110,6 +10110,9 @@ async function createReviewApp() {
   if (publicUrl) {
     buildCmd = (publicUrl ? `PUBLIC_URL=${fullPathDir} ` : '') + buildCmd;
   }
+  core.debug(`
+    -> Running ${buildCmd}
+  `);
   await exec(buildCmd);
 
   core.debug(`
@@ -10259,13 +10262,15 @@ function getManifest () {
 const core = __webpack_require__(7117);
 const { createReviewApp } = __webpack_require__(3327);
 
-try {
-  createReviewApp();
-} catch (error) {
-  core.debug('-> Program failed');
-  core.setFailed(error.message);
-  throw error;
-}
+(async function () {
+  try {
+    await createReviewApp();
+  } catch (error) {
+    core.debug('-> Program failed');
+    core.setFailed(error.message);
+    throw error;
+  }
+})();
 
 
 /***/ }),

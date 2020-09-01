@@ -42,6 +42,9 @@ async function createReviewApp() {
   if (publicUrl) {
     buildCmd = (publicUrl ? `PUBLIC_URL=${fullPathDir} ` : '') + buildCmd;
   }
+  core.debug(`
+    -> Running ${buildCmd}
+  `);
   await exec(buildCmd);
 
   core.debug(`
