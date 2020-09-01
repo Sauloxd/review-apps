@@ -8,5 +8,15 @@
         "href": "/review-apps/cra/refactor-monorepo/9407b2"
       }
     ]
+  },
+  "cra-sb": {
+    "apps": [
+      {
+        "name": "refactor-monorepo",
+        "headCommitId": "9407b2f96c6b77363f279e5fbba83b732a1a4940",
+        "updatedAt": "2020-09-01T14:15:31.345Z",
+        "href": "/review-apps/cra-sb/refactor-monorepo/9407b2"
+      }
+    ]
   }
 }
