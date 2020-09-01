@@ -21,7 +21,7 @@ jobs:
         run: yarn install --frozen-lockfile
 
       # This is how you'll use the action
-      - name: Replace with next line with - 'sauloxd/review-apps@X.X.X'
+      - name: Building create-react-app example
         uses: ./ # Replace here with sauloxd/review-apps@X.X.X
         with:
           build-cmd: 'yarn run cra:build'
@@ -31,7 +31,7 @@ jobs:
           public-url: true
 
       # This is how you'll use the action
-      - name: Replace with next line with - 'sauloxd/review-apps@X.X.X'
+      - name: Building
         uses: ./ # Replace here with sauloxd/review-apps@X.X.X
         with:
           build-cmd: 'yarn run cra:storybook'
@@ -44,7 +44,7 @@ jobs:
       - name: Replace with next line with - 'sauloxd/review-apps@X.X.X'
         uses: ./ # Replace here with sauloxd/review-apps@X.X.X
         with:
-          build-cmd: 'yarn run cra:storybook'
+          build-cmd: 'yarn run gatsby:build'
           branch: 'review-apps'
           dist: 'packages/gatsby/public'
           slug: 'gatsby'
