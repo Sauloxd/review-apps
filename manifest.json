@@ -1,13 +1,1 @@
-{
-  "update-readme": {
-    "apps": [
-      {
-        "name": "storybook",
-        "headCommitId": "83257f14348de0ad67dfbddd5ae2a6589de89bc0",
-        "updatedAt": "2020-09-02T19:33:35.537Z",
-        "href": "storybook/update-readme/83257f",
-        "pullRequestUrl": "https://github.com/Sauloxd/review-apps/pull/4"
-      }
-    ]
-  }
-}
+{}
