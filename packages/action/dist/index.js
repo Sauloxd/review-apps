@@ -10125,9 +10125,6 @@ async function createReviewApp() {
     });
   }
 
-  core.debug('Return to original state');
-  await exec('git', ['fetch', 'origin', branchName]);
-  await exec('git', ['checkout', branchName]);
 }
 
 
@@ -10294,6 +10291,9 @@ async function otherEvents({
     await exec('git', ['push', 'origin', ghBranch]);
   });
   await io.rmRF('.tmp');
+  core.debug('Return to original state');
+  await exec('git', ['fetch', 'origin', branchName]);
+  await exec('git', ['checkout', branchName]);
 }
 
 

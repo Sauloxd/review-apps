@@ -57,7 +57,4 @@ async function createReviewApp() {
     });
   }
 
-  core.debug('Return to original state');
-  await exec('git', ['fetch', 'origin', branchName]);
-  await exec('git', ['checkout', branchName]);
 }
