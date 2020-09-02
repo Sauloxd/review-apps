@@ -67,9 +67,13 @@ async function otherEvents({
     await exec('git', ['fetch', 'origin', ghBranch]);
     await exec('git', ['checkout', ghBranch]);
     await exec('git', ['reset', '--hard', 'origin/' + ghBranch]);
+    core.debug('Coping .tmp/. -> ' + pathByHeadCommit);
     await io.cp('.tmp/.', pathByHeadCommit, { recursive: true, force: true });
-    fs.writeFileSync('manifest.json', JSON.stringify(manifest, null, 2), 'utf-8');
-    fs.writeFileSync('index.html', indexPage(manifest), 'utf-8');
+    core.debug('Saving manifest.json');
+    fs.writeFileSync('./manifest.json', JSON.stringify(manifest, null, 2), 'utf-8');
+    core.debug('Saving index.html');
+    fs.writeFileSync('./index.html', indexPage(manifest), 'utf-8');
+    await exec('git', ['status']);
 
     try {
       await exec('git', ['add', pathByHeadCommit, 'index.html', 'manifest.json']);
