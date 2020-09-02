@@ -86,6 +86,12 @@
         "headCommitId": "fd5517388163371e90f8d0e7bd9d33bc45b26367",
         "updatedAt": "2020-09-02T17:54:26.089Z",
         "href": "dev-gatsby/update-readme/fd5517"
+      },
+      {
+        "name": "master",
+        "headCommitId": "f46991d53eee7b2ce03d4e5fb205e63a3d920c8e",
+        "updatedAt": "2020-09-02T18:06:41.681Z",
+        "href": "dev-gatsby/master/f46991"
       }
     ]
   },
