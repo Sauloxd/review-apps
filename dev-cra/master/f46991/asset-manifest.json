@@ -1,0 +1,25 @@
+{
+  "files": {
+    "main.css": "/review-apps/dev-cra/master/f46991/static/css/main.5ecd60fb.chunk.css",
+    "main.js": "/review-apps/dev-cra/master/f46991/static/js/main.ef546134.chunk.js",
+    "main.js.map": "/review-apps/dev-cra/master/f46991/static/js/main.ef546134.chunk.js.map",
+    "runtime-main.js": "/review-apps/dev-cra/master/f46991/static/js/runtime-main.00c0c28f.js",
+    "runtime-main.js.map": "/review-apps/dev-cra/master/f46991/static/js/runtime-main.00c0c28f.js.map",
+    "static/js/2.a2a6c264.chunk.js": "/review-apps/dev-cra/master/f46991/static/js/2.a2a6c264.chunk.js",
+    "static/js/2.a2a6c264.chunk.js.map": "/review-apps/dev-cra/master/f46991/static/js/2.a2a6c264.chunk.js.map",
+    "index.html": "/review-apps/dev-cra/master/f46991/index.html",
+    "precache-manifest.a0374f563d3d7c9444993f38c7acb925.js": "/review-apps/dev-cra/master/f46991/precache-manifest.a0374f563d3d7c9444993f38c7acb925.js",
+    "service-worker.js": "/review-apps/dev-cra/master/f46991/service-worker.js",
+    "static/css/main.5ecd60fb.chunk.css.map": "/review-apps/dev-cra/master/f46991/static/css/main.5ecd60fb.chunk.css.map",
+    "static/js/2.a2a6c264.chunk.js.LICENSE.txt": "/review-apps/dev-cra/master/f46991/static/js/2.a2a6c264.chunk.js.LICENSE.txt",
+    "static/media/fox-combo-1.gif": "/review-apps/dev-cra/master/f46991/static/media/fox-combo-1.b8000ebc.gif",
+    "static/media/fox-multishine.gif": "/review-apps/dev-cra/master/f46991/static/media/fox-multishine.90b071d4.gif",
+    "static/media/fox-waveshine.gif": "/review-apps/dev-cra/master/f46991/static/media/fox-waveshine.7ec8b809.gif"
+  },
+  "entrypoints": [
+    "static/js/runtime-main.00c0c28f.js",
+    "static/js/2.a2a6c264.chunk.js",
+    "static/css/main.5ecd60fb.chunk.css",
+    "static/js/main.ef546134.chunk.js"
+  ]
+}
