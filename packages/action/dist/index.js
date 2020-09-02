@@ -10104,7 +10104,18 @@ async function createReviewApp() {
   const pathByBranch = `${slug}/${branchName}`;
   const pathByHeadCommit = `${pathByBranch}/${headCommitId.substr(0, 6)}`;
 
-  core.debug(`
+  if (isClosePrEvent) {
+    await exec('git', ['fetch', 'origin', branch]);
+    await exec('git', ['checkout', branch]);
+    await io.rmRF(pathByBranch);
+    manifest = getManifest();
+    const apps = (manifest[branchName] && manifest[branchName].apps || []).filter(app => app.name !== slug);
+    manifest[branchName] = {
+      ...manifest[branchName],
+      apps
+    };
+  } else {
+    core.debug(`
     -> Paths:
     -> Your app will be hosted in github pages: "https://{ username }.github.io"
     -> Inside the repository name as prefix: "/{ repo }" (/${pathByRepo})
@@ -10114,37 +10125,25 @@ async function createReviewApp() {
     -> Example:
     -> "https://sauloxd.github.io/review-apps/storybook/feature-1/c1fcf15"
 
-    -> We build your app with the proper PUBLIC_URL
+    -> We'll build your app with the proper PUBLIC_URL
     -> For more info:
     -> https://github.com/facebook/create-react-app/pull/937/files#diff-9b26877ecf8d15b7987c96e5a17502f6
     -> https://www.gatsbyjs.com/docs/path-prefix/
   `);
 
-  core.debug(`
+    core.debug(`
     -> Building app
   `);
 
-  core.exportVariable('PUBLIC_URL', `/${pathByRepo}/${pathByHeadCommit}`);
-  await exec(buildCmd);
+    core.exportVariable('PUBLIC_URL', `/${pathByRepo}/${pathByHeadCommit}`);
+    await exec(buildCmd);
 
-  core.debug(`
+    core.debug(`
     -> Current working branch: ${branchName}"
     -> Will move (and override) the build result on '${distDir}' to '${pathByHeadCommit}' in ${branch}"
     -> Finally, will commit and push with the following message:"
     -> ${commitMessage}"
   `);
-
-  if (isClosePrEvent) {
-    await exec('git', ['fetch', 'origin', branch]);
-    await exec('git', ['checkout', branch]);
-    await io.rmRF(pathByBranch);
-    manifest = getManifest();
-    const apps = (manifest[slug] && manifest[slug].apps || []).filter(app => app.name !== branchName);
-    manifest[slug] = {
-      ...manifest[slug],
-      apps
-    };
-  } else {
     await exec('mv', [distDir, '.tmp']);
     await exec('git', ['fetch', 'origin', branch]);
     await exec('git', ['checkout', branch]);
@@ -10152,11 +10151,11 @@ async function createReviewApp() {
     await io.rmRF('.tmp');
     manifest = getManifest();
 
-    const apps = (manifest[slug] && manifest[slug].apps || []).filter(app => app.name !== branchName);
-    manifest[slug] = {
-      ...manifest[slug],
+    const apps = (manifest[branchName] && manifest[branchName].apps || []).filter(app => app.name !== slug);
+    manifest[branchName] = {
+      ...manifest[branchName],
       apps: apps.concat({
-        name: branchName,
+        name: slug,
         headCommitId,
         updatedAt: new Date(),
         href: pathByHeadCommit,
@@ -10200,8 +10199,8 @@ function retry(times) {
 }
 
 function getParamsFromPayload(payload) {
-  let userName;
-  let userEmail;
+  let userName = 'review-app-action-user';
+  let userEmail = 'review-app-action-email';
   let headCommitId;
   let branchName;
   let repositoryName;
@@ -10209,16 +10208,16 @@ function getParamsFromPayload(payload) {
 
   try {
     if (['opened', 'closed', 'synchronize', 'labeled'].includes(payload.action)) {
-      userName = payload.sender && payload.sender.name;
-      userEmail = payload.sender && payload.sender.email;
+      userName = payload.sender && payload.sender.name || userName;
+      userEmail = payload.sender && payload.sender.email || userEmail;
       headCommitId = payload.pull_request.head.sha;
       branchName = payload.pull_request.head.ref.split('/').pop();
       repositoryName = payload.repository.name;
       pullRequestUrl = payload.pull_request.html_url;
     }
     if (['push'].includes(payload.action) || typeof payload.action === 'undefined' ) {
-      userName = payload.pusher.name;
-      userEmail = payload.pusher.email;
+      userName = payload.pusher.name || userName;
+      userEmail = payload.pusher.email || userEmail;
       headCommitId = payload.head_commit.id;
       branchName = payload.ref.split('/').pop();
       repositoryName = payload.repository.name;
@@ -10242,9 +10241,8 @@ function getParamsFromPayload(payload) {
   };
 
   if (Object.values(result).filter(r => typeof r === 'undefined').length !== 0) {
-    core.debug('-> A VALUE IS UNDEFINED');
+    core.debug('-> A value is undefined');
     core.debug(JSON.stringify(payload, null, 2));
-    core.debug('-> END LOGS');
   }
 
   core.debug('-> Metadata:');

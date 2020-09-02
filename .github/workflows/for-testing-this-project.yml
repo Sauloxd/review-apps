@@ -1,4 +1,4 @@
-name: 'Build and deploy create react app to review apps, so you can safely QA it'
+name: 'Workflow to help develop this action'
 on: [push]
 jobs:
   develop:
