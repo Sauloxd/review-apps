@@ -10100,19 +10100,20 @@ async function createReviewApp() {
   await exec('git', ['config', '--global', 'user.email', userEmail]);
   await exec('git', ['config', 'pull.rebase', true]);
   const commitMessage = `[skip ci] ref to ${headCommitId} for - ${slug}`;
-  const basePathDir = `${slug}/${branchName}`;
-  const fullPathDir = `${basePathDir}/${headCommitId.substr(0, 6)}`;
+  const basePrefix = repositoryName;
+  const basePathInsidePrefix = `${slug}/${branchName}`;
+  const targetDist = `${basePathInsidePrefix}/${headCommitId.substr(0, 6)}`;
 
   core.debug(`
     -> Building app
   `);
 
-  core.exportVariable('PATH_PREFIX', `${repositoryName}/fullPathDir`);
+  core.exportVariable('PATH_PREFIX', `${repositoryName}/${targetDist}`);
   await exec(buildCmd);
 
   core.debug(`
     -> Current working branch: ${branchName}"
-    -> Will move (and override) the build result on '${distDir}' to '${fullPathDir}' in ${branch}"
+    -> Will move (and override) the build result on '${distDir}' to '${targetDist}' in ${branch}"
     -> Finally, will commit and push with the following message:"
     -> ${commitMessage}"
   `);
@@ -10120,7 +10121,7 @@ async function createReviewApp() {
   if (isClosePrEvent) {
     await exec('git', ['fetch', 'origin', branch]);
     await exec('git', ['checkout', branch]);
-    await io.rmRF(basePathDir);
+    await io.rmRF(basePathInsidePrefix);
     manifest = getManifest();
     const apps = (manifest[slug] && manifest[slug].apps || []).filter(app => app.name !== branchName);
     manifest[slug] = {
@@ -10131,7 +10132,7 @@ async function createReviewApp() {
     await exec('mv', [distDir, '.tmp']);
     await exec('git', ['fetch', 'origin', branch]);
     await exec('git', ['checkout', branch]);
-    await io.cp('.tmp/.', basePathDir, { recursive: true, force: true });
+    await io.cp('.tmp/.', basePathInsidePrefix, { recursive: true, force: true });
     await io.rmRF('.tmp');
     manifest = getManifest();
 
@@ -10142,7 +10143,7 @@ async function createReviewApp() {
         name: branchName,
         headCommitId,
         updatedAt: new Date(),
-        href: fullPathDir,
+        href: targetDist,
         pullRequestUrl
       })
     };
@@ -10154,7 +10155,7 @@ async function createReviewApp() {
   fs.writeFileSync('index.html', indexPage(manifest), 'utf-8');
 
   try {
-    await exec('git', ['add', fullPathDir, 'index.html', 'manifest.json']);
+    await exec('git', ['add', targetDist, 'index.html', 'manifest.json']);
     await exec('git', ['commit', '-m', commitMessage]);
   } catch (e) {
     core.debug(e);
