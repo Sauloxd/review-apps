@@ -10256,6 +10256,9 @@ async function otherEvents({
   `);
   await exec('mv', [distDir, '.tmp']);
 
+  await exec('git', ['fetch', 'origin', ghBranch]);
+  await exec('git', ['checkout', ghBranch]);
+
   const manifest = replaceApp({
     manifest: getManifest(),
     branchName,
@@ -10275,9 +10278,9 @@ async function otherEvents({
     core.debug('Coping .tmp/. -> ' + pathByHeadCommit);
     await io.cp('.tmp/.', pathByHeadCommit, { recursive: true, force: true });
     core.debug('Saving manifest.json');
-    fs.writeFileSync('./manifest.json', JSON.stringify(manifest, null, 2), 'utf-8');
+    fs.writeFileSync('manifest.json', JSON.stringify(manifest, null, 2), 'utf-8');
     core.debug('Saving index.html');
-    fs.writeFileSync('./index.html', indexPage(manifest), 'utf-8');
+    fs.writeFileSync('index.html', indexPage(manifest), 'utf-8');
     await exec('git', ['status']);
 
     try {
