@@ -40,7 +40,7 @@ async function createReviewApp() {
     -> Building app
   `);
 
-  core.exportVariable('PATH_PREFIX', `${repositoryName}/${targetDist}`);
+  core.exportVariable('PUBLIC_URL', `/${basePrefix}/${targetDist}`);
   await exec(buildCmd);
 
   core.debug(`

@@ -11,9 +11,11 @@ import waveshine from './assets/fox-waveshine.gif';
 import combo1 from './assets/fox-combo-1.gif';
 
 function App() {
+  const basename = process.env.PUBLIC_URL;
+  console.log(basename)
   return (
     <>
-      <Router basename={process.env.PATH_PREFIX}>
+      <Router basename={basename}>
         <div style={{ display: 'flex', alignItems: 'center', flexDirection: 'column' }}>
           <div style={{ marginTop: 24, marginBottom: 24 }}>
             <Navbar />
