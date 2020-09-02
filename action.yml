@@ -34,13 +34,6 @@ inputs:
       Example: If you want something like: https://sauloxd.github.io/my-app/storybooks/ft-home-1231bdhb, pass string "storybooks"
     default: 'review-apps'
 
-  path-prefix:
-    description: |
-      Since each app will live in a prefixed base url (se we can have a single host and multiple apps), your application may need some adjustments.
-      If your app doesnt use HashRouting, i.e. your app doesn't use the # to emulate url navigation (see https://reactrouter.com/web/api/HashRouter),
-      Please follow the FAQ to correctly configure you app to work with this action
-    default: false
-
 runs:
   using: 'node12'
   main: 'packages/action/dist/index.js'

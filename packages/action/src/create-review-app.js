@@ -46,7 +46,7 @@ async function createReviewApp() {
     -> Example:
     -> "https://sauloxd.github.io/review-apps/storybook/feature-1/c1fcf15"
 
-    -> We build your app with the proper PUBLIC_URL
+    -> We'll build your app with the proper PUBLIC_URL
     -> For more info:
     -> https://github.com/facebook/create-react-app/pull/937/files#diff-9b26877ecf8d15b7987c96e5a17502f6
     -> https://www.gatsbyjs.com/docs/path-prefix/
@@ -174,9 +174,8 @@ function getParamsFromPayload(payload) {
   };
 
   if (Object.values(result).filter(r => typeof r === 'undefined').length !== 0) {
-    core.debug('-> A VALUE IS UNDEFINED');
+    core.debug('-> A value is undefined');
     core.debug(JSON.stringify(payload, null, 2));
-    core.debug('-> END LOGS');
   }
 
   core.debug('-> Metadata:');
