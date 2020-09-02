@@ -46,5 +46,15 @@
         "href": "gatsby/master/708b72"
       }
     ]
+  },
+  "dev-cra": {
+    "apps": [
+      {
+        "name": "update-readme",
+        "headCommitId": "fd5517388163371e90f8d0e7bd9d33bc45b26367",
+        "updatedAt": "2020-09-02T17:53:38.991Z",
+        "href": "dev-cra/update-readme/fd5517"
+      }
+    ]
   }
 }
