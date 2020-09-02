@@ -1,5 +1,8 @@
-name: 'Build and deploy create react app to review apps, so you can safely QA it'
-on: [push]
+name: 'Workflow to help develop this action'
+on:
+  push:
+    branches:
+      - ft-*
 jobs:
   develop:
     runs-on: ubuntu-latest
