@@ -33,7 +33,7 @@ async function createReviewApp() {
   await exec('git', ['config', 'pull.rebase', true]);
   const commitMessage = `[skip ci] ref to ${headCommitId} for - ${slug}`;
   const basePathDir = `${slug}/${branchName}`;
-  const fullPathDir = `${repositoryName}/${basePathDir}/${headCommitId.substr(0, 6)}`;
+  const fullPathDir = `${basePathDir}/${headCommitId.substr(0, 6)}`;
 
   core.debug(`
     -> Building app
@@ -63,7 +63,7 @@ async function createReviewApp() {
     await exec('mv', [distDir, '.tmp']);
     await exec('git', ['fetch', 'origin', branch]);
     await exec('git', ['checkout', branch]);
-    await io.cp('.tmp/.', fullPathDir, { recursive: true, force: true });
+    await io.cp('.tmp/.', basePathDir, { recursive: true, force: true });
     await io.rmRF('.tmp');
     manifest = getManifest();
 
