@@ -10175,7 +10175,7 @@ async function onPrClose({
 }) {
   await retry(5)(async () => {
     await exec('git', ['fetch', 'origin', ghBranch]);
-    await exec('git', ['checkout', ghBranch]);
+    await exec('git', ['checkout', '-f', ghBranch]);
     await exec('git', ['reset', '--hard', 'origin/' + ghBranch]);
     await io.rmRF(pathByBranch);
     const manifest = removeApp({ manifest: getManifest(), branchName, slug });
@@ -10257,7 +10257,7 @@ async function otherEvents({
   await exec('mv', [distDir, '.tmp']);
 
   await exec('git', ['fetch', 'origin', ghBranch]);
-  await exec('git', ['checkout', ghBranch]);
+  await exec('git', ['checkout', '-f', ghBranch]);
 
   const manifest = replaceApp({
     manifest: getManifest(),
@@ -10273,7 +10273,7 @@ async function otherEvents({
   const retry5 = retry(5);
   await retry5(async () => {
     await exec('git', ['fetch', 'origin', ghBranch]);
-    await exec('git', ['checkout', ghBranch]);
+    await exec('git', ['checkout', '-f', ghBranch]);
     await exec('git', ['reset', '--hard', 'origin/' + ghBranch]);
     core.debug('Coping .tmp/. -> ' + pathByHeadCommit);
     await io.cp('.tmp/.', pathByHeadCommit, { recursive: true, force: true });
