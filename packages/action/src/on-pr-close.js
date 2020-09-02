@@ -8,7 +8,7 @@ const retry = require('./utils/retry');
 
 module.exports = onPrClose;
 
-function onPrClose({
+async function onPrClose({
   ghBranch,
   branchName,
   pathByBranch,
