@@ -76,5 +76,16 @@
         "href": "dev-gatsby/update-readme/fd5517"
       }
     ]
+  },
+  "storybook": {
+    "apps": [
+      {
+        "name": "update-readme",
+        "headCommitId": "fd5517388163371e90f8d0e7bd9d33bc45b26367",
+        "updatedAt": "2020-09-02T17:55:40.896Z",
+        "href": "storybook/update-readme/fd5517",
+        "pullRequestUrl": "https://github.com/Sauloxd/review-apps/pull/2"
+      }
+    ]
   }
 }
