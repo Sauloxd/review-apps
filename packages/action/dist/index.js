@@ -10276,18 +10276,14 @@ async function otherEvents({
     fs.writeFileSync('manifest.json', JSON.stringify(manifest, null, 2), 'utf-8');
     fs.writeFileSync('index.html', indexPage(manifest), 'utf-8');
 
-    core.debug('AAAA');
     try {
       await exec('git', ['add', pathByHeadCommit, 'index.html', 'manifest.json']);
       await exec('git', ['commit', '-m', commitMessage]);
-      core.debug('CCCC');
     } catch (e) {
       core.debug(e);
     }
-    core.debug('BBBB');
     await exec('git', ['push', 'origin', ghBranch]);
   });
-  core.debug('DDDD');
   await io.rmRF('.tmp');
 }
 
