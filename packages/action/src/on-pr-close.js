@@ -9,16 +9,16 @@ const retry = require('./utils/retry');
 module.exports = onPrClose;
 
 async function onPrClose({
-  ghBranch,
   branchName,
+  commitMessage,
+  ghBranch,
   pathByBranch,
   pathByHeadCommit,
-  commitMessage,
   slug
 }) {
-  await exec('git', ['checkout', ghBranch]);
   await retry(5)(async () => {
     await exec('git', ['fetch', 'origin', ghBranch]);
+    await exec('git', ['checkout', ghBranch]);
     await exec('git', ['reset', '--hard', 'origin/' + ghBranch]);
     await io.rmRF(pathByBranch);
     const manifest = removeApp({ manifest: getManifest(), branchName, slug });

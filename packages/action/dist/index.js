@@ -10066,17 +10066,12 @@ function wrappy (fn, cb) {
 /***/ 3327:
 /***/ ((module, __unused_webpack_exports, __webpack_require__) => {
 
-/* eslint-disable @typescript-eslint/no-use-before-define */
-const io = __webpack_require__(6890);
 const github = __webpack_require__(4005);
 const core = __webpack_require__(7117);
 const { exec } = __webpack_require__(6473);
-const fs = __webpack_require__(5747);
-const indexPage = __webpack_require__(9445);
 const onPrClose = __webpack_require__(7302);
-const { getManifest, replaceApp } = __webpack_require__(5226);
-const retry = __webpack_require__(7112);
 const getParamsFromPayload = __webpack_require__(9535);
+const otherEvents = __webpack_require__(8332);
 
 module.exports = {
   createReviewApp
@@ -10108,74 +10103,26 @@ async function createReviewApp() {
 
   if (isClosePrEvent) {
     onPrClose({
-      ghBranch,
       branchName,
+      commitMessage,
+      ghBranch,
       pathByBranch,
       pathByHeadCommit,
-      commitMessage,
       slug
     });
   } else {
-    core.debug(`
-      -> Paths:
-      -> Your app will be hosted in github pages: "https://{ username }.github.io"
-      -> Inside the repository name as prefix: "/{ repo }" (/${pathByRepo})
-      -> And this action will append even more prefixes, so multiple apps can live inside
-      -> "/{ slug }/{ branch }/{ head_commit }" (/${pathByHeadCommit})
-
-      -> Example:
-      -> "https://sauloxd.github.io/review-apps/storybook/feature-1/c1fcf15"
-
-      -> We'll build your app with the proper PUBLIC_URL
-      -> For more info:
-      -> https://github.com/facebook/create-react-app/pull/937/files#diff-9b26877ecf8d15b7987c96e5a17502f6
-      -> https://www.gatsbyjs.com/docs/path-prefix/
-    `);
-
-    core.debug(`
-      -> Building app
-    `);
-
-    core.exportVariable('PUBLIC_URL', `/${pathByRepo}/${pathByHeadCommit}`);
-    await exec(buildCmd);
-
-    core.debug(`
-      -> Current working branch: ${branchName}"
-      -> Will move (and override) the build result on '${distDir}' to '${pathByHeadCommit}' in ${ghBranch}"
-      -> Finally, will commit and push with the following message:"
-      -> ${commitMessage}"
-    `);
-    await exec('mv', [distDir, '.tmp']);
-
-    const manifest = replaceApp({
-      manifest: getManifest(),
+    otherEvents({
       branchName,
-      slug,
+      buildCmd,
+      commitMessage,
+      distDir,
+      ghBranch,
       headCommitId,
       pathByHeadCommit,
-      pullRequestUrl
-
+      pathByRepo,
+      pullRequestUrl,
+      slug
     });
-
-    core.debug(JSON.stringify(manifest, null, 2));
-
-    await exec('git', ['checkout', ghBranch]);
-    await retry(5)(async () => {
-      await exec('git', ['fetch', 'origin', ghBranch]);
-      await exec('git', ['reset', '--hard', 'origin/' + ghBranch]);
-      await io.cp('.tmp/.', pathByHeadCommit, { recursive: true, force: true });
-      fs.writeFileSync('manifest.json', JSON.stringify(manifest, null, 2), 'utf-8');
-      fs.writeFileSync('index.html', indexPage(manifest), 'utf-8');
-
-      try {
-        await exec('git', ['add', pathByHeadCommit, 'index.html', 'manifest.json']);
-        await exec('git', ['commit', '-m', commitMessage]);
-      } catch (e) {
-        core.debug(e);
-      }
-      await exec('git', ['push', 'origin', ghBranch]);
-    });
-    await io.rmRF('.tmp');
   }
 
   await exec('git', ['fetch', 'origin', branchName]);
@@ -10218,16 +10165,16 @@ const retry = __webpack_require__(7112);
 module.exports = onPrClose;
 
 async function onPrClose({
-  ghBranch,
   branchName,
+  commitMessage,
+  ghBranch,
   pathByBranch,
   pathByHeadCommit,
-  commitMessage,
   slug
 }) {
-  await exec('git', ['checkout', ghBranch]);
   await retry(5)(async () => {
     await exec('git', ['fetch', 'origin', ghBranch]);
+    await exec('git', ['checkout', ghBranch]);
     await exec('git', ['reset', '--hard', 'origin/' + ghBranch]);
     await io.rmRF(pathByBranch);
     const manifest = removeApp({ manifest: getManifest(), branchName, slug });
@@ -10247,6 +10194,97 @@ async function onPrClose({
     await exec('git', ['push', 'origin', ghBranch]);
   });
 
+}
+
+
+/***/ }),
+
+/***/ 8332:
+/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+
+
+const io = __webpack_require__(6890);
+const core = __webpack_require__(7117);
+const { exec } = __webpack_require__(6473);
+const fs = __webpack_require__(5747);
+const indexPage = __webpack_require__(9445);
+const { getManifest, replaceApp } = __webpack_require__(5226);
+const retry = __webpack_require__(7112);
+
+module.exports = otherEvents;
+
+async function otherEvents({
+  branchName,
+  buildCmd,
+  commitMessage,
+  distDir,
+  ghBranch,
+  headCommitId,
+  pathByHeadCommit,
+  pathByRepo,
+  pullRequestUrl,
+  slug
+}) {
+  core.debug(`
+      -> Paths:
+      -> Your app will be hosted in github pages: "https://{ username }.github.io"
+      -> Inside the repository name as prefix: "/{ repo }" (/${pathByRepo})
+      -> And this action will append even more prefixes, so multiple apps can live inside
+      -> "/{ slug }/{ branch }/{ head_commit }" (/${pathByHeadCommit})
+
+      -> Example:
+      -> "https://sauloxd.github.io/review-apps/storybook/feature-1/c1fcf15"
+
+      -> We'll build your app with the proper PUBLIC_URL
+      -> For more info:
+      -> https://github.com/facebook/create-react-app/pull/937/files#diff-9b26877ecf8d15b7987c96e5a17502f6
+      -> https://www.gatsbyjs.com/docs/path-prefix/
+    `);
+
+  core.debug(`
+      -> Building app
+    `);
+
+  core.exportVariable('PUBLIC_URL', `/${pathByRepo}/${pathByHeadCommit}`);
+  await exec(buildCmd);
+
+  core.debug(`
+      -> Current working branch: ${branchName}"
+      -> Will move (and override) the build result on '${distDir}' to '${pathByHeadCommit}' in ${ghBranch}"
+      -> Finally, will commit and push with the following message:"
+      -> ${commitMessage}"
+    `);
+  await exec('mv', [distDir, '.tmp']);
+
+  const manifest = replaceApp({
+    manifest: getManifest(),
+    branchName,
+    slug,
+    headCommitId,
+    pathByHeadCommit,
+    pullRequestUrl
+
+  });
+
+  core.debug(JSON.stringify(manifest, null, 2));
+
+  await retry(5)(async () => {
+    await exec('git', ['fetch', 'origin', ghBranch]);
+    await exec('git', ['checkout', ghBranch]);
+    await exec('git', ['reset', '--hard', 'origin/' + ghBranch]);
+    await io.cp('.tmp/.', pathByHeadCommit, { recursive: true, force: true });
+    fs.writeFileSync('manifest.json', JSON.stringify(manifest, null, 2), 'utf-8');
+    fs.writeFileSync('index.html', indexPage(manifest), 'utf-8');
+
+    try {
+      await exec('git', ['add', pathByHeadCommit, 'index.html', 'manifest.json']);
+      await exec('git', ['commit', '-m', commitMessage]);
+    } catch (e) {
+      core.debug(e);
+    }
+    await exec('git', ['push', 'origin', ghBranch]);
+  });
+  await io.rmRF('.tmp');
 }
 
 
