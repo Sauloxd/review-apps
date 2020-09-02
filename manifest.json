@@ -6,6 +6,12 @@
         "headCommitId": "5ac9e78d45af203501cb5c77e8dd704fb92344ca",
         "updatedAt": "2020-09-02T20:24:41.910Z",
         "href": "dev-gatsby/ft-preparing-release-v1.3/5ac9e7"
+      },
+      {
+        "name": "dev-cra",
+        "headCommitId": "dcdcb24b55845ebb3a8f1e7d6bad2d512973980a",
+        "updatedAt": "2020-09-02T20:31:11.878Z",
+        "href": "dev-cra/ft-preparing-release-v1.3/dcdcb2"
       }
     ]
   }
