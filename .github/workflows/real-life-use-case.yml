@@ -1,0 +1,39 @@
+name: 'Build and deploy only on PR with label'
+on:
+  pull_request:
+    types: [labeled, unlabeled, opened, edited, closed, synchronize]
+
+jobs:
+  real-life:
+    if: |
+      contains(github.event.pull_request.labels.*.name, 'storybook')
+
+    runs-on: ubuntu-latest
+    name: Deploy storybook
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Get yarn cache directory path
+        id: yarn-cache-dir-path
+        run: echo "::set-output name=dir::$(yarn cache dir)"
+        if: github.event.action != 'closed'
+      - uses: actions/cache@v2
+        id: yarn-cache
+        with:
+          path: ${{ steps.yarn-cache-dir-path.outputs.dir }}
+          key: ${{ runner.os }}-yarn-v1-${{ hashFiles('**/yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-yarn-v1-
+        if: github.event.action != 'closed'
+      - name: Install deps checking cache hit
+        run: yarn install --frozen-lockfile
+        if: github.event.action != 'closed'
+
+      # This is how you'll use the action
+      - name: build -> deploy storybook
+        uses: ./ # Replace here with sauloxd/review-apps@X.X.X
+        with:
+          build-cmd: 'yarn run cra:storybook'
+          branch: 'review-apps'
+          dist: 'packages/cra-example/storybook-static'
+          slug: 'storybook'
