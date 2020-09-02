@@ -2,29 +2,11 @@
   "update-readme": {
     "apps": [
       {
-        "name": "dev-cra-sb",
-        "headCommitId": "cd8013fd8365e0693987f22c2eff59e4fdd046c0",
-        "updatedAt": "2020-09-02T18:19:33.644Z",
-        "href": "dev-cra-sb/update-readme/cd8013"
-      },
-      {
-        "name": "dev-gatsby",
-        "headCommitId": "cd8013fd8365e0693987f22c2eff59e4fdd046c0",
-        "updatedAt": "2020-09-02T18:19:51.249Z",
-        "href": "dev-gatsby/update-readme/cd8013"
-      },
-      {
-        "name": "dev-cra",
-        "headCommitId": "aab2bb5009059ea9a547d2ea05dfd5b7fc6c5113",
-        "updatedAt": "2020-09-02T18:22:32.168Z",
-        "href": "dev-cra/update-readme/aab2bb"
-      },
-      {
         "name": "storybook",
-        "headCommitId": "9a398592e45575011a96e9c8da3ba002e7093e41",
-        "updatedAt": "2020-09-02T18:39:50.816Z",
-        "href": "storybook/update-readme/9a3985",
-        "pullRequestUrl": "https://github.com/Sauloxd/review-apps/pull/3"
+        "headCommitId": "83257f14348de0ad67dfbddd5ae2a6589de89bc0",
+        "updatedAt": "2020-09-02T19:33:35.537Z",
+        "href": "storybook/update-readme/83257f",
+        "pullRequestUrl": "https://github.com/Sauloxd/review-apps/pull/4"
       }
     ]
   }
