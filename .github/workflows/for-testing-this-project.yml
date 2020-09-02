@@ -1,5 +1,8 @@
 name: 'Workflow to help develop this action'
-on: [push]
+on:
+  push:
+    branches:
+      - ft-*
 jobs:
   develop:
     runs-on: ubuntu-latest
