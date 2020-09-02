@@ -10074,7 +10074,7 @@ const { exec } = __webpack_require__(6473);
 const fs = __webpack_require__(5747);
 const indexPage = __webpack_require__(9445);
 const onPrClose = __webpack_require__(7302);
-const { getManifest } = __webpack_require__(5226);
+const { getManifest, replaceApp } = __webpack_require__(5226);
 const retry = __webpack_require__(7112);
 const getParamsFromPayload = __webpack_require__(9535);
 
@@ -10112,7 +10112,8 @@ async function createReviewApp() {
       branchName,
       pathByBranch,
       pathByHeadCommit,
-      commitMessage
+      commitMessage,
+      slug
     });
   } else {
     core.debug(`
@@ -10145,19 +10146,17 @@ async function createReviewApp() {
       -> ${commitMessage}"
     `);
     await exec('mv', [distDir, '.tmp']);
-    const manifest = getManifest();
 
-    const apps = (manifest[branchName] && manifest[branchName].apps || []).filter(app => app.name !== slug);
-    manifest[branchName] = {
-      ...manifest[branchName],
-      apps: apps.concat({
-        name: slug,
-        headCommitId,
-        updatedAt: new Date(),
-        href: pathByHeadCommit,
-        pullRequestUrl
-      })
-    };
+    const manifest = replaceApp({
+      manifest: getManifest(),
+      branchName,
+      slug,
+      headCommitId,
+      pathByHeadCommit,
+      pullRequestUrl
+
+    });
+
     core.debug(JSON.stringify(manifest, null, 2));
 
     await exec('git', ['checkout', ghBranch]);
@@ -10213,7 +10212,7 @@ const core = __webpack_require__(7117);
 const { exec } = __webpack_require__(6473);
 const fs = __webpack_require__(5747);
 const indexPage = __webpack_require__(9445);
-const { getManifest } = __webpack_require__(5226);
+const { getManifest, removeApp } = __webpack_require__(5226);
 const retry = __webpack_require__(7112);
 
 module.exports = onPrClose;
@@ -10223,25 +10222,15 @@ async function onPrClose({
   branchName,
   pathByBranch,
   pathByHeadCommit,
-  commitMessage
+  commitMessage,
+  slug
 }) {
   await exec('git', ['checkout', ghBranch]);
   await retry(5)(async () => {
     await exec('git', ['fetch', 'origin', ghBranch]);
     await exec('git', ['reset', '--hard', 'origin/' + ghBranch]);
     await io.rmRF(pathByBranch);
-    let manifest = getManifest();
-    const apps = (manifest[branchName] && manifest[branchName].apps || []).filter(app => app.name !== slug);
-    manifest[branchName] = {
-      ...manifest[branchName],
-      apps
-    };
-    if (manifest[branchName].apps.length === 0) {
-      manifest = Object.keys(manifest).reduce((acc, key) => {
-        if (key === branchName) return acc;
-        return { ...acc, [key]: manifest[key] };
-      }, {});
-    }
+    const manifest = removeApp({ manifest: getManifest(), branchName, slug });
 
     core.debug(JSON.stringify(manifest, null, 2));
 
@@ -10353,10 +10342,12 @@ const fs = __webpack_require__(5747);
 const core = __webpack_require__(7117);
 
 module.exports = {
-  getManifest
+  getManifest,
+  removeApp,
+  replaceApp
 };
 
-function getManifest () {
+function getManifest() {
   let manifest;
   try {
     manifest = JSON.parse(fs.readFileSync('manifest.json', 'utf-8'));
@@ -10366,6 +10357,49 @@ function getManifest () {
   }
 
   return manifest;
+}
+
+function removeApp({ manifest, branchName, slug }) {
+  let newManifest = { ...manifest };
+  const apps = (newManifest[branchName] && newManifest[branchName].apps || []).filter(app => app.name !== slug);
+  if (apps.length === 0) {
+    newManifest = Object.keys(newManifest).reduce((acc, key) => {
+      if (key === branchName) return acc;
+      return { ...acc, [key]: newManifest[key] };
+    }, {});
+  } else {
+    newManifest[branchName] = {
+      ...newManifest[branchName],
+      apps
+    };
+  }
+
+  return newManifest;
+}
+
+function replaceApp({
+  manifest,
+  branchName,
+  slug,
+  headCommitId,
+  pathByHeadCommit,
+  pullRequestUrl
+}) {
+  const newManifest = { ...manifest };
+
+  const apps = (newManifest[branchName] && newManifest[branchName].apps || []).filter(app => app.name !== slug);
+  newManifest[branchName] = {
+    ...newManifest[branchName],
+    apps: apps.concat({
+      name: slug,
+      headCommitId,
+      updatedAt: new Date(),
+      href: pathByHeadCommit,
+      pullRequestUrl
+    })
+  };
+
+  return newManifest;
 }
 
 

@@ -6,7 +6,7 @@ const { exec } = require('@actions/exec');
 const fs = require('fs');
 const indexPage = require('./template/index-page');
 const onPrClose = require('./on-pr-close');
-const { getManifest } = require('./utils/manifest');
+const { getManifest, replaceApp } = require('./utils/manifest');
 const retry = require('./utils/retry');
 const getParamsFromPayload = require('./utils/params-from-payload');
 
@@ -44,7 +44,8 @@ async function createReviewApp() {
       branchName,
       pathByBranch,
       pathByHeadCommit,
-      commitMessage
+      commitMessage,
+      slug
     });
   } else {
     core.debug(`
@@ -77,19 +78,17 @@ async function createReviewApp() {
       -> ${commitMessage}"
     `);
     await exec('mv', [distDir, '.tmp']);
-    const manifest = getManifest();
 
-    const apps = (manifest[branchName] && manifest[branchName].apps || []).filter(app => app.name !== slug);
-    manifest[branchName] = {
-      ...manifest[branchName],
-      apps: apps.concat({
-        name: slug,
-        headCommitId,
-        updatedAt: new Date(),
-        href: pathByHeadCommit,
-        pullRequestUrl
-      })
-    };
+    const manifest = replaceApp({
+      manifest: getManifest(),
+      branchName,
+      slug,
+      headCommitId,
+      pathByHeadCommit,
+      pullRequestUrl
+
+    });
+
     core.debug(JSON.stringify(manifest, null, 2));
 
     await exec('git', ['checkout', ghBranch]);
