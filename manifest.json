@@ -9,12 +9,6 @@
         "pullRequestUrl": "https://github.com/Sauloxd/review-apps/pull/3"
       },
       {
-        "name": "dev-cra",
-        "headCommitId": "cd8013fd8365e0693987f22c2eff59e4fdd046c0",
-        "updatedAt": "2020-09-02T18:19:05.282Z",
-        "href": "dev-cra/update-readme/cd8013"
-      },
-      {
         "name": "dev-cra-sb",
         "headCommitId": "cd8013fd8365e0693987f22c2eff59e4fdd046c0",
         "updatedAt": "2020-09-02T18:19:33.644Z",
@@ -25,6 +19,12 @@
         "headCommitId": "cd8013fd8365e0693987f22c2eff59e4fdd046c0",
         "updatedAt": "2020-09-02T18:19:51.249Z",
         "href": "dev-gatsby/update-readme/cd8013"
+      },
+      {
+        "name": "dev-cra",
+        "headCommitId": "aab2bb5009059ea9a547d2ea05dfd5b7fc6c5113",
+        "updatedAt": "2020-09-02T18:22:32.168Z",
+        "href": "dev-cra/update-readme/aab2bb"
       }
     ]
   }
