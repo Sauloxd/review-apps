@@ -10281,7 +10281,9 @@ async function otherEvents({
     await exec('git', ['status']);
 
     try {
-      await exec('git', ['add', pathByHeadCommit, 'index.html', 'manifest.json']);
+      await exec('git', ['add', pathByHeadCommit]);
+      await exec('git', ['add', 'index.html']);
+      await exec('git', ['add', 'manifest.json']);
       await exec('git', ['commit', '-m', commitMessage]);
     } catch (e) {
       core.debug(e);
