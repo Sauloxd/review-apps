@@ -1,4 +1,3 @@
-
 const io = require('@actions/io');
 const core = require('@actions/core');
 const { exec } = require('@actions/exec');
