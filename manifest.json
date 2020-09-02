@@ -2,10 +2,10 @@
   "ft-preparing-release-v1.3": {
     "apps": [
       {
-        "name": "dev-cra-sb",
+        "name": "dev-gatsby",
         "headCommitId": "5ac9e78d45af203501cb5c77e8dd704fb92344ca",
-        "updatedAt": "2020-09-02T20:24:22.205Z",
-        "href": "dev-cra-sb/ft-preparing-release-v1.3/5ac9e7"
+        "updatedAt": "2020-09-02T20:24:41.910Z",
+        "href": "dev-gatsby/ft-preparing-release-v1.3/5ac9e7"
       }
     ]
   }
