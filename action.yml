@@ -1,9 +1,6 @@
 name: 'Deploy static app in branch to gh-pages'
 description: |
-  Automatically deploy static apps to gh-pages, so you're able to easily QA it.
-  When working on features that has UI impact, you'll probably want to work in sync with a the design team.
-  Having a quick way to generate the result before merging (or even WIP) to validate (or iterate quicker) is essential in this modern days.
-  I hope this action will help detect problems before they hit the main branch!
+  Manages multiple static apps (or review-apps) for each branch in github pages
 
 inputs:
   build-cmd:
