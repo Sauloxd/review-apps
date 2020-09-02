@@ -1,1 +1,12 @@
-{}
+{
+  "ft-preparing-release-v1.3": {
+    "apps": [
+      {
+        "name": "dev-cra",
+        "headCommitId": "37bb4f85826d2a015ef09367e145f9e93bbda6f4",
+        "updatedAt": "2020-09-02T19:40:16.917Z",
+        "href": "dev-cra/ft-preparing-release-v1.3/37bb4f"
+      }
+    ]
+  }
+}
