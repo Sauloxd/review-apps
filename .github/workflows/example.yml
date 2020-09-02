@@ -1,0 +1,51 @@
+name: 'Build and deploy create react app to review apps, so you can safely QA it'
+on: [push]
+jobs:
+  stories:
+    runs-on: ubuntu-latest
+    name: Manage review apps
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Get yarn cache directory path
+        id: yarn-cache-dir-path
+        run: echo "::set-output name=dir::$(yarn cache dir)"
+      - uses: actions/cache@v2
+        id: yarn-cache
+        with:
+          path: ${{ steps.yarn-cache-dir-path.outputs.dir }}
+          key: ${{ runner.os }}-yarn-v1-${{ hashFiles('**/yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-yarn-v1-
+      - name: Install deps checking cache hit
+        run: yarn install --frozen-lockfile
+
+      # - name: Setup tmate session
+      #   uses: mxschmitt/action-tmate@v2
+
+      # This is how you'll use the action
+      - name: Building create-react-app example
+        uses: ./ # Replace here with sauloxd/review-apps@X.X.X
+        with:
+          build-cmd: 'yarn run cra:build'
+          branch: 'review-apps'
+          dist: 'packages/cra-example/build'
+          slug: 'cra'
+
+      # This is how you'll use the action
+      - name: Building storybook example
+        uses: ./ # Replace here with sauloxd/review-apps@X.X.X
+        with:
+          build-cmd: 'yarn run cra:storybook'
+          branch: 'review-apps'
+          dist: 'packages/cra-example/storybook-static'
+          slug: 'cra-sb'
+
+      # This is how you'll use the action
+      - name: Building gatsby example
+        uses: ./ # Replace here with sauloxd/review-apps@X.X.X
+        with:
+          build-cmd: 'yarn run gatsby:build'
+          branch: 'review-apps'
+          dist: 'packages/gatsby-example/public'
+          slug: 'gatsby'

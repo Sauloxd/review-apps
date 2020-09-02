@@ -1,0 +1,21 @@
+{
+  "name": "@sxd/review-apps-action",
+  "version": "0.0.1",
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "ncc build src/index.js",
+    "dev:tmpl": "nodemon template/html-template.js"
+  },
+  "dependencies": {
+    "@actions/core": "^1.2.4",
+    "@actions/exec": "^1.0.4",
+    "@actions/github": "^4.0.0",
+    "@actions/io": "^1.0.2"
+  },
+  "devDependencies": {
+    "@vercel/ncc": "^0.24.0",
+    "eslint-config-sxd": "^1.0.7",
+    "nodemon": "^2.0.4"
+  },
+  "license": "MIT"
+}

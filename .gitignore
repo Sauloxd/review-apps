@@ -101,3 +101,8 @@ typings/
 
 # TernJS port file
 .tern-port
+
+# Builds
+packages/cra-example/build
+packages/cra-example/storybook-static
+packages/gatsy-example/public
