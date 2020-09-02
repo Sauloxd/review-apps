@@ -34,7 +34,7 @@ async function createReviewApp() {
   const pathByHeadCommit = `${pathByBranch}/${headCommitId.substr(0, 6)}`;
 
   if (isClosePrEvent) {
-    onPrClose({
+    await onPrClose({
       branchName,
       commitMessage,
       ghBranch,
@@ -43,7 +43,7 @@ async function createReviewApp() {
       slug
     });
   } else {
-    otherEvents({
+    await otherEvents({
       branchName,
       buildCmd,
       commitMessage,
@@ -57,6 +57,7 @@ async function createReviewApp() {
     });
   }
 
+  core.debug('Return to original state');
   await exec('git', ['fetch', 'origin', branchName]);
   await exec('git', ['checkout', branchName]);
 }
