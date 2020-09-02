@@ -10100,20 +10100,36 @@ async function createReviewApp() {
   await exec('git', ['config', '--global', 'user.email', userEmail]);
   await exec('git', ['config', 'pull.rebase', true]);
   const commitMessage = `[skip ci] ref to ${headCommitId} for - ${slug}`;
-  const basePrefix = repositoryName;
-  const basePathInsidePrefix = `${slug}/${branchName}`;
-  const targetDist = `${basePathInsidePrefix}/${headCommitId.substr(0, 6)}`;
+  const pathByRepo = repositoryName;
+  const pathByBranch = `${slug}/${branchName}`;
+  const pathByHeadCommit = `${pathByBranch}/${headCommitId.substr(0, 6)}`;
+
+  core.debug(`
+    -> Paths:
+    -> Your app will be hosted in github pages: "https://{ username }.github.io"
+    -> Inside the repository name as prefix: "/{ repo }" (/${pathByRepo})
+    -> And this action will append even more prefixes, so multiple apps can live inside
+    -> "/{ slug }/{ branch }/{ head_commit }" (/${pathByHeadCommit})
+
+    -> Example:
+    -> "https://sauloxd.github.io/review-apps/storybook/feature-1/c1fcf15"
+
+    -> We build your app with the proper PUBLIC_URL
+    -> For more info:
+    -> https://github.com/facebook/create-react-app/pull/937/files#diff-9b26877ecf8d15b7987c96e5a17502f6
+    -> https://www.gatsbyjs.com/docs/path-prefix/
+  `);
 
   core.debug(`
     -> Building app
   `);
 
-  core.exportVariable('PUBLIC_URL', `/${basePrefix}/${targetDist}`);
+  core.exportVariable('PUBLIC_URL', `/${pathByRepo}/${pathByHeadCommit}`);
   await exec(buildCmd);
 
   core.debug(`
     -> Current working branch: ${branchName}"
-    -> Will move (and override) the build result on '${distDir}' to '${targetDist}' in ${branch}"
+    -> Will move (and override) the build result on '${distDir}' to '${pathByHeadCommit}' in ${branch}"
     -> Finally, will commit and push with the following message:"
     -> ${commitMessage}"
   `);
@@ -10121,7 +10137,7 @@ async function createReviewApp() {
   if (isClosePrEvent) {
     await exec('git', ['fetch', 'origin', branch]);
     await exec('git', ['checkout', branch]);
-    await io.rmRF(basePathInsidePrefix);
+    await io.rmRF(pathByBranch);
     manifest = getManifest();
     const apps = (manifest[slug] && manifest[slug].apps || []).filter(app => app.name !== branchName);
     manifest[slug] = {
@@ -10132,7 +10148,7 @@ async function createReviewApp() {
     await exec('mv', [distDir, '.tmp']);
     await exec('git', ['fetch', 'origin', branch]);
     await exec('git', ['checkout', branch]);
-    await io.cp('.tmp/.', basePathInsidePrefix, { recursive: true, force: true });
+    await io.cp('.tmp/.', pathByHeadCommit, { recursive: true, force: true });
     await io.rmRF('.tmp');
     manifest = getManifest();
 
@@ -10143,7 +10159,7 @@ async function createReviewApp() {
         name: branchName,
         headCommitId,
         updatedAt: new Date(),
-        href: targetDist,
+        href: pathByHeadCommit,
         pullRequestUrl
       })
     };
@@ -10155,7 +10171,7 @@ async function createReviewApp() {
   fs.writeFileSync('index.html', indexPage(manifest), 'utf-8');
 
   try {
-    await exec('git', ['add', targetDist, 'index.html', 'manifest.json']);
+    await exec('git', ['add', pathByHeadCommit, 'index.html', 'manifest.json']);
     await exec('git', ['commit', '-m', commitMessage]);
   } catch (e) {
     core.debug(e);
