@@ -46,6 +46,12 @@ async function createReviewApp() {
       ...manifest[branchName],
       apps
     };
+    if (manifest[branchName].apps.length === 0) {
+      manifest = Object.keys(manifest).reduce((acc, key) => {
+        if (key === branchName) return acc;
+        return { ...acc, [key]: manifest[key] };
+      }, {});
+    }
   } else {
     core.debug(`
     -> Paths:
