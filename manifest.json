@@ -20,5 +20,15 @@
         "href": "dev-gatsby/ft-preparing-release-v1.3/dcdcb2"
       }
     ]
+  },
+  "issue-6": {
+    "apps": [
+      {
+        "name": "dev-cra",
+        "headCommitId": "54cbbb0f33093d6239dbd1af7d1ecea01a5edfce",
+        "updatedAt": "2020-11-19T22:45:59.712Z",
+        "href": "dev-cra/issue-6/54cbbb"
+      }
+    ]
   }
 }
