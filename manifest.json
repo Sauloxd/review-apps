@@ -25,9 +25,9 @@
     "apps": [
       {
         "name": "dev-cra",
-        "headCommitId": "3eb53956119ea123e397b2e491a867cad501e715",
-        "updatedAt": "2020-11-19T22:52:13.084Z",
-        "href": "dev-cra/issue-6/3eb539"
+        "headCommitId": "d093eaf65a744f89af5e9a561fb915cdbc5d1137",
+        "updatedAt": "2020-11-19T22:59:52.347Z",
+        "href": "dev-cra/issue-6/d093ea"
       }
     ]
   }
