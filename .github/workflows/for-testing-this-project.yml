@@ -3,6 +3,7 @@ on:
   push:
     branches:
       - ft-*
+      - issue-*
 jobs:
   develop:
     runs-on: ubuntu-latest
