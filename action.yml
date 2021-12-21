@@ -21,18 +21,18 @@ inputs:
   dist:
     description: |
       The directory where you build artifacts will live.
-      For example, if you use create-react-app, it will be the "dist" directory. If you use a monorepo setup, please add the relative the path relative from the project root or an absolute path'
+      For example, if you use create-react-app, it will be the "dist" directory. If you use a monorepo setup, please add the path relative from project's root or an absolute path'
     default: 'dist'
 
   slug:
     description: |
       The default URL for every app is: https://{ GH_USER_NAME }.github.io/{ REPOSITORY }/{ SLUG }/{ BRANCH_NAME }/{ HEAD_COMMIT }
-      Where SLUG defaults to `review-apps`. For multiple types of apps inside the same repository (i.e. APP & STORYBOOK), provide an uniq slug.
-      Example: If you want something like: https://sauloxd.github.io/my-app/storybooks/ft-home-1231bdhb, pass string "storybooks"
+      For multiple types of apps inside the same repository (i.e. APP & STORYBOOK), provide an uniq slug.
+      Example: If you want something like: https://sauloxd.github.io/my-app/storybooks/ft-home-1231bdhb, pass string "storybooks" so it doesn't override other apps inside same respository.
     default: 'review-apps'
 
 runs:
-  using: 'node12'
+  using: 'node14'
   main: 'packages/action/dist/index.js'
 
 branding:

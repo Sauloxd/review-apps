@@ -1,5 +1,19 @@
 # Review apps action
 
+This action manages your "github pages" branch, so you can host multiple apps inside the same app for free.
+It will manage the build artifacts and organize it by branch/commit inside the `github pages` branch.
+
+For example, imagine you have a *blog*, a *landing page* and your *design system* inside the same monorepo.
+And you want to see how the changes in your button is affecting all your apps.
+After pushing to GH, this action will create the following urls:
+
+- https://sauloxd.github.io/my-monorepo/blog/ft-button-v2/90fc94
+- https://sauloxd.github.io/my-monorepo/landing-page/ft-button-v2/90fc94
+- https://sauloxd.github.io/my-monorepo/design-system/ft-button-v2/90fc94
+
+And after your PR is closed, it will delete these static assets for you!
+
+## Why?
 Have ever seen yourself in this situation, where you are developing a `Select` component, and you're not quite right the interaction you've built is good enough? So you need to share what you've built so far with your UX/UI/QA team, just to see if you're following in the right direction?
 
 You probably solved this by having a call with your designer or maybe sharing the link via `ngrok`. But everyone know how time consuming it is to do those things everytime you introduce a new change.
@@ -7,11 +21,6 @@ You probably solved this by having a call with your designer or maybe sharing th
 So why not deploy a new version of your app automatically? If your application is mainly static, this should be super easy, right? You could host it in S3, Netlify and even in Github-Pages.
 
 And that's what this action do. The main difference is that it organizes your apps, by branch, so every developer working in your repo can have it's dedicated app!
-
-
-## TL;DR;
-This action manages the "github pages" branch, so you can host multiple apps inside the same app.
-It will manage the build artifacts and organize it by branch/commit inside the `github pages` branch.
 
 ## How to use it:
 
@@ -36,16 +45,6 @@ Example of usage:
 If you want to also deploy, for example, a storybook app, just add another step with a *different slug* and it will have it's unique url for it!
 
 4. The CLEANUP will only happen when the action receives an event of PR closed. Currently there is no other way, unless you manually remove the app yourself in the github pages branch.
-
-## The envisoned workflow
-Since you can use this action the way you want, I'll share the way I envisioned this when I created this.
-
-Probably you don't want to constantly (re)build your app on every PUSH (like in the workflow in this repo, which was built for developing it), but only per PR created, when it's almost done.
-Even better, to avoid unnecessary computations, you can configure this action to only run on specific PR `labels`, like `storybook` or `Review App`. (see this [examle](https://github.com/Sauloxd/review-apps/blob/master/.github/workflows/real-life-use-case.yml))
-
-That said, the only way out of an open PR is a closed PR, and thats when this action will delete the branch namespace in github action branch.
-
-This is probably not useful for hosting the production version of the app, so keep that in mind.
 
 ## Inputs
 
@@ -79,7 +78,7 @@ git checkout --orphan $BRANCH_NAME
 git rm -rf .
 echo "Github pages branch" > README.md
 git add README.md
-git commit -m "First commit xD"
+git commit -m "Add readme"
 git push origin $BRANCH_NAME
 ```
 
@@ -110,11 +109,12 @@ const Router = () => (
 
 3. The cleanup action didn't happen and now the index page is polluted! What do I do?
 
-Since everything is inside your github pages branch, just manages directly:
-- Remove the correct directory
+Since everything is inside your github pages branch, you can checkout to that branch and manually fix it:
+- git checkout to your github pages branch (be sure to *pull* the latest version)
+- Remove the directory for the app you don't want to see anymore
 - Remove the app from manifest.json
 
-The next time this action runs, it will gernerate the correct index.html based on manifest.json.
+The next time this action runs, it will generate the correct index.html based on manifest.json.
 Probably this will be automated in next releases.
 
 4. It's taking too long to update the index page for my new commit!
@@ -123,8 +123,14 @@ When the action just finished, it might take some time to the github pages refle
 Even though the correct index.html was generated and is inside the updated github pages branch.
 I'm not sure how to burst the cache immediatly :/
 
-
 # Contributing
 
 Please, if you find some bugs are some usecase not covered in this README, open a issue and feel free to open a PR to fix it :)
-Basically, this action is just a bunch of bash commands inside a node.js githubaction wrapper, so it's hard to replicate it, unless inside the real machine running an action... :/
+
+## How to develop
+- Remember to update the action.yml (and this README) when changing arguments
+- There is a workflow just for development, called "for-testing-this-project.yml".
+ - Create a branch named `ft-*` or `issue-*` and it will trigger the github action.
+ - This workflow is getting the action directly from the src code, so remember to build before testing the action: `yarn build`
+
+
