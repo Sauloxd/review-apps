@@ -24,7 +24,7 @@ jobs:
       - name: Install deps checking cache hit
         run: yarn install --frozen-lockfile
 
-      # - name: Setup tmate session
+      # - name: Setup tmate session (ssh)
       #   uses: mxschmitt/action-tmate@v2
 
       # This is how you'll use the action
