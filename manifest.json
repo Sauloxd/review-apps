@@ -46,12 +46,6 @@
   "ft-add-how-to-dev-docs": {
     "apps": [
       {
-        "name": "dev-cra",
-        "headCommitId": "90fc9436c6726fc4ccd64b59943e0dc4851c4fd6",
-        "updatedAt": "2021-12-21T12:20:10.049Z",
-        "href": "dev-cra/ft-add-how-to-dev-docs/90fc94"
-      },
-      {
         "name": "dev-cra-sb",
         "headCommitId": "90fc9436c6726fc4ccd64b59943e0dc4851c4fd6",
         "updatedAt": "2021-12-21T12:20:30.770Z",
@@ -62,6 +56,12 @@
         "headCommitId": "90fc9436c6726fc4ccd64b59943e0dc4851c4fd6",
         "updatedAt": "2021-12-21T12:20:45.982Z",
         "href": "dev-gatsby/ft-add-how-to-dev-docs/90fc94"
+      },
+      {
+        "name": "dev-cra",
+        "headCommitId": "24aa99b8a5f3d74c25d95f8ccc588bd8ca39e1de",
+        "updatedAt": "2021-12-21T13:07:06.451Z",
+        "href": "dev-cra/ft-add-how-to-dev-docs/24aa99"
       }
     ]
   }
