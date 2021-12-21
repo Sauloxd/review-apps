@@ -3,8 +3,9 @@
 This action manages your "github pages" branch, so you can host multiple apps inside the same app for free.
 It will manage the build artifacts and organize it by branch/commit inside the `github pages` branch.
 
-For example, imagine you have a *blog*, a *landing page* and your *design system* inside the same monorepo.
-And you want to see how the changes in your button is affecting all your apps.
+For example, imagine you have a *blog*, a *landing page* and your *design system* inside the same monorepo,
+and you want to see how the changes in your button are affecting all your apps.
+
 After pushing to GH, this action will create the following urls:
 
 - https://sauloxd.github.io/my-monorepo/blog/ft-button-v2/90fc94
@@ -128,10 +129,21 @@ I'm not sure how to burst the cache immediatly :/
 Please, if you find some bugs are some usecase not covered in this README, open a issue and feel free to open a PR to fix it :)
 
 ## How to develop
-- Remember to update the action.yml (and this README) when changing arguments
-- There is a workflow just for development, called "for-testing-this-project.yml".
- - Create a branch named `ft-*` or `issue-*` and it will trigger the github action.
- - This workflow is getting the action directly from the src code, so remember to build before testing the action: `yarn build`
+=======
+1. Remember to update the action.yml (and this README) when changing arguments
+1. There is a workflow just for development, called "for-testing-this-project.yml".
+ 1. Create a branch named `ft-*` or `issue-*` and it will trigger the github action.
+ 1. This workflow is getting the action directly from the src code, so remember to build before testing the action: `yarn build`
 
 
 ## How to release
+1. Tag the commit with a bumped version
+   ``` bash
+   git tag -a v1.x # Tag new version
+   git push origin v1.x
+
+   # Delete from local and remote if necessary
+   git tag -d v1.x v1.x2
+   git push --delete origin v1.x v1.x2
+   ```
+1. Do a manual release to github actions marketplace referencing this new version
