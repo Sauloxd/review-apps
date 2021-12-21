@@ -33,6 +33,8 @@ function getParamsFromPayload(payload) {
     throw new Error('Failed to get basic parameters');
   }
 
+  core.debug(`-> received payload.action ${payload.action}`);
+
   const result = {
     userName,
     userEmail,
