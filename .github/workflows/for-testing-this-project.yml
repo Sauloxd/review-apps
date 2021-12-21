@@ -1,5 +1,25 @@
 name: 'Workflow to help develop this action'
 on:
+  pull_request:
+    types:
+      # - assigned
+      # - unassigned
+      - labeled
+      - unlabeled
+      - opened
+      # - edited
+      - closed
+      - reopened
+      - synchronize
+      # - converted_to_draft
+      # - ready_for_review
+      # - locked
+      # - unlocked
+      # - review_requested
+      # - review_request_removed
+      # - auto_merge_enabled
+      # - auto_merge_disabled
+
   push:
     branches:
       - ft-*
@@ -27,7 +47,7 @@ jobs:
       # - name: Setup tmate session (ssh)
       #   uses: mxschmitt/action-tmate@v2
 
-      # This is how you'll use the action
+      # This is how  you'll use the action
       - name: Building create-react-app example
         uses: ./ # Replace here with sauloxd/review-apps@X.X.X
         with:
