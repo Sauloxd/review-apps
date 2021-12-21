@@ -1,0 +1,25 @@
+{
+  "files": {
+    "main.css": "/review-apps/dev-cra/ft-add-how-to-dev-docs/43781b/static/css/main.5ecd60fb.chunk.css",
+    "main.js": "/review-apps/dev-cra/ft-add-how-to-dev-docs/43781b/static/js/main.788becda.chunk.js",
+    "main.js.map": "/review-apps/dev-cra/ft-add-how-to-dev-docs/43781b/static/js/main.788becda.chunk.js.map",
+    "runtime-main.js": "/review-apps/dev-cra/ft-add-how-to-dev-docs/43781b/static/js/runtime-main.ce283e88.js",
+    "runtime-main.js.map": "/review-apps/dev-cra/ft-add-how-to-dev-docs/43781b/static/js/runtime-main.ce283e88.js.map",
+    "static/js/2.a2a6c264.chunk.js": "/review-apps/dev-cra/ft-add-how-to-dev-docs/43781b/static/js/2.a2a6c264.chunk.js",
+    "static/js/2.a2a6c264.chunk.js.map": "/review-apps/dev-cra/ft-add-how-to-dev-docs/43781b/static/js/2.a2a6c264.chunk.js.map",
+    "index.html": "/review-apps/dev-cra/ft-add-how-to-dev-docs/43781b/index.html",
+    "precache-manifest.39633629d780a910d5b2c98b17f90b77.js": "/review-apps/dev-cra/ft-add-how-to-dev-docs/43781b/precache-manifest.39633629d780a910d5b2c98b17f90b77.js",
+    "service-worker.js": "/review-apps/dev-cra/ft-add-how-to-dev-docs/43781b/service-worker.js",
+    "static/css/main.5ecd60fb.chunk.css.map": "/review-apps/dev-cra/ft-add-how-to-dev-docs/43781b/static/css/main.5ecd60fb.chunk.css.map",
+    "static/js/2.a2a6c264.chunk.js.LICENSE.txt": "/review-apps/dev-cra/ft-add-how-to-dev-docs/43781b/static/js/2.a2a6c264.chunk.js.LICENSE.txt",
+    "static/media/fox-combo-1.gif": "/review-apps/dev-cra/ft-add-how-to-dev-docs/43781b/static/media/fox-combo-1.b8000ebc.gif",
+    "static/media/fox-multishine.gif": "/review-apps/dev-cra/ft-add-how-to-dev-docs/43781b/static/media/fox-multishine.90b071d4.gif",
+    "static/media/fox-waveshine.gif": "/review-apps/dev-cra/ft-add-how-to-dev-docs/43781b/static/media/fox-waveshine.7ec8b809.gif"
+  },
+  "entrypoints": [
+    "static/js/runtime-main.ce283e88.js",
+    "static/js/2.a2a6c264.chunk.js",
+    "static/css/main.5ecd60fb.chunk.css",
+    "static/js/main.788becda.chunk.js"
+  ]
+}
