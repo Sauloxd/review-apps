@@ -134,3 +134,4 @@ Please, if you find some bugs are some usecase not covered in this README, open 
  - This workflow is getting the action directly from the src code, so remember to build before testing the action: `yarn build`
 
 
+## How to release
