@@ -129,11 +129,10 @@ I'm not sure how to burst the cache immediatly :/
 Please, if you find some bugs are some usecase not covered in this README, open a issue and feel free to open a PR to fix it :)
 
 ## How to develop
-=======
 1. Remember to update the action.yml (and this README) when changing arguments
 1. There is a workflow just for development, called "for-testing-this-project.yml".
- 1. Create a branch named `ft-*` or `issue-*` and it will trigger the github action.
- 1. This workflow is getting the action directly from the src code, so remember to build before testing the action: `yarn build`
+  1. Create a branch named `ft-*` or `issue-*` and it will trigger the github action.
+  1. This workflow is getting the action directly from the src code, so remember to build before testing the action: `yarn build`
 
 
 ## How to release
