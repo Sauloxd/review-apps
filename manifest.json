@@ -42,5 +42,15 @@
         "href": "dev-gatsby/issue-6/d093ea"
       }
     ]
+  },
+  "ft-add-how-to-dev-docs": {
+    "apps": [
+      {
+        "name": "dev-cra",
+        "headCommitId": "90fc9436c6726fc4ccd64b59943e0dc4851c4fd6",
+        "updatedAt": "2021-12-21T12:20:10.049Z",
+        "href": "dev-cra/ft-add-how-to-dev-docs/90fc94"
+      }
+    ]
   }
 }
