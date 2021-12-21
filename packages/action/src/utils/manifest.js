@@ -20,7 +20,7 @@ function getManifest() {
 }
 
 function removeApp({ manifest, branchName, slug }) {
-  let newManifest = { ...manifest };
+  let newManifest = JSON.parse(JSON.stringify(manifest));
   const apps = (newManifest[branchName] && newManifest[branchName].apps || []).filter(app => app.name !== slug);
   if (apps.length === 0) {
     newManifest = Object.keys(newManifest).reduce((acc, key) => {
@@ -45,7 +45,7 @@ function replaceApp({
   pathByHeadCommit,
   pullRequestUrl
 }) {
-  const newManifest = { ...manifest };
+  const newManifest = JSON.parse(JSON.stringify(manifest));
 
   const apps = (newManifest[branchName] && newManifest[branchName].apps || []).filter(app => app.name !== slug);
   newManifest[branchName] = {
