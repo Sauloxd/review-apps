@@ -24,7 +24,7 @@ jobs:
       - name: Install deps checking cache hit
         run: yarn install --frozen-lockfile
 
-      # - name: Setup tmate session
+      # - name: Setup tmate session (ssh)
       #   uses: mxschmitt/action-tmate@v2
 
       # This is how you'll use the action
@@ -37,19 +37,19 @@ jobs:
           slug: 'dev-cra'
 
       # This is how you'll use the action
-      - name: Building storybook example
-        uses: ./ # Replace here with sauloxd/review-apps@X.X.X
-        with:
-          build-cmd: 'yarn run cra:storybook'
-          branch: 'review-apps'
-          dist: 'packages/cra-example/storybook-static'
-          slug: 'dev-cra-sb'
+      # - name: Building storybook example
+      #   uses: ./ # Replace here with sauloxd/review-apps@X.X.X
+      #   with:
+      #     build-cmd: 'yarn run cra:storybook'
+      #     branch: 'review-apps'
+      #     dist: 'packages/cra-example/storybook-static'
+      #     slug: 'dev-cra-sb'
 
-      # This is how you'll use the action
-      - name: Building gatsby example
-        uses: ./ # Replace here with sauloxd/review-apps@X.X.X
-        with:
-          build-cmd: 'yarn run gatsby:build'
-          branch: 'review-apps'
-          dist: 'packages/gatsby-example/public'
-          slug: 'dev-gatsby'
+      # # This is how you'll use the action
+      # - name: Building gatsby example
+      #   uses: ./ # Replace here with sauloxd/review-apps@X.X.X
+      #   with:
+      #     build-cmd: 'yarn run gatsby:build'
+      #     branch: 'review-apps'
+      #     dist: 'packages/gatsby-example/public'
+      #     slug: 'dev-gatsby'
