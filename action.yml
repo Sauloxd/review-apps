@@ -32,7 +32,7 @@ inputs:
     default: 'review-apps'
 
 runs:
-  using: 'node14'
+  using: 'node16'
   main: 'packages/action/dist/index.js'
 
 branding:
