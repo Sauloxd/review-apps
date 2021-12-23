@@ -2,6 +2,8 @@ name: 'Build and deploy only on PR with label'
 on:
   pull_request:
     types: [labeled, unlabeled, opened, edited, closed, synchronize]
+    branches:
+      - force-real-life-usecase
 
 jobs:
   real-life:
