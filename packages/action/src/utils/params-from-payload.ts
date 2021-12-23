@@ -13,20 +13,24 @@ export function getParamsFromPayload(
   debug('WITH payload');
   debug(JSON.stringify(payload, null, 2));
 
+  const baseParams = {
+    action: payload.action,
+    user: {
+      name: 'ReviewApps admin',
+      email: 'review-apps@saulo.dev',
+    },
+    repository: {
+      name: payload.repository.name,
+    },
+  };
+
   switch (payload.action) {
     case PullRequestAction.OPENED:
     case PullRequestAction.CLOSED:
     case PullRequestAction.SYNCHRONIZE:
     case PullRequestAction.LABELED:
       return {
-        action: payload.action,
-        user: {
-          name: payload.sender?.name,
-          email: payload.sender?.email,
-        },
-        repository: {
-          name: payload.repository.name,
-        },
+        ...baseParams,
         branch: {
           name: payload.pull_request.head.ref.split('/').pop() as string,
           headCommit: payload.pull_request.head.sha,
@@ -37,14 +41,7 @@ export function getParamsFromPayload(
       };
     case PullRequestAction.PUSH:
       return {
-        action: payload.action,
-        user: {
-          name: payload.pusher.name,
-          email: payload.pusher.email,
-        },
-        repository: {
-          name: payload.repository.name,
-        },
+        ...baseParams,
         branch: {
           name: payload.ref.split('/').pop(),
           headCommit: payload.head_commit.id,
