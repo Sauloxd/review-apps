@@ -1,4 +1,5 @@
 import { exec } from '@actions/exec';
+import { debug } from '@actions/core';
 import { SanitizedPayloadParams } from '../interface';
 import { userInput } from '../utils/user-input';
 
@@ -9,6 +10,8 @@ export async function configure(params: SanitizedPayloadParams) {
 }
 
 export async function hardReset(branch: string) {
+  debug('CALL hardReset');
+  debug(`WITH branch: ${branch}`);
   await exec('git', ['fetch', 'origin', branch]);
   await exec('git', ['checkout', '-f', branch]);
   await exec('git', ['reset', '--hard', 'origin/' + branch]);

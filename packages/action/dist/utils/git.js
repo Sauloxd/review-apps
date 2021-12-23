@@ -11,6 +11,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.getFilesFromOtherBranch = exports.push = exports.commit = exports.stageChanges = exports.decorateMessage = exports.hardReset = exports.configure = void 0;
 const exec_1 = require("@actions/exec");
+const core_1 = require("@actions/core");
 const user_input_1 = require("../utils/user-input");
 function configure(params) {
     return __awaiter(this, void 0, void 0, function* () {
@@ -22,6 +23,8 @@ function configure(params) {
 exports.configure = configure;
 function hardReset(branch) {
     return __awaiter(this, void 0, void 0, function* () {
+        (0, core_1.debug)('CALL hardReset');
+        (0, core_1.debug)(`WITH branch: ${branch}`);
         yield (0, exec_1.exec)('git', ['fetch', 'origin', branch]);
         yield (0, exec_1.exec)('git', ['checkout', '-f', branch]);
         yield (0, exec_1.exec)('git', ['reset', '--hard', 'origin/' + branch]);

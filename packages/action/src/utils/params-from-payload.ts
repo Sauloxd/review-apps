@@ -14,7 +14,7 @@ export function getParamsFromPayload(
   debug(JSON.stringify(payload, null, 2));
 
   const baseParams = {
-    action: payload.action,
+    action: payload.action as PullRequestAction,
     user: {
       name: 'ReviewApps admin',
       email: 'review-apps@saulo.dev',
