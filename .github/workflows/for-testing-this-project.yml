@@ -19,11 +19,14 @@ on:
       # - review_request_removed
       # - auto_merge_enabled
       # - auto_merge_disabled
-
-  push:
     branches:
       - ft-*
       - issue-*
+
+  # push:
+  #   branches:
+  #     - ft-*
+  #     - issue-*
 jobs:
   develop:
     runs-on: ubuntu-latest
