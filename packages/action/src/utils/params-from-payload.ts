@@ -1,8 +1,6 @@
-const core = require('@actions/core');
+import * as core from '@actions/core';
 
-module.exports = getParamsFromPayload;
-
-function getParamsFromPayload(payload) {
+export function getParamsFromPayload(payload) {
   let userName = 'review-app-action-user';
   let userEmail = 'review-app-action-email';
   let headCommitId;

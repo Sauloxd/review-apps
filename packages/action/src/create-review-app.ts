@@ -1,19 +1,15 @@
-const github = require('@actions/github');
-const core = require('@actions/core');
-const { exec } = require('@actions/exec');
-const onPrClose = require('./on-pr-close');
-const getParamsFromPayload = require('./utils/params-from-payload');
-const otherEvents = require('./other-events');
+import * as github from '@actions/github';
+import { getInput, info } from '@actions/core';
+import { exec } from '@actions/exec';
+import { onPrClose } from './on-pr-close';
+import { getParamsFromPayload } from './utils/params-from-payload';
+import { otherEvents } from './other-events';
 
-module.exports = {
-  createReviewApp
-};
-
-async function createReviewApp() {
-  const distDir = core.getInput('dist');
-  const slug = core.getInput('slug');
-  const ghBranch = core.getInput('branch');
-  const buildCmd = core.getInput('build-cmd');
+export async function createReviewApp() {
+  const distDir = getInput('dist');
+  const slug = getInput('slug');
+  const ghBranch = getInput('branch');
+  const buildCmd = getInput('build-cmd');
   const {
     userName,
     userEmail,
@@ -21,13 +17,13 @@ async function createReviewApp() {
     branchName,
     repositoryName,
     pullRequestUrl,
-    isClosePrEvent
+    isClosePrEvent,
   } = getParamsFromPayload(github.context.payload);
-
-  core.debug(`Setting config options - name:${userName}, email:${userEmail}`);
+  info('Review Apps');
+  info(`Setting config options - name:${userName}, email:${userEmail}`);
   await exec('git', ['config', '--global', 'user.name', userName]);
   await exec('git', ['config', '--global', 'user.email', userEmail]);
-  await exec('git', ['config', 'pull.rebase', true]);
+  await exec('git', ['config', 'pull.rebase', 'true']);
   const commitMessage = `[skip ci] ref to ${headCommitId} for - ${slug}`;
   const pathByRepo = repositoryName;
   const pathByBranch = `${slug}/${branchName}`;
@@ -40,7 +36,7 @@ async function createReviewApp() {
       ghBranch,
       pathByBranch,
       pathByHeadCommit,
-      slug
+      slug,
     });
   } else {
     await otherEvents({
@@ -53,8 +49,7 @@ async function createReviewApp() {
       pathByHeadCommit,
       pathByRepo,
       pullRequestUrl,
-      slug
+      slug,
     });
   }
-
 }

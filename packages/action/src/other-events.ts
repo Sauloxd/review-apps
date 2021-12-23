@@ -1,14 +1,12 @@
-const io = require('@actions/io');
-const core = require('@actions/core');
-const { exec } = require('@actions/exec');
-const fs = require('fs');
-const indexPage = require('./template/index-page');
-const { getManifest, replaceApp } = require('./utils/manifest');
-const retry = require('./utils/retry');
+import * as io from '@actions/io';
+import * as core from '@actions/core';
+import { exec } from '@actions/exec';
+import * as fs from 'fs';
+import { indexPage } from './template/index-page';
+import { getManifest, replaceApp } from './utils/manifest';
+import { retry } from './utils/retry';
 
-module.exports = otherEvents;
-
-async function otherEvents({
+export async function otherEvents({
   branchName,
   buildCmd,
   commitMessage,
@@ -18,7 +16,7 @@ async function otherEvents({
   pathByHeadCommit,
   pathByRepo,
   pullRequestUrl,
-  slug
+  slug,
 }) {
   core.debug(`
     -> Paths:
@@ -60,7 +58,7 @@ async function otherEvents({
     slug,
     headCommitId,
     pathByHeadCommit,
-    pullRequestUrl
+    pullRequestUrl,
   });
 
   core.debug(JSON.stringify(manifest, null, 2));
@@ -73,7 +71,11 @@ async function otherEvents({
     core.debug('Coping .tmp/. -> ' + pathByHeadCommit);
     await io.cp('.tmp/.', pathByHeadCommit, { recursive: true, force: true });
     core.debug('Saving manifest.json');
-    fs.writeFileSync('manifest.json', JSON.stringify(manifest, null, 2), 'utf-8');
+    fs.writeFileSync(
+      'manifest.json',
+      JSON.stringify(manifest, null, 2),
+      'utf-8'
+    );
     core.debug('Saving index.html');
     fs.writeFileSync('index.html', indexPage(manifest), 'utf-8');
     await exec('git', ['status']);

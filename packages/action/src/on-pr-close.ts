@@ -1,20 +1,18 @@
-const io = require('@actions/io');
-const core = require('@actions/core');
-const { exec } = require('@actions/exec');
-const fs = require('fs');
-const indexPage = require('./template/index-page');
-const { getManifest, removeApp } = require('./utils/manifest');
-const retry = require('./utils/retry');
+import * as io from '@actions/io';
+import * as core from '@actions/core';
+import { exec } from '@actions/exec';
+import * as fs from 'fs';
+import { indexPage } from './template/index-page';
+import { getManifest, removeApp } from './utils/manifest';
+import { retry } from './utils/retry';
 
-module.exports = onPrClose;
-
-async function onPrClose({
+export async function onPrClose({
   branchName,
   commitMessage,
   ghBranch,
   pathByBranch,
   pathByHeadCommit,
-  slug
+  slug,
 }) {
   await retry(5)(async () => {
     await exec('git', ['fetch', 'origin', ghBranch]);
@@ -25,11 +23,20 @@ async function onPrClose({
 
     core.debug(JSON.stringify(manifest, null, 2));
 
-    fs.writeFileSync('manifest.json', JSON.stringify(manifest, null, 2), 'utf-8');
+    fs.writeFileSync(
+      'manifest.json',
+      JSON.stringify(manifest, null, 2),
+      'utf-8'
+    );
     fs.writeFileSync('index.html', indexPage(manifest), 'utf-8');
 
     try {
-      await exec('git', ['add', pathByHeadCommit, 'index.html', 'manifest.json']);
+      await exec('git', [
+        'add',
+        pathByHeadCommit,
+        'index.html',
+        'manifest.json',
+      ]);
       await exec('git', ['commit', '-m', commitMessage]);
     } catch (e) {
       core.debug(e);
@@ -37,5 +44,4 @@ async function onPrClose({
 
     await exec('git', ['push', 'origin', ghBranch]);
   });
-
 }

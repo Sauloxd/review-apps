@@ -1,53 +1,53 @@
-const fs = require('fs');
-const core = require('@actions/core');
+import * as fs from 'fs';
+import * as core from '@actions/core';
 
-module.exports = {
-  getManifest,
-  removeApp,
-  replaceApp
-};
-
-function getManifest() {
+export function getManifest() {
   let manifest;
   try {
     manifest = JSON.parse(fs.readFileSync('manifest.json', 'utf-8'));
   } catch (e) {
-    core.debug(e);
+    core.debug('Failed to get manifest');
     manifest = {};
   }
 
   return manifest;
 }
 
-function removeApp({ manifest, branchName, slug }) {
+export function removeApp({ manifest, branchName, slug }) {
   let newManifest = JSON.parse(JSON.stringify(manifest));
-  const apps = (newManifest[branchName] && newManifest[branchName].apps || []).filter(app => app.name !== slug);
+  const apps = (
+    (newManifest[branchName] && newManifest[branchName].apps) ||
+    []
+  ).filter((app) => app.name !== slug);
   if (apps.length === 0) {
     newManifest = Object.keys(newManifest).reduce((acc, key) => {
       if (key === branchName) return acc;
+
       return { ...acc, [key]: newManifest[key] };
     }, {});
   } else {
     newManifest[branchName] = {
       ...newManifest[branchName],
-      apps
+      apps,
     };
   }
 
   return newManifest;
 }
 
-function replaceApp({
+export function replaceApp({
   manifest,
   branchName,
   slug,
   headCommitId,
   pathByHeadCommit,
-  pullRequestUrl
+  pullRequestUrl,
 }) {
   const newManifest = JSON.parse(JSON.stringify(manifest));
-
-  const apps = (newManifest[branchName] && newManifest[branchName].apps || []).filter(app => app.name !== slug);
+  const apps = (
+    (newManifest[branchName] && newManifest[branchName].apps) ||
+    []
+  ).filter((app) => app.name !== slug);
   newManifest[branchName] = {
     ...newManifest[branchName],
     apps: apps.concat({
@@ -55,8 +55,8 @@ function replaceApp({
       headCommitId,
       updatedAt: new Date(),
       href: pathByHeadCommit,
-      pullRequestUrl
-    })
+      pullRequestUrl,
+    }),
   };
 
   return newManifest;
