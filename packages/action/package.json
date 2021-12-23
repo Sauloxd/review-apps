@@ -3,7 +3,7 @@
   "version": "0.0.1",
   "main": "dist/index.js",
   "scripts": {
-    "build": "rimraf lib && tsc src/index.ts",
+    "build": "rimraf dist && tsc src/index.ts",
     "dev:tmpl": "nodemon template/html-template.js"
   },
   "dependencies": {

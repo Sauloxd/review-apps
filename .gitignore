@@ -106,4 +106,3 @@ typings/
 packages/cra-example/build
 packages/cra-example/storybook-static
 packages/gatsy-example/public
-packages/action/dist
