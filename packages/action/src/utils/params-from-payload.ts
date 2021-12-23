@@ -1,56 +1,60 @@
-import * as core from '@actions/core';
+import { debug, setFailed } from '@actions/core';
+import { WebhookPayload } from '@actions/github/lib/interfaces';
+import {
+  PullRequestAction,
+  SanitizedPayloadParams,
+  GithubPullRequestPayload,
+} from '../interface';
 
-export function getParamsFromPayload(payload) {
-  let userName = 'review-app-action-user';
-  let userEmail = 'review-app-action-email';
-  let headCommitId;
-  let branchName;
-  let repositoryName;
-  let pullRequestUrl;
+export function getParamsFromPayload(
+  payload: WebhookPayload & GithubPullRequestPayload
+): SanitizedPayloadParams {
+  debug('CALL getParamsFromPayload');
+  debug('WITH payload');
+  debug(JSON.stringify(payload, null, 2));
 
-  try {
-    if (['opened', 'closed', 'synchronize', 'labeled'].includes(payload.action)) {
-      userName = payload.sender && payload.sender.name || userName;
-      userEmail = payload.sender && payload.sender.email || userEmail;
-      headCommitId = payload.pull_request.head.sha;
-      branchName = payload.pull_request.head.ref.split('/').pop();
-      repositoryName = payload.repository.name;
-      pullRequestUrl = payload.pull_request.html_url;
-    }
-    if (['push'].includes(payload.action) || typeof payload.action === 'undefined' ) {
-      userName = payload.pusher.name || userName;
-      userEmail = payload.pusher.email || userEmail;
-      headCommitId = payload.head_commit.id;
-      branchName = payload.ref.split('/').pop();
-      repositoryName = payload.repository.name;
-      pullRequestUrl = undefined;
-    }
-  } catch (e) {
-    core.debug(e);
-    core.debug(JSON.stringify(payload, null, 2));
-    throw new Error('Failed to get basic parameters');
+  switch (payload.action) {
+    case PullRequestAction.OPENED:
+    case PullRequestAction.CLOSED:
+    case PullRequestAction.SYNCHRONIZE:
+    case PullRequestAction.LABELED:
+      return {
+        action: payload.action,
+        user: {
+          name: payload.sender?.name,
+          email: payload.sender?.email,
+        },
+        repository: {
+          name: payload.repository.name,
+        },
+        branch: {
+          name: payload.pull_request.head.ref.split('/').pop() as string,
+          headCommit: payload.pull_request.head.sha,
+          pullRequest: {
+            url: payload.pull_request.html_url,
+          },
+        },
+      };
+    case PullRequestAction.PUSH:
+      return {
+        action: payload.action,
+        user: {
+          name: payload.pusher.name,
+          email: payload.pusher.email,
+        },
+        repository: {
+          name: payload.repository.name,
+        },
+        branch: {
+          name: payload.ref.split('/').pop(),
+          headCommit: payload.head_commit.id,
+          pullRequest: {
+            url: undefined,
+          },
+        },
+      };
+    default:
+      setFailed(`unhandled payload action: ${payload.action}`);
+      throw new Error(`unhandled payload action: ${payload.action}`);
   }
-
-  core.debug(`-> received payload.action ${payload.action}`);
-
-  const result = {
-    userName,
-    userEmail,
-    headCommitId,
-    branchName,
-    repositoryName,
-    isClosePrEvent: payload.action === 'closed',
-    ...(pullRequestUrl?{ pullRequestUrl }:{}),
-    ...(payload.action?{ action: payload.action }:{})
-  };
-
-  if (Object.values(result).filter(r => typeof r === 'undefined').length !== 0) {
-    core.debug('-> A value is undefined');
-    core.debug(JSON.stringify(payload, null, 2));
-  }
-
-  core.debug('-> Metadata:');
-  core.debug(JSON.stringify(result, null, 2));
-
-  return result;
 }

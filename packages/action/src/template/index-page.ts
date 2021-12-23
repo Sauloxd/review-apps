@@ -1,16 +1,6 @@
-type App = {
-  name: string;
-  headCommitId: string;
-  updatedAt: string;
-  href: string;
-  pullRequestUrl: string;
-};
+import { App, Manifest } from '../interface';
 
-export const indexPage: (reviewApps: {
-  [slug: string]: {
-    apps?: App[];
-  };
-}) => string = (reviewApps = {}) => `
+export const indexPage = (reviewApps: Manifest) => `
 <!DOCTYPE html>
 <html>
   <head>
