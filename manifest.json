@@ -70,8 +70,9 @@
       {
         "name": "dev-cra",
         "headCommitId": "f0a4c3b69f5be1f3dc12e1f59939c5771cd905f4",
-        "updatedAt": "2021-12-23T12:45:25.266Z",
-        "href": "dev-cra/ft-refactor-action/f0a4c3"
+        "updatedAt": "2021-12-23T12:45:36.363Z",
+        "href": "dev-cra/ft-refactor-action/f0a4c3",
+        "pullRequestUrl": "https://github.com/Sauloxd/review-apps/pull/12"
       }
     ]
   }
