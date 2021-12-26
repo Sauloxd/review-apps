@@ -32,6 +32,8 @@ export async function onDefault(params: SanitizedPayloadParams) {
     -> Building app
   `);
 
+  await git.hardReset(params.branch.name);
+
   core.exportVariable('PUBLIC_URL', PUBLIC_URL);
 
   await exec(input.buildCmd);
