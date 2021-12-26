@@ -65,25 +65,29 @@ function onDefault(params) {
     -> Current working branch: ${params.branch.name}"
     -> Will move (and override) the build result on '${input.dist}' to '${paths.byHeadCommit}' in ${input.branch}"
   `);
-        git.stageChanges(input.dist);
-        git.commit(`Persisting dist output for ${input.slug}`);
+        yield git.stageChanges(input.dist);
+        yield git.commit(`Persisting dist output for ${input.slug}`);
         yield (0, retry_1.retry)(5)(() => __awaiter(this, void 0, void 0, function* () {
-            git.hardReset(input.branch);
-            git.getFilesFromOtherBranch(params.branch.name, input.dist);
+            yield git.hardReset(input.branch);
+            yield git.getFilesFromOtherBranch(params.branch.name, input.dist);
             manifest.replaceApp(params);
+            core.debug('Copying from input.dist to -> ' + paths.byHeadCommit);
+            yield (0, exec_1.exec)('ls');
             yield (0, exec_1.exec)('git', ['status']);
-            core.debug('Coping from input.dist to -> ' + paths.byHeadCommit);
+            core.debug(input.dist + '->' + paths.byHeadCommit);
             yield io.cp(input.dist, paths.byHeadCommit, {
                 recursive: true,
                 force: true,
             });
+            core.debug('Finished copying');
+            yield (0, exec_1.exec)('ls');
             yield (0, exec_1.exec)('git', ['status']);
-            git.stageChanges(paths.byHeadCommit, 'index.html', 'manifest.json');
-            git.commit(`Updating app ${params.branch.headCommit}`);
-            git.push(params.branch.name);
+            yield git.stageChanges(paths.byHeadCommit, 'index.html', 'manifest.json');
+            yield git.commit(`Updating app ${paths.byHeadCommit}`);
+            yield git.push(input.branch);
         }));
         core.debug('Return to original state');
-        git.hardReset(params.branch.name);
+        yield git.hardReset(params.branch.name);
     });
 }
 exports.onDefault = onDefault;

@@ -33,6 +33,7 @@ export async function onDefault(params: SanitizedPayloadParams) {
   `);
 
   core.exportVariable('PUBLIC_URL', `/${paths.byRepo}/${paths.byHeadCommit}`);
+
   await exec(input.buildCmd);
 
   core.info(`
@@ -40,30 +41,30 @@ export async function onDefault(params: SanitizedPayloadParams) {
     -> Will move (and override) the build result on '${input.dist}' to '${paths.byHeadCommit}' in ${input.branch}"
   `);
 
-  git.stageChanges(input.dist);
-  git.commit(`Persisting dist output for ${input.slug}`);
+  await git.stageChanges(input.dist);
+  await git.commit(`Persisting dist output for ${input.slug}`);
 
   await retry(5)(async () => {
-    git.hardReset(input.branch);
-    git.getFilesFromOtherBranch(params.branch.name, input.dist);
+    await git.hardReset(input.branch);
+    await git.getFilesFromOtherBranch(params.branch.name, input.dist);
     manifest.replaceApp(params);
 
+    core.debug('Copying from input.dist to -> ' + paths.byHeadCommit);
+    await exec('ls');
     await exec('git', ['status']);
-    core.debug('Coping from input.dist to -> ' + paths.byHeadCommit);
+    core.debug(input.dist + '->' + paths.byHeadCommit);
     await io.cp(input.dist, paths.byHeadCommit, {
       recursive: true,
       force: true,
     });
+    core.debug('Finished copying');
+    await exec('ls');
     await exec('git', ['status']);
 
-    git.stageChanges(
-        paths.byHeadCommit,
-        'index.html',
-        'manifest.json',
-    );
-    git.commit(`Updating app ${params.branch.headCommit}`);
-    git.push(params.branch.name);
+    await git.stageChanges(paths.byHeadCommit, 'index.html', 'manifest.json');
+    await git.commit(`Updating app ${paths.byHeadCommit}`);
+    await git.push(input.branch);
   });
   core.debug('Return to original state');
-  git.hardReset(params.branch.name);
+  await git.hardReset(params.branch.name);
 }

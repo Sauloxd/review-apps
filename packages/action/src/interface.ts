@@ -56,7 +56,7 @@ export interface FileManagerPaths {
 
 export type App = {
   name: string;
-  headCommit: string;
+  headCommitId: string;
   updatedAt: Date;
   href: string;
   pullRequestUrl?: string;

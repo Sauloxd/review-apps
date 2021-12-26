@@ -5,6 +5,7 @@ export function retry(times: number) {
     try {
       await cb();
     } catch (e) {
+      core.debug((e as any).message as any);
       if (count < times) {
         core.debug(`Retrying... ${count}`);
         await r(cb, count + 1);

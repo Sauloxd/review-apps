@@ -37,6 +37,7 @@ function retry(times) {
                 yield cb();
             }
             catch (e) {
+                core.debug(e.message);
                 if (count < times) {
                     core.debug(`Retrying... ${count}`);
                     yield r(cb, count + 1);

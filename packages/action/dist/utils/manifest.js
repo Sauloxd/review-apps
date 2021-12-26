@@ -18,65 +18,64 @@ var __importStar = (this && this.__importStar) || function (mod) {
     __setModuleDefault(result, mod);
     return result;
 };
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.replaceApp = exports.getManifest = exports.removeApp = void 0;
+exports.replaceApp = exports.removeApp = void 0;
 const fs = __importStar(require("fs"));
 const core = __importStar(require("@actions/core"));
 const index_page_1 = require("../template/index-page");
 const fileManager = __importStar(require("./file-manager"));
 const user_input_1 = require("./user-input");
-function removeApp(branch) {
-    core.debug('CALL removeApp');
-    core.debug(`WITH branch ${branch}`);
-    const manifest = getManifest();
-    delete manifest[branch];
-    core.debug(JSON.stringify(manifest, null, 2));
-    fs.writeFileSync('manifest.json', JSON.stringify(manifest, null, 2), 'utf-8');
-    fs.writeFileSync('index.html', (0, index_page_1.indexPage)(manifest), 'utf-8');
-}
-exports.removeApp = removeApp;
-function getManifest() {
-    try {
-        return JSON.parse(fs.readFileSync('manifest.json', 'utf-8'));
-    }
-    catch (e) {
-        core.setFailed('Failed to get manifest');
-        throw new Error('Failed to get manifest');
-    }
-}
-exports.getManifest = getManifest;
-function replaceApp(params) {
+const log_error_1 = require("./log-error");
+exports.removeApp = (0, log_error_1.withError)(function removeApp(branch) {
+    return __awaiter(this, void 0, void 0, function* () {
+        const manifest = getManifest();
+        delete manifest[branch];
+        fs.writeFileSync('manifest.json', JSON.stringify(manifest, null, 2), 'utf-8');
+        fs.writeFileSync('index.html', (0, index_page_1.indexPage)(manifest), 'utf-8');
+    });
+});
+exports.replaceApp = (0, log_error_1.withError)(function replaceApp(params) {
     var _a;
-    core.debug('CALL replaceApp');
-    core.debug(`WITH branch ${params.branch.name}`);
-    const manifest = getManifest();
-    const input = (0, user_input_1.userInput)();
-    const apps = ((_a = manifest[params.branch.name]) === null || _a === void 0 ? void 0 : _a.apps) || [];
-    const index = apps.findIndex((app) => app.name === input.slug);
-    const newApp = buildApp(params);
-    if (index > 0) {
-        apps[index] = newApp;
-    }
-    else {
-        apps.push(newApp);
-    }
-    manifest[params.branch.name] = Object.assign(Object.assign({}, manifest[params.branch.name]), { apps });
-    core.debug(JSON.stringify(manifest, null, 2));
-    core.debug('Saving manifest.json');
-    fs.writeFileSync('manifest.json', JSON.stringify(manifest, null, 2), 'utf-8');
-    core.debug('Saving index.html');
-    fs.writeFileSync('index.html', (0, index_page_1.indexPage)(manifest), 'utf-8');
-    return manifest;
-}
-exports.replaceApp = replaceApp;
+    return __awaiter(this, void 0, void 0, function* () {
+        const manifest = getManifest();
+        const input = (0, user_input_1.userInput)();
+        const apps = ((_a = manifest[params.branch.name]) === null || _a === void 0 ? void 0 : _a.apps) || [];
+        const index = apps.findIndex((app) => app.name === input.slug);
+        const newApp = buildApp(params);
+        if (index > -1) {
+            apps[index] = newApp;
+        }
+        else {
+            apps.push(newApp);
+        }
+        manifest[params.branch.name] = Object.assign(Object.assign({}, manifest[params.branch.name]), { apps });
+        fs.writeFileSync('manifest.json', JSON.stringify(manifest, null, 2), 'utf-8');
+        fs.writeFileSync('index.html', (0, index_page_1.indexPage)(manifest), 'utf-8');
+    });
+});
 function buildApp(params) {
     const input = (0, user_input_1.userInput)();
     const paths = fileManager.paths(params);
     return {
         name: input.slug,
-        headCommit: params.branch.headCommit,
+        headCommitId: params.branch.headCommit,
         updatedAt: new Date(),
         href: paths.byHeadCommit,
         pullRequestUrl: params.branch.pullRequest.url,
     };
+}
+function getManifest() {
+    const manifest = JSON.parse(fs.readFileSync('manifest.json', 'utf-8'));
+    core.debug('CALL getManifest');
+    core.debug(JSON.stringify(manifest, null, 2));
+    return manifest;
 }

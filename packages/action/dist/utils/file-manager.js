@@ -30,6 +30,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.removeAllAppsFromBranch = exports.paths = void 0;
 const io = __importStar(require("@actions/io"));
+const log_error_1 = require("./log-error");
 const user_input_1 = require("./user-input");
 function paths({ branch, repository, }) {
     const { slug } = (0, user_input_1.userInput)();
@@ -43,10 +44,9 @@ function paths({ branch, repository, }) {
     };
 }
 exports.paths = paths;
-function removeAllAppsFromBranch(params) {
+exports.removeAllAppsFromBranch = (0, log_error_1.withError)(function removeAllAppsFromBranch(params) {
     return __awaiter(this, void 0, void 0, function* () {
         const { byBranch } = paths(params);
         yield io.rmRF(byBranch);
     });
-}
-exports.removeAllAppsFromBranch = removeAllAppsFromBranch;
+});

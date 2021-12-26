@@ -39,12 +39,12 @@ function onClosed(params) {
         const input = (0, user_input_1.userInput)();
         const { byHeadCommit } = fileManager.paths(params);
         yield (0, retry_1.retry)(5)(() => __awaiter(this, void 0, void 0, function* () {
-            git.hardReset(input.branch);
-            fileManager.removeAllAppsFromBranch(params);
+            yield git.hardReset(input.branch);
+            yield fileManager.removeAllAppsFromBranch(params);
             manifest.removeApp(params.branch.name);
-            git.stageChanges(byHeadCommit, 'index.html', 'manifest.json');
-            git.commit(git.decorateMessage(`Removing branch ${params.branch.name}`));
-            git.push(input.branch);
+            yield git.stageChanges(byHeadCommit, 'index.html', 'manifest.json');
+            yield git.commit(git.decorateMessage(`Removing branch ${params.branch.name}`));
+            yield git.push(input.branch);
         }));
     });
 }

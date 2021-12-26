@@ -58,12 +58,12 @@ const indexPage = (reviewApps) => `
 `;
 exports.indexPage = indexPage;
 function Card(app) {
-    const { name, headCommit, updatedAt, href, pullRequestUrl } = app;
+    const { name, headCommitId, updatedAt, href, pullRequestUrl } = app;
     return `
     <div class="card" style="width: 18rem;">
       <div class="card-body">
         <h5 class="card-title">${name}</h5>
-        <h6 class="card-subtitle mb-2 text-muted">#${headCommit.slice(0, 12)}</h6>
+        <h6 class="card-subtitle mb-2 text-muted">#${headCommitId.slice(0, 12)}</h6>
         <h6 class="card-subtitle mb-2 text-muted">${updatedAt.toLocaleString()}</h6>
         <a href="${href}" class="card-link">App</a>
         ${pullRequestUrl

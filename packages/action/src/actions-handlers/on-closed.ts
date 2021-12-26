@@ -10,11 +10,13 @@ export async function onClosed(params: SanitizedPayloadParams) {
   const { byHeadCommit } = fileManager.paths(params);
 
   await retry(5)(async () => {
-    git.hardReset(input.branch);
-    fileManager.removeAllAppsFromBranch(params);
+    await git.hardReset(input.branch);
+    await fileManager.removeAllAppsFromBranch(params);
     manifest.removeApp(params.branch.name);
-    git.stageChanges(byHeadCommit, 'index.html', 'manifest.json');
-    git.commit(git.decorateMessage(`Removing branch ${params.branch.name}`));
-    git.push(input.branch);
+    await git.stageChanges(byHeadCommit, 'index.html', 'manifest.json');
+    await git.commit(
+      git.decorateMessage(`Removing branch ${params.branch.name}`)
+    );
+    await git.push(input.branch);
   });
 }

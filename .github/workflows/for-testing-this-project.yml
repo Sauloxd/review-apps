@@ -24,7 +24,6 @@ jobs:
 
       # - name: Setup tmate session (ssh)
       #   uses: mxschmitt/action-tmate@v2
-
       # This is how  you'll use the action
       - name: Building create-react-app example
         uses: ./ # Replace here with sauloxd/review-apps@X.X.X

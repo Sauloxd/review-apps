@@ -28,25 +28,17 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.createReviewApp = void 0;
-const github = __importStar(require("@actions/github"));
-const core_1 = require("@actions/core");
-const handlers = __importStar(require("./actions-handlers"));
-const git = __importStar(require("./utils/git"));
-const params_from_payload_1 = require("./utils/params-from-payload");
-const interface_1 = require("./interface");
-function createReviewApp() {
-    return __awaiter(this, void 0, void 0, function* () {
-        const payload = github.context.payload;
-        const sanitizedParams = (0, params_from_payload_1.getParamsFromPayload)(payload);
-        (0, core_1.info)('Review Apps start!');
-        yield git.configure(sanitizedParams);
-        switch (payload.action) {
-            case interface_1.PullRequestAction.CLOSED:
-                return handlers.onClosed(sanitizedParams);
-            default:
-                return handlers.onDefault(sanitizedParams);
-        }
-    });
-}
-exports.createReviewApp = createReviewApp;
+exports.withError = void 0;
+const core = __importStar(require("@actions/core"));
+const withError = (cb) => (...args) => __awaiter(void 0, void 0, void 0, function* () {
+    core.debug(`CALL ${cb.name}`);
+    core.debug(`WITH ${JSON.stringify(args, null, 2)}`);
+    try {
+        return yield cb(...args);
+    }
+    catch (e) {
+        core.setFailed(`FAILED ${cb.name}`);
+        core.debug(e.message);
+    }
+});
+exports.withError = withError;
