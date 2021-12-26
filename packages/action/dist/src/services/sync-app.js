@@ -28,19 +28,20 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.onDefault = void 0;
-const io = __importStar(require("@actions/io"));
+exports.syncApp = void 0;
 const core = __importStar(require("@actions/core"));
+const io = __importStar(require("@actions/io"));
 const exec_1 = require("@actions/exec");
+const fileManager = __importStar(require("../utils/file-manager"));
+const git = __importStar(require("../utils/git"));
 const manifest = __importStar(require("../utils/manifest"));
 const retry_1 = require("../utils/retry");
-const git = __importStar(require("../utils/git"));
-const fileManager = __importStar(require("../utils/file-manager"));
+const log_error_1 = require("../utils/log-error");
 const user_input_1 = require("../utils/user-input");
-function onDefault(params) {
+exports.syncApp = (0, log_error_1.withError)(function syncApp(params) {
     return __awaiter(this, void 0, void 0, function* () {
-        const input = (0, user_input_1.userInput)();
         const paths = fileManager.paths(params);
+        const input = (0, user_input_1.userInput)();
         const PUBLIC_URL = `/${paths.byRepo}/${paths.byHeadCommit}`;
         core.info(`
     -> Paths:
@@ -64,14 +65,15 @@ function onDefault(params) {
   `);
         yield git.stageChanges(input.dist);
         yield git.commit(`Persisting dist output for ${input.slug}`);
-        yield (0, retry_1.retry)(5)(updateApp.bind(null, input, params, paths));
+        yield (0, retry_1.retry)(5)(updateApp.bind(null, params));
         core.debug('Return to original state');
         yield git.hardReset(params.branch.name);
     });
-}
-exports.onDefault = onDefault;
-function updateApp(input, params, paths) {
+});
+function updateApp(params) {
     return __awaiter(this, void 0, void 0, function* () {
+        const input = (0, user_input_1.userInput)();
+        const paths = fileManager.paths(params);
         yield git.hardReset(input.branch);
         yield git.getFilesFromOtherBranch(params.branch.name, input.dist);
         manifest.replaceApp(params);

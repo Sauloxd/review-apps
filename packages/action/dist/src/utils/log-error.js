@@ -28,24 +28,18 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.onClosed = void 0;
-const retry_1 = require("../utils/retry");
-const user_input_1 = require("../utils/user-input");
-const git = __importStar(require("../utils/git"));
-const manifest = __importStar(require("../utils/manifest"));
-const fileManager = __importStar(require("../utils/file-manager"));
-function onClosed(params) {
-    return __awaiter(this, void 0, void 0, function* () {
-        const input = (0, user_input_1.userInput)();
-        const { byHeadCommit } = fileManager.paths(params);
-        yield (0, retry_1.retry)(5)(() => __awaiter(this, void 0, void 0, function* () {
-            yield git.hardReset(input.branch);
-            yield fileManager.removeAllAppsFromBranch(params);
-            manifest.removeApp(params.branch.name);
-            yield git.stageChanges(byHeadCommit, 'index.html', 'manifest.json');
-            yield git.commit(git.decorateMessage(`Removing branch: ${params.branch.name}`));
-            yield git.push(input.branch);
-        }));
-    });
-}
-exports.onClosed = onClosed;
+exports.withError = void 0;
+const core = __importStar(require("@actions/core"));
+const withError = (cb) => (...args) => __awaiter(void 0, void 0, void 0, function* () {
+    core.debug(`CALL ${cb.name}`);
+    core.debug(`WITH ${JSON.stringify(args, null, 2)}`);
+    try {
+        return yield cb(...args);
+    }
+    catch (e) {
+        core.setFailed(`FAILED ${cb.name}`);
+        core.debug(e.message);
+        throw e;
+    }
+});
+exports.withError = withError;

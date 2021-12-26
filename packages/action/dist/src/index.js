@@ -32,22 +32,27 @@ exports.run = void 0;
 const github = __importStar(require("@actions/github"));
 const core_1 = require("@actions/core");
 const handlers = __importStar(require("./actions-handlers"));
-const git = __importStar(require("./utils/git"));
-const params_from_payload_1 = require("./utils/params-from-payload");
 const interface_1 = require("./interface");
 const log_error_1 = require("./utils/log-error");
+const git = __importStar(require("./utils/git"));
 exports.run = (0, log_error_1.withError)(function run() {
     return __awaiter(this, void 0, void 0, function* () {
         (0, core_1.debug)(JSON.stringify(github, null, 2));
-        const payload = github.context.payload;
-        const sanitizedParams = (0, params_from_payload_1.getParamsFromPayload)(payload);
+        const event = github.context.eventName;
         (0, core_1.info)('-> Review Apps start!');
-        yield git.configure(sanitizedParams);
-        switch (payload.action) {
-            case interface_1.PullRequestAction.CLOSED:
-                return yield handlers.onClosed(sanitizedParams);
+        yield git.configure({
+            name: 'ReviewApps admin',
+            email: 'review-apps@saulo.dev',
+        });
+        switch (event) {
+            case interface_1.GithubTriggerActions.PULL_REQUEST:
+                return yield handlers.onPullRequest();
+            case interface_1.GithubTriggerActions.PUSH:
+                return yield handlers.onPush();
             default:
-                return yield handlers.onDefault(sanitizedParams);
+                (0, core_1.debug)(JSON.stringify(github.context, null, 2));
+                (0, core_1.setFailed)(`-> Invalid trigger for this workflow: ${event}`);
+                throw new Error(`-> Invalid trigger for this workflow: ${event}`);
         }
     });
 });

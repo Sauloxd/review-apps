@@ -2,8 +2,8 @@ import * as core from '@actions/core';
 
 export const withError =
   <P, R>(
-    cb: (...params: P[]) => Promise<R | undefined>
-  ): ((...params: P[]) => Promise<R | undefined>) =>
+    cb: (...params: P[]) => Promise<R>
+  ): ((...params: P[]) => Promise<R>) =>
   async (...args) => {
     core.debug(`CALL ${cb.name}`);
     core.debug(`WITH ${JSON.stringify(args, null, 2)}`);
@@ -12,5 +12,6 @@ export const withError =
     } catch (e) {
       core.setFailed(`FAILED ${cb.name}`);
       core.debug((e as any).message as string);
+      throw e;
     }
   };

@@ -1,2 +1,2 @@
-export { onClosed } from './on-closed';
-export { onDefault } from './on-default';
+export { onPush } from './on-push';
+export { onPullRequest } from './on-pull-request';

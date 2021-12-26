@@ -13,11 +13,11 @@ exports.getFilesFromOtherBranch = exports.push = exports.commit = exports.stageC
 const exec_1 = require("@actions/exec");
 const user_input_1 = require("../utils/user-input");
 const log_error_1 = require("./log-error");
-exports.configure = (0, log_error_1.withError)(function configure(params) {
+exports.configure = (0, log_error_1.withError)(function configure({ name, email, }) {
     return __awaiter(this, void 0, void 0, function* () {
         yield (0, exec_1.exec)('git', ['--version']);
-        yield (0, exec_1.exec)('git', ['config', '--global', 'user.name', params.user.name]);
-        yield (0, exec_1.exec)('git', ['config', '--global', 'user.email', params.user.email]);
+        yield (0, exec_1.exec)('git', ['config', '--global', 'user.name', name]);
+        yield (0, exec_1.exec)('git', ['config', '--global', 'user.email', email]);
         yield (0, exec_1.exec)('git', ['config', 'pull.rebase', 'true']);
     });
 });

@@ -1,11 +1,8 @@
 name: 'Workflow to help develop this action'
 on:
   # https://docs.github.com/en/actions/learn-github-actions/events-that-trigger-workflows#pull_request
-  # pull_request:
-  #   types: [labeled, unlabeled, opened, edited, closed, synchronize]
-  push:
-    branches:
-      - issue-**
+  pull_request:
+    types: [labeled, unlabeled, opened, edited, closed, synchronize]
 
 jobs:
   develop:

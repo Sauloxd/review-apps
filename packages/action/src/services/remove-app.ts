@@ -1,13 +1,16 @@
-import { retry } from '../utils/retry';
-import { SanitizedPayloadParams } from '../interface';
-import { userInput } from '../utils/user-input';
+import * as fileManager from '../utils/file-manager';
 import * as git from '../utils/git';
 import * as manifest from '../utils/manifest';
-import * as fileManager from '../utils/file-manager';
+import { retry } from '../utils/retry';
+import { withError } from '../utils/log-error';
+import { SanitizedPayloadParams } from '../interface';
+import { userInput } from '../utils/user-input';
 
-export async function onClosed(params: SanitizedPayloadParams) {
-  const input = userInput();
+export const removeApp = withError(async function removeApp(
+  params: SanitizedPayloadParams
+) {
   const { byHeadCommit } = fileManager.paths(params);
+  const input = userInput();
 
   await retry(5)(async () => {
     await git.hardReset(input.branch);
@@ -19,4 +22,4 @@ export async function onClosed(params: SanitizedPayloadParams) {
     );
     await git.push(input.branch);
   });
-}
+});

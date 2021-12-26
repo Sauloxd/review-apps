@@ -1,20 +1,19 @@
-import * as io from '@actions/io';
 import * as core from '@actions/core';
+import * as io from '@actions/io';
 import { exec } from '@actions/exec';
+import { SanitizedPayloadParams } from '../interface';
+import * as fileManager from '../utils/file-manager';
+import * as git from '../utils/git';
 import * as manifest from '../utils/manifest';
 import { retry } from '../utils/retry';
-import * as git from '../utils/git';
-import * as fileManager from '../utils/file-manager';
+import { withError } from '../utils/log-error';
 import { userInput } from '../utils/user-input';
-import {
-  FileManagerPaths,
-  SanitizedPayloadParams,
-  UserInput,
-} from '../interface';
 
-export async function onDefault(params: SanitizedPayloadParams) {
-  const input = userInput();
+export const syncApp = withError(async function syncApp(
+  params: SanitizedPayloadParams
+) {
   const paths = fileManager.paths(params);
+  const input = userInput();
   const PUBLIC_URL = `/${paths.byRepo}/${paths.byHeadCommit}`;
 
   core.info(`
@@ -46,18 +45,16 @@ export async function onDefault(params: SanitizedPayloadParams) {
   await git.stageChanges(input.dist);
   await git.commit(`Persisting dist output for ${input.slug}`);
 
-  await retry(5)(updateApp.bind(null, input, params, paths));
+  await retry(5)(updateApp.bind(null, params));
 
   core.debug('Return to original state');
 
   await git.hardReset(params.branch.name);
-}
+});
 
-async function updateApp(
-  input: UserInput,
-  params: SanitizedPayloadParams,
-  paths: FileManagerPaths
-) {
+async function updateApp(params: SanitizedPayloadParams) {
+  const input = userInput();
+  const paths = fileManager.paths(params);
   await git.hardReset(input.branch);
   await git.getFilesFromOtherBranch(params.branch.name, input.dist);
   manifest.replaceApp(params);
