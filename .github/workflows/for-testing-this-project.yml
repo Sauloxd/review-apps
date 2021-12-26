@@ -5,7 +5,7 @@ on:
   #   types: [labeled, unlabeled, opened, edited, closed, synchronize]
   push:
     branches:
-      - issue-*
+      - issue-**
 
 jobs:
   develop:
