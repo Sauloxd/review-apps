@@ -31,7 +31,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.replaceApp = exports.removeApp = void 0;
 const fs = __importStar(require("fs"));
 const core = __importStar(require("@actions/core"));
-const index_page_1 = require("../template/index-page");
+const default_1 = require("../template/default");
 const fileManager = __importStar(require("./file-manager"));
 const user_input_1 = require("./user-input");
 const log_error_1 = require("./log-error");
@@ -39,8 +39,7 @@ exports.removeApp = (0, log_error_1.withError)(function removeApp(branch) {
     return __awaiter(this, void 0, void 0, function* () {
         const manifest = getManifest();
         delete manifest[branch];
-        fs.writeFileSync('manifest.json', JSON.stringify(manifest, null, 2), 'utf-8');
-        fs.writeFileSync('index.html', (0, index_page_1.indexPage)(manifest), 'utf-8');
+        syncManifest(manifest);
     });
 });
 exports.replaceApp = (0, log_error_1.withError)(function replaceApp(params) {
@@ -58,10 +57,13 @@ exports.replaceApp = (0, log_error_1.withError)(function replaceApp(params) {
             apps.push(newApp);
         }
         manifest[params.branch.name] = Object.assign(Object.assign({}, manifest[params.branch.name]), { apps });
-        fs.writeFileSync('manifest.json', JSON.stringify(manifest, null, 2), 'utf-8');
-        fs.writeFileSync('index.html', (0, index_page_1.indexPage)(manifest), 'utf-8');
+        syncManifest(manifest);
     });
 });
+function syncManifest(manifest) {
+    fs.writeFileSync('manifest.json', JSON.stringify(manifest, null, 2), 'utf-8');
+    fs.writeFileSync('index.html', (0, default_1.defaultPage)(manifest), 'utf-8');
+}
 function buildApp(params) {
     const input = (0, user_input_1.userInput)();
     const paths = fileManager.paths(params);
