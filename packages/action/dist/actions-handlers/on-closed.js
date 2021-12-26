@@ -28,26 +28,24 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.run = void 0;
-const github = __importStar(require("@actions/github"));
-const core_1 = require("@actions/core");
-const handlers = __importStar(require("./actions-handlers"));
-const git = __importStar(require("./utils/git"));
-const params_from_payload_1 = require("./utils/params-from-payload");
-const interface_1 = require("./interface");
-const log_error_1 = require("./utils/log-error");
-exports.run = (0, log_error_1.withError)(function run() {
+exports.onClosed = void 0;
+const retry_1 = require("../utils/retry");
+const user_input_1 = require("../utils/user-input");
+const git = __importStar(require("../utils/git"));
+const manifest = __importStar(require("../utils/manifest"));
+const fileManager = __importStar(require("../utils/file-manager"));
+function onClosed(params) {
     return __awaiter(this, void 0, void 0, function* () {
-        const payload = github.context.payload;
-        const sanitizedParams = (0, params_from_payload_1.getParamsFromPayload)(payload);
-        (0, core_1.info)('Review Apps start!');
-        yield git.configure(sanitizedParams);
-        switch (payload.action) {
-            case interface_1.PullRequestAction.CLOSED:
-                return yield handlers.onClosed(sanitizedParams);
-            default:
-                return yield handlers.onDefault(sanitizedParams);
-        }
+        const input = (0, user_input_1.userInput)();
+        const { byHeadCommit } = fileManager.paths(params);
+        yield (0, retry_1.retry)(5)(() => __awaiter(this, void 0, void 0, function* () {
+            yield git.hardReset(input.branch);
+            yield fileManager.removeAllAppsFromBranch(params);
+            manifest.removeApp(params.branch.name);
+            yield git.stageChanges(byHeadCommit, 'index.html', 'manifest.json');
+            yield git.commit(git.decorateMessage(`Removing branch ${params.branch.name}`));
+            yield git.push(input.branch);
+        }));
     });
-});
-(0, exports.run)();
+}
+exports.onClosed = onClosed;

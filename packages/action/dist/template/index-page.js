@@ -1,7 +1,7 @@
-/* eslint-disable indent */
-const fs = require('fs');
-
-const IndexPage = (reviewApps = {}, styles = '') => `
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.indexPage = void 0;
+const indexPage = (reviewApps) => `
 <!DOCTYPE html>
 <html>
   <head>
@@ -11,7 +11,6 @@ const IndexPage = (reviewApps = {}, styles = '') => `
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
     <style>
       body { font-family: Roboto; }
-      ${styles}
     </style>
   </head>
   <body>
@@ -24,9 +23,10 @@ const IndexPage = (reviewApps = {}, styles = '') => `
         </div>
       </div>
       ${Object.keys(reviewApps).length === 0 ? 'No apps available yet' : ''}
-      ${
-        Object.entries(reviewApps).map(([name, reviewApp]) => {
-          return `
+      ${Object.entries(reviewApps)
+    .map(([name, reviewApp]) => {
+    var _a, _b;
+    return `
             <div class="row">
               <div class="col-sm">
                 <h2 style="margin-top: 30px;">
@@ -35,42 +35,41 @@ const IndexPage = (reviewApps = {}, styles = '') => `
               </div>
             </div>
             <div class="row">
-              ${Object.keys(reviewApp.apps).length === 0 ? 'No apps available yet' : ''}
-              ${reviewApp.apps.map((app, index) => {
-                return `
+              ${((_a = reviewApp.apps) === null || _a === void 0 ? void 0 : _a.length) === 0 ? 'No apps available yet' : ''}
+              ${(_b = reviewApp.apps) === null || _b === void 0 ? void 0 : _b.map((app, index) => {
+        return `
                   <div class="col-sm">
                     ${Card(app)}
                   </div>
-                  ${index % 4 === 3 ?
-                   `
+                  ${index % 4 === 3
+            ? `
                      <div class="w-100"></div>
-                   ` : ''}
+                   `
+            : ''}
                 `;
-
-              }).join('\n')}
+    }).join('\n')}
             </div>
           `;
-        })
-.join('\n')
-      }
+})
+    .join('\n')}
     </div>
   </body>
 </html>
 `;
-
+exports.indexPage = indexPage;
 function Card(app) {
-  const { name, headCommitId, updatedAt, href, pullRequestUrl } = app;
-  return `
+    const { name, headCommitId, updatedAt, href, pullRequestUrl } = app;
+    return `
     <div class="card" style="width: 18rem;">
       <div class="card-body">
         <h5 class="card-title">${name}</h5>
-        <h6 class="card-subtitle mb-2 text-muted">#${headCommitId.substr(0, 12)}</h6>
+        <h6 class="card-subtitle mb-2 text-muted">#${headCommitId.slice(0, 12)}</h6>
         <h6 class="card-subtitle mb-2 text-muted">${updatedAt.toLocaleString()}</h6>
         <a href="${href}" class="card-link">App</a>
-        ${pullRequestUrl ? `<a href="${pullRequestUrl}" class="card-link">Pull Request</a>` : ''}
+        ${pullRequestUrl
+        ? `<a href="${pullRequestUrl}" class="card-link">Pull Request</a>`
+        : ''}
       </div>
     </div>
   `;
 }
-
-module.exports = IndexPage;

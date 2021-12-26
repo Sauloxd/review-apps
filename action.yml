@@ -2,6 +2,10 @@ name: 'Deploy static app in branch to gh-pages'
 description: |
   Manages multiple static apps (or review-apps) for each branch in github pages
 
+runs:
+  using: 'node16'
+  main: 'packages/action/dist/index.js'
+
 inputs:
   build-cmd:
     description: |
@@ -30,10 +34,6 @@ inputs:
       For multiple types of apps inside the same repository (i.e. APP & STORYBOOK), provide an uniq slug.
       Example: If you want something like: https://sauloxd.github.io/my-app/storybooks/ft-home-1231bdhb, pass string "storybooks" so it doesn't override other apps inside same respository.
     default: 'review-apps'
-
-runs:
-  using: 'node16'
-  main: 'packages/action/dist/index.js'
 
 branding:
   icon: 'package'

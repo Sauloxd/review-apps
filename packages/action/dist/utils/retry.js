@@ -28,26 +28,26 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.run = void 0;
-const github = __importStar(require("@actions/github"));
-const core_1 = require("@actions/core");
-const handlers = __importStar(require("./actions-handlers"));
-const git = __importStar(require("./utils/git"));
-const params_from_payload_1 = require("./utils/params-from-payload");
-const interface_1 = require("./interface");
-const log_error_1 = require("./utils/log-error");
-exports.run = (0, log_error_1.withError)(function run() {
-    return __awaiter(this, void 0, void 0, function* () {
-        const payload = github.context.payload;
-        const sanitizedParams = (0, params_from_payload_1.getParamsFromPayload)(payload);
-        (0, core_1.info)('Review Apps start!');
-        yield git.configure(sanitizedParams);
-        switch (payload.action) {
-            case interface_1.PullRequestAction.CLOSED:
-                return yield handlers.onClosed(sanitizedParams);
-            default:
-                return yield handlers.onDefault(sanitizedParams);
-        }
-    });
-});
-(0, exports.run)();
+exports.retry = void 0;
+const core = __importStar(require("@actions/core"));
+function retry(times) {
+    return function r(cb, count = 0) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                yield cb();
+            }
+            catch (e) {
+                core.debug(e.message);
+                if (count < times) {
+                    core.debug(`Retrying... ${count}`);
+                    yield r(cb, count + 1);
+                }
+                else {
+                    core.debug(`Exhausted retries: ${count}`);
+                    throw new Error('Retry failed');
+                }
+            }
+        });
+    };
+}
+exports.retry = retry;
