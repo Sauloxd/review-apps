@@ -1,6 +1,6 @@
 import * as github from '@actions/github';
 import { setFailed, debug, info } from '@actions/core';
-import * as handlers from './actions-handlers';
+import * as handlers from './event-handlers';
 import { GithubTriggerActions } from './interface';
 import { withError } from './utils/log-error';
 import * as git from './utils/git';

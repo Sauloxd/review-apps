@@ -31,7 +31,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.run = void 0;
 const github = __importStar(require("@actions/github"));
 const core_1 = require("@actions/core");
-const handlers = __importStar(require("./actions-handlers"));
+const handlers = __importStar(require("./event-handlers"));
 const interface_1 = require("./interface");
 const log_error_1 = require("./utils/log-error");
 const git = __importStar(require("./utils/git"));
