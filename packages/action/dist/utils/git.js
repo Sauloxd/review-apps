@@ -19,7 +19,6 @@ exports.configure = (0, log_error_1.withError)(function configure(params) {
         yield (0, exec_1.exec)('git', ['config', '--global', 'user.name', params.user.name]);
         yield (0, exec_1.exec)('git', ['config', '--global', 'user.email', params.user.email]);
         yield (0, exec_1.exec)('git', ['config', 'pull.rebase', 'true']);
-        yield (0, exports.hardReset)(params.branch.name);
     });
 });
 exports.hardReset = (0, log_error_1.withError)(function hardReset(branch) {

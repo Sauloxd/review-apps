@@ -55,6 +55,7 @@ function onDefault(params) {
         core.info(`
     -> Building app
   `);
+        yield git.hardReset(params.branch.name);
         core.exportVariable('PUBLIC_URL', PUBLIC_URL);
         yield (0, exec_1.exec)(input.buildCmd);
         core.info(`
