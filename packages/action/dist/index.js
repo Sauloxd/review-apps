@@ -40,7 +40,7 @@ exports.run = (0, log_error_1.withError)(function run() {
     return __awaiter(this, void 0, void 0, function* () {
         const payload = github.context.payload;
         const sanitizedParams = (0, params_from_payload_1.getParamsFromPayload)(payload);
-        (0, core_1.info)('Review Apps start!');
+        (0, core_1.info)('-> Review Apps start!');
         yield git.configure(sanitizedParams);
         switch (payload.action) {
             case interface_1.PullRequestAction.CLOSED:

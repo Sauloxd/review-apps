@@ -1,0 +1,8 @@
+#!/bin/sh
+. "$(dirname "$0")/_/husky.sh"
+
+yarn build
+echo "-> Build action and commit"
+LAST_COMMIT_ID=$(git log --format="%H" -n 1)
+git add -f packages/action/dist
+git commit --amend --no-verify --all --reuse-message $LAST_COMMIT_ID

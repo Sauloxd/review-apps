@@ -43,7 +43,7 @@ function onClosed(params) {
             yield fileManager.removeAllAppsFromBranch(params);
             manifest.removeApp(params.branch.name);
             yield git.stageChanges(byHeadCommit, 'index.html', 'manifest.json');
-            yield git.commit(git.decorateMessage(`Removing branch ${params.branch.name}`));
+            yield git.commit(git.decorateMessage(`Removing branch: ${params.branch.name}`));
             yield git.push(input.branch);
         }));
     });

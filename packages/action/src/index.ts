@@ -12,7 +12,7 @@ export const run = withError(async function run() {
     GithubPullRequestPayload;
   const sanitizedParams = getParamsFromPayload(payload);
 
-  info('Review Apps start!');
+  info('-> Review Apps start!');
 
   await git.configure(sanitizedParams);
 

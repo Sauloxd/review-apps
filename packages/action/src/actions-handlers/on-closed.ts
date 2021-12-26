@@ -15,7 +15,7 @@ export async function onClosed(params: SanitizedPayloadParams) {
     manifest.removeApp(params.branch.name);
     await git.stageChanges(byHeadCommit, 'index.html', 'manifest.json');
     await git.commit(
-      git.decorateMessage(`Removing branch ${params.branch.name}`)
+      git.decorateMessage(`Removing branch: ${params.branch.name}`)
     );
     await git.push(input.branch);
   });
