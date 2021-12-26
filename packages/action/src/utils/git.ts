@@ -10,7 +10,6 @@ export const configure = withError(async function configure(
   await exec('git', ['config', '--global', 'user.name', params.user.name]);
   await exec('git', ['config', '--global', 'user.email', params.user.email]);
   await exec('git', ['config', 'pull.rebase', 'true']);
-  await hardReset(params.branch.name);
 });
 
 export const hardReset = withError(async function hardReset(branch: string) {
