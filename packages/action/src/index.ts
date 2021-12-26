@@ -1,5 +1,5 @@
 import * as github from '@actions/github';
-import { info } from '@actions/core';
+import { info, debug } from '@actions/core';
 import * as handlers from './actions-handlers';
 import * as git from './utils/git';
 import { getParamsFromPayload } from './utils/params-from-payload';
@@ -8,6 +8,8 @@ import { WebhookPayload } from '@actions/github/lib/interfaces';
 import { withError } from './utils/log-error';
 
 export const run = withError(async function run() {
+  debug(JSON.stringify(github, null, 2));
+
   const payload = github.context.payload as unknown as WebhookPayload &
     GithubPullRequestPayload;
   const sanitizedParams = getParamsFromPayload(payload);

@@ -38,6 +38,7 @@ const interface_1 = require("./interface");
 const log_error_1 = require("./utils/log-error");
 exports.run = (0, log_error_1.withError)(function run() {
     return __awaiter(this, void 0, void 0, function* () {
+        (0, core_1.debug)(JSON.stringify(github, null, 2));
         const payload = github.context.payload;
         const sanitizedParams = (0, params_from_payload_1.getParamsFromPayload)(payload);
         (0, core_1.info)('-> Review Apps start!');
