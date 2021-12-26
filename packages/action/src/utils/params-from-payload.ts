@@ -33,7 +33,7 @@ export function getParamsFromPayload(
       return {
         ...baseParams,
         branch: {
-          name: payload.pull_request.head.ref.split('/').pop() as string,
+          name: payload.pull_request.head.ref,
           headCommit: payload.pull_request.head.sha,
           pullRequest: {
             url: payload.pull_request.html_url,
@@ -44,7 +44,7 @@ export function getParamsFromPayload(
       return {
         ...baseParams,
         branch: {
-          name: payload.ref.split('/').pop(),
+          name: payload.ref,
           headCommit: payload.head_commit.id,
           pullRequest: {
             url: undefined,

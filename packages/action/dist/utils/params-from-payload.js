@@ -24,7 +24,7 @@ function getParamsFromPayload(payload) {
         case interface_1.PullRequestAction.SYNCHRONIZE:
         case interface_1.PullRequestAction.LABELED:
             return Object.assign(Object.assign({}, baseParams), { branch: {
-                    name: payload.pull_request.head.ref.split('/').pop(),
+                    name: payload.pull_request.head.ref,
                     headCommit: payload.pull_request.head.sha,
                     pullRequest: {
                         url: payload.pull_request.html_url,
@@ -32,7 +32,7 @@ function getParamsFromPayload(payload) {
                 } });
         case interface_1.PullRequestAction.PUSH:
             return Object.assign(Object.assign({}, baseParams), { branch: {
-                    name: payload.ref.split('/').pop(),
+                    name: payload.ref,
                     headCommit: payload.head_commit.id,
                     pullRequest: {
                         url: undefined,
