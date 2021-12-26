@@ -2,8 +2,5 @@
 . "$(dirname "$0")/_/husky.sh"
 
 yarn build
-echo "-> Build action and commit"
 LAST_COMMIT_ID=$(git log --format="%H" -n 1)
-echo "-> git add dist"
 git add -f packages/action/dist
-echo "-> git commit ammend last commit"
