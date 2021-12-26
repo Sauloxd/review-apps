@@ -14,6 +14,7 @@ export interface SanitizedPayloadParams {
   };
   repository: {
     name: string;
+    owner: string;
   };
   branch: {
     name: string;

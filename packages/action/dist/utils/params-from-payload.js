@@ -15,6 +15,7 @@ function getParamsFromPayload(payload) {
         },
         repository: {
             name: payload.repository.name,
+            owner: payload.repository.owner.login,
         },
     };
     switch (payload.action) {

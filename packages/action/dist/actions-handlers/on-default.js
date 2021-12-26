@@ -41,17 +41,13 @@ function onDefault(params) {
     return __awaiter(this, void 0, void 0, function* () {
         const input = (0, user_input_1.userInput)();
         const paths = fileManager.paths(params);
+        const PUBLIC_URL = `/${paths.byRepo}/${paths.byHeadCommit}`;
         core.info(`
     -> Paths:
     -> Your app will be hosted in github pages:
-    -> "https://{ username }.github.io/{ repository }/{ slug }/{ branch }/{ head_commit }"
-    -> This app URL:
-    -> @TODO
+    -> "https://${params.repository.owner}.github.io/${params.repository.name}/${paths.byHeadCommit}"
 
-    -> Example:
-    -> "https://sauloxd.github.io/review-apps/storybook/feature-1/c1fcf15"
-
-    -> We'll build your app with the proper PUBLIC_URL
+    -> We'll build your app with the proper PUBLIC_URL: ${PUBLIC_URL}
     -> For more info:
     -> https://github.com/facebook/create-react-app/pull/937/files#diff-9b26877ecf8d15b7987c96e5a17502f6
     -> https://www.gatsbyjs.com/docs/path-prefix/
@@ -59,7 +55,7 @@ function onDefault(params) {
         core.info(`
     -> Building app
   `);
-        core.exportVariable('PUBLIC_URL', `/${paths.byRepo}/${paths.byHeadCommit}`);
+        core.exportVariable('PUBLIC_URL', PUBLIC_URL);
         yield (0, exec_1.exec)(input.buildCmd);
         core.info(`
     -> Current working branch: ${params.branch.name}"
@@ -67,27 +63,26 @@ function onDefault(params) {
   `);
         yield git.stageChanges(input.dist);
         yield git.commit(`Persisting dist output for ${input.slug}`);
-        yield (0, retry_1.retry)(5)(() => __awaiter(this, void 0, void 0, function* () {
-            yield git.hardReset(input.branch);
-            yield git.getFilesFromOtherBranch(params.branch.name, input.dist);
-            manifest.replaceApp(params);
-            core.debug('Copying from input.dist to -> ' + paths.byHeadCommit);
-            yield (0, exec_1.exec)('ls');
-            yield (0, exec_1.exec)('git', ['status']);
-            core.debug(input.dist + '->' + paths.byHeadCommit);
-            yield io.cp(input.dist, paths.byHeadCommit, {
-                recursive: true,
-                force: true,
-            });
-            core.debug('Finished copying');
-            yield (0, exec_1.exec)('ls');
-            yield (0, exec_1.exec)('git', ['status']);
-            yield git.stageChanges(paths.byHeadCommit, 'index.html', 'manifest.json');
-            yield git.commit(`Updating app ${paths.byHeadCommit}`);
-            yield git.push(input.branch);
-        }));
+        yield (0, retry_1.retry)(5)(updateApp.bind(null, input, params, paths));
         core.debug('Return to original state');
         yield git.hardReset(params.branch.name);
     });
 }
 exports.onDefault = onDefault;
+function updateApp(input, params, paths) {
+    return __awaiter(this, void 0, void 0, function* () {
+        yield git.hardReset(input.branch);
+        yield git.getFilesFromOtherBranch(params.branch.name, input.dist);
+        manifest.replaceApp(params);
+        core.debug('Copying from input.dist to -> ' + paths.byHeadCommit);
+        core.debug(input.dist + '->' + paths.byHeadCommit);
+        yield io.cp(input.dist, paths.byHeadCommit, {
+            recursive: true,
+            force: true,
+        });
+        core.debug('Finished copying');
+        yield git.stageChanges(paths.byHeadCommit, 'index.html', 'manifest.json');
+        yield git.commit(`Updating app ${paths.byHeadCommit}`);
+        yield git.push(input.branch);
+    });
+}
