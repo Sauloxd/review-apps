@@ -14,7 +14,7 @@
 importScripts("https://storage.googleapis.com/workbox-cdn/releases/4.3.1/workbox-sw.js");
 
 importScripts(
-  "/review-apps/dev-cra/ft-refactor-action/95352c/precache-manifest.949e7550961f9728c1e94d85e4d1b062.js"
+  "/review-apps/dev-cra/íssue-8-nested-branch0names/5a4d8f/precache-manifest.6cd8d499a5ed9b4532c0a8f90333716f.js"
 );
 
 self.addEventListener('message', (event) => {
@@ -33,7 +33,7 @@ workbox.core.clientsClaim();
 self.__precacheManifest = [].concat(self.__precacheManifest || []);
 workbox.precaching.precacheAndRoute(self.__precacheManifest, {});
 
-workbox.routing.registerNavigationRoute(workbox.precaching.getCacheKeyForURL("/review-apps/dev-cra/ft-refactor-action/95352c/index.html"), {
+workbox.routing.registerNavigationRoute(workbox.precaching.getCacheKeyForURL("/review-apps/dev-cra/íssue-8-nested-branch0names/5a4d8f/index.html"), {
   
   blacklist: [/^\/_/,/\/[^/?]+\.[^/]+$/],
 });
