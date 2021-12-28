@@ -1,12 +1,12 @@
 {
   "name": "@sxd/review-apps-action",
   "version": "0.0.1",
-  "main": "dist/src/index.js",
+  "main": "dist/index.js",
   "scripts": {
     "build": "yarn build:clean && yarn build:ts && yarn build:html",
     "build:clean": "rimraf dist",
     "build:ts": "tsc -p tsconfig.json",
-    "build:html": "yarn copyfiles \"src/**/*.html\" dist",
+    "build:html": "yarn copyfiles -u 1 \"src/**/*.html\" dist",
     "dev:tmpl": "nodemon -e ts,tsx spec/template/default/index.ts"
   },
   "dependencies": {

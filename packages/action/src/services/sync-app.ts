@@ -12,30 +12,19 @@ import { userInput } from '../utils/user-input';
 export const syncApp = withError(async function syncApp(
   params: SanitizedPayloadParams
 ) {
-  const paths = fileManager.paths(params);
   const input = userInput();
-  const PUBLIC_URL = `/${paths.byRepo}/${paths.byHeadCommit}`;
+  const paths = fileManager.paths(params);
 
   core.info(`
-    -> Paths:
     -> Your app will be hosted in github pages:
+    -> "https://${params.repository.owner}.github.io/${params.repository.name}"
+
+    -> This app is served from:
     -> "https://${params.repository.owner}.github.io/${params.repository.name}/${paths.byHeadCommit}"
 
-    -> We'll build your app with the proper PUBLIC_URL: ${PUBLIC_URL}
-    -> For more info:
-    -> https://github.com/facebook/create-react-app/pull/937/files#diff-9b26877ecf8d15b7987c96e5a17502f6
-    -> https://www.gatsbyjs.com/docs/path-prefix/
   `);
 
-  core.info(`
-    -> Building app
-  `);
-
-  await git.hardReset(params.branch.name);
-
-  core.exportVariable('PUBLIC_URL', PUBLIC_URL);
-
-  await exec(input.buildCmd);
+  await optionalBuildApp(params);
 
   core.info(`
     -> Current working branch: ${params.branch.name}"
@@ -70,4 +59,34 @@ async function updateApp(params: SanitizedPayloadParams) {
   await git.stageChanges(paths.byHeadCommit, 'index.html', 'manifest.json');
   await git.commit(`Updating app ${paths.byHeadCommit}`);
   await git.push(input.branch);
+}
+
+async function optionalBuildApp(params: SanitizedPayloadParams) {
+  const input = userInput();
+
+  if (!input.buildCmd) {
+    core.info(`
+    -> NO "buildCmd" passed, skipping build phase
+    `);
+
+    return;
+  }
+  const paths = fileManager.paths(params);
+  const PUBLIC_URL = `/${paths.byRepo}/${paths.byHeadCommit}`;
+
+  core.info(`
+    -> BUILDING APP
+
+    -> We'll build your app with the proper PUBLIC_URL: ${PUBLIC_URL}
+    -> That way you can use relative links inside your app.
+    -> For more info:
+    -> https://github.com/facebook/create-react-app/pull/937/files#diff-9b26877ecf8d15b7987c96e5a17502f6
+    -> https://www.gatsbyjs.com/docs/path-prefix/
+  `);
+
+  await git.hardReset(params.branch.name);
+
+  core.exportVariable('PUBLIC_URL', PUBLIC_URL);
+
+  await exec(input.buildCmd);
 }

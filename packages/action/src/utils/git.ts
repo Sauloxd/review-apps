@@ -34,7 +34,7 @@ export const stageChanges = withError(async function stageChanges(
 });
 
 export const commit = withError(async function commit(message: string) {
-  await exec('git', ['commit', '-m', decorateMessage(message)]);
+  await exec('git', ['commit', '--no-verify', '-m', decorateMessage(message)]);
 });
 
 export const push = withError(async function push(branch: string) {

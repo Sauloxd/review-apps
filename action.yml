@@ -4,7 +4,7 @@ description: |
 
 runs:
   using: 'node16'
-  main: 'packages/action/dist/src/index.js'
+  main: 'packages/action/dist/index.js'
 
 inputs:
   build-cmd:
@@ -13,7 +13,8 @@ inputs:
       For example, if you use "create-react-app", this would be "yarn build".
       IMPORTANT: If your app doesn't use HashRouting (the #/ in url), use process.env.PUBLIC_URL to correctly configure it.
       See FAQ and https://www.gatsbyjs.com/docs/path-prefix/ for more info.
-    default: 'yarn build'
+      Also you can skip building your apps if you did it in a previous step.
+      Remember that the "dist" path should be pointing to your app's build
 
   branch:
     description: |
