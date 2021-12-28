@@ -25,6 +25,13 @@
         "updatedAt": "2021-12-28T21:14:34.709Z",
         "href": "dev-cra-sb/issue-9/optional-build-cmd/7906c6",
         "pullRequestUrl": "https://github.com/Sauloxd/review-apps/pull/15"
+      },
+      {
+        "name": "dev-gatsby",
+        "headCommitId": "7906c6980c63e1ad185b2f8ddbc9be3a749790b5",
+        "updatedAt": "2021-12-28T21:14:51.037Z",
+        "href": "dev-gatsby/issue-9/optional-build-cmd/7906c6",
+        "pullRequestUrl": "https://github.com/Sauloxd/review-apps/pull/15"
       }
     ]
   }
