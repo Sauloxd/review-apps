@@ -3,7 +3,10 @@
   "version": "0.0.1",
   "main": "dist/src/index.js",
   "scripts": {
-    "build": "rimraf dist && tsc -p tsconfig.json",
+    "build": "yarn build:clean && yarn build:ts && yarn build:html",
+    "build:clean": "rimraf dist",
+    "build:ts": "tsc -p tsconfig.json",
+    "build:html": "yarn copyfiles \"src/**/*.html\" dist",
     "dev:tmpl": "nodemon -e ts,tsx spec/template/default/index.ts"
   },
   "dependencies": {
@@ -11,6 +14,7 @@
     "@actions/exec": "^1.1.0",
     "@actions/github": "^5.0.0",
     "@actions/io": "^1.1.1",
+    "copyfiles": "^2.4.1",
     "mustache": "^4.2.0"
   },
   "devDependencies": {
