@@ -40,25 +40,17 @@ const log_error_1 = require("../utils/log-error");
 const user_input_1 = require("../utils/user-input");
 exports.syncApp = (0, log_error_1.withError)(function syncApp(params) {
     return __awaiter(this, void 0, void 0, function* () {
-        const paths = fileManager.paths(params);
         const input = (0, user_input_1.userInput)();
-        const PUBLIC_URL = `/${paths.byRepo}/${paths.byHeadCommit}`;
+        const paths = fileManager.paths(params);
         core.info(`
-    -> Paths:
     -> Your app will be hosted in github pages:
+    -> "https://${params.repository.owner}.github.io/${params.repository.name}"
+
+    -> This app is served from:
     -> "https://${params.repository.owner}.github.io/${params.repository.name}/${paths.byHeadCommit}"
 
-    -> We'll build your app with the proper PUBLIC_URL: ${PUBLIC_URL}
-    -> For more info:
-    -> https://github.com/facebook/create-react-app/pull/937/files#diff-9b26877ecf8d15b7987c96e5a17502f6
-    -> https://www.gatsbyjs.com/docs/path-prefix/
   `);
-        core.info(`
-    -> Building app
-  `);
-        yield git.hardReset(params.branch.name);
-        core.exportVariable('PUBLIC_URL', PUBLIC_URL);
-        yield (0, exec_1.exec)(input.buildCmd);
+        yield optionalBuildApp(params);
         core.info(`
     -> Current working branch: ${params.branch.name}"
     -> Will move (and override) the build result on '${input.dist}' to '${paths.byHeadCommit}' in ${input.branch}"
@@ -87,5 +79,28 @@ function updateApp(params) {
         yield git.stageChanges(paths.byHeadCommit, 'index.html', 'manifest.json');
         yield git.commit(`Updating app ${paths.byHeadCommit}`);
         yield git.push(input.branch);
+    });
+}
+function optionalBuildApp(params) {
+    return __awaiter(this, void 0, void 0, function* () {
+        const input = (0, user_input_1.userInput)();
+        if (!input.buildCmd) {
+            core.info('-> NO "buildCmd" passed, skipping build phase');
+            return;
+        }
+        const paths = fileManager.paths(params);
+        const PUBLIC_URL = `/${paths.byRepo}/${paths.byHeadCommit}`;
+        core.info(`
+    -> BUILDING APP
+
+    -> We'll build your app with the proper PUBLIC_URL: ${PUBLIC_URL}
+    -> That way you can use relative links inside your app.
+    -> For more info:
+    -> https://github.com/facebook/create-react-app/pull/937/files#diff-9b26877ecf8d15b7987c96e5a17502f6
+    -> https://www.gatsbyjs.com/docs/path-prefix/
+  `);
+        yield git.hardReset(params.branch.name);
+        core.exportVariable('PUBLIC_URL', PUBLIC_URL);
+        yield (0, exec_1.exec)(input.buildCmd);
     });
 }

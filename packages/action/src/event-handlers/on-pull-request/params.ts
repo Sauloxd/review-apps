@@ -1,9 +1,8 @@
 import * as github from '@actions/github';
-import { GithubPullRequestPayload } from '../../../spec/fixtures/on-pull-request';
 import { PullRequestAction, SanitizedPayloadParams } from '../../interface';
 
 export function getParams(): SanitizedPayloadParams {
-  const payload: GithubPullRequestPayload = github.context.payload as any;
+  const payload = github.context.payload as any;
 
   return {
     action: payload.action as PullRequestAction,
