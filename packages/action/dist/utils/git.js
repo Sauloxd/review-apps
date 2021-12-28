@@ -40,7 +40,7 @@ exports.stageChanges = (0, log_error_1.withError)(function stageChanges(...files
 });
 exports.commit = (0, log_error_1.withError)(function commit(message) {
     return __awaiter(this, void 0, void 0, function* () {
-        yield (0, exec_1.exec)('git', ['commit', '-m', decorateMessage(message)]);
+        yield (0, exec_1.exec)('git', ['commit', '--no-verify', '-m', decorateMessage(message)]);
     });
 });
 exports.push = (0, log_error_1.withError)(function push(branch) {
