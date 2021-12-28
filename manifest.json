@@ -9,5 +9,16 @@
         "pullRequestUrl": "https://github.com/Sauloxd/review-apps/pull/14"
       }
     ]
+  },
+  "issue-9/optional-build-cmd": {
+    "apps": [
+      {
+        "name": "dev-cra",
+        "headCommitId": "8286ae00b380170c79d5902338af59c12241faf7",
+        "updatedAt": "2021-12-28T20:48:12.384Z",
+        "href": "dev-cra/issue-9/optional-build-cmd/8286ae",
+        "pullRequestUrl": "https://github.com/Sauloxd/review-apps/pull/15"
+      }
+    ]
   }
 }
