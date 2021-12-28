@@ -1,25 +1,25 @@
 {
   "files": {
-    "main.css": "/review-apps/dev-cra/issue-8/branch/with/nested/names/034b8b/static/css/main.5ecd60fb.chunk.css",
-    "main.js": "/review-apps/dev-cra/issue-8/branch/with/nested/names/034b8b/static/js/main.1e9d10d1.chunk.js",
-    "main.js.map": "/review-apps/dev-cra/issue-8/branch/with/nested/names/034b8b/static/js/main.1e9d10d1.chunk.js.map",
-    "runtime-main.js": "/review-apps/dev-cra/issue-8/branch/with/nested/names/034b8b/static/js/runtime-main.e07aa6b6.js",
-    "runtime-main.js.map": "/review-apps/dev-cra/issue-8/branch/with/nested/names/034b8b/static/js/runtime-main.e07aa6b6.js.map",
-    "static/js/2.a2a6c264.chunk.js": "/review-apps/dev-cra/issue-8/branch/with/nested/names/034b8b/static/js/2.a2a6c264.chunk.js",
-    "static/js/2.a2a6c264.chunk.js.map": "/review-apps/dev-cra/issue-8/branch/with/nested/names/034b8b/static/js/2.a2a6c264.chunk.js.map",
-    "index.html": "/review-apps/dev-cra/issue-8/branch/with/nested/names/034b8b/index.html",
-    "precache-manifest.b2869ef922cb750f01dbe3269d675f4c.js": "/review-apps/dev-cra/issue-8/branch/with/nested/names/034b8b/precache-manifest.b2869ef922cb750f01dbe3269d675f4c.js",
-    "service-worker.js": "/review-apps/dev-cra/issue-8/branch/with/nested/names/034b8b/service-worker.js",
-    "static/css/main.5ecd60fb.chunk.css.map": "/review-apps/dev-cra/issue-8/branch/with/nested/names/034b8b/static/css/main.5ecd60fb.chunk.css.map",
-    "static/js/2.a2a6c264.chunk.js.LICENSE.txt": "/review-apps/dev-cra/issue-8/branch/with/nested/names/034b8b/static/js/2.a2a6c264.chunk.js.LICENSE.txt",
-    "static/media/fox-combo-1.gif": "/review-apps/dev-cra/issue-8/branch/with/nested/names/034b8b/static/media/fox-combo-1.b8000ebc.gif",
-    "static/media/fox-multishine.gif": "/review-apps/dev-cra/issue-8/branch/with/nested/names/034b8b/static/media/fox-multishine.90b071d4.gif",
-    "static/media/fox-waveshine.gif": "/review-apps/dev-cra/issue-8/branch/with/nested/names/034b8b/static/media/fox-waveshine.7ec8b809.gif"
+    "main.css": "/review-apps/dev-cra/issue-8/branch/with/nested/names/f2aadc/static/css/main.5ecd60fb.chunk.css",
+    "main.js": "/review-apps/dev-cra/issue-8/branch/with/nested/names/f2aadc/static/js/main.d5060687.chunk.js",
+    "main.js.map": "/review-apps/dev-cra/issue-8/branch/with/nested/names/f2aadc/static/js/main.d5060687.chunk.js.map",
+    "runtime-main.js": "/review-apps/dev-cra/issue-8/branch/with/nested/names/f2aadc/static/js/runtime-main.4c75525d.js",
+    "runtime-main.js.map": "/review-apps/dev-cra/issue-8/branch/with/nested/names/f2aadc/static/js/runtime-main.4c75525d.js.map",
+    "static/js/2.a2a6c264.chunk.js": "/review-apps/dev-cra/issue-8/branch/with/nested/names/f2aadc/static/js/2.a2a6c264.chunk.js",
+    "static/js/2.a2a6c264.chunk.js.map": "/review-apps/dev-cra/issue-8/branch/with/nested/names/f2aadc/static/js/2.a2a6c264.chunk.js.map",
+    "index.html": "/review-apps/dev-cra/issue-8/branch/with/nested/names/f2aadc/index.html",
+    "precache-manifest.477f009edefa08f1f4a4dd15dfa76180.js": "/review-apps/dev-cra/issue-8/branch/with/nested/names/f2aadc/precache-manifest.477f009edefa08f1f4a4dd15dfa76180.js",
+    "service-worker.js": "/review-apps/dev-cra/issue-8/branch/with/nested/names/f2aadc/service-worker.js",
+    "static/css/main.5ecd60fb.chunk.css.map": "/review-apps/dev-cra/issue-8/branch/with/nested/names/f2aadc/static/css/main.5ecd60fb.chunk.css.map",
+    "static/js/2.a2a6c264.chunk.js.LICENSE.txt": "/review-apps/dev-cra/issue-8/branch/with/nested/names/f2aadc/static/js/2.a2a6c264.chunk.js.LICENSE.txt",
+    "static/media/fox-combo-1.gif": "/review-apps/dev-cra/issue-8/branch/with/nested/names/f2aadc/static/media/fox-combo-1.b8000ebc.gif",
+    "static/media/fox-multishine.gif": "/review-apps/dev-cra/issue-8/branch/with/nested/names/f2aadc/static/media/fox-multishine.90b071d4.gif",
+    "static/media/fox-waveshine.gif": "/review-apps/dev-cra/issue-8/branch/with/nested/names/f2aadc/static/media/fox-waveshine.7ec8b809.gif"
   },
   "entrypoints": [
-    "static/js/runtime-main.e07aa6b6.js",
+    "static/js/runtime-main.4c75525d.js",
     "static/js/2.a2a6c264.chunk.js",
     "static/css/main.5ecd60fb.chunk.css",
-    "static/js/main.1e9d10d1.chunk.js"
+    "static/js/main.d5060687.chunk.js"
   ]
 }
