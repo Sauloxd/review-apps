@@ -9,16 +9,5 @@
         "pullRequestUrl": "https://github.com/Sauloxd/review-apps/pull/14"
       }
     ]
-  },
-  "issue-8/branch/with/nested/names": {
-    "apps": [
-      {
-        "name": "dev-cra",
-        "headCommitId": "f2aadc1d464b56b90a0d800af2c5922a7278a9d5",
-        "updatedAt": "2021-12-28T20:00:44.770Z",
-        "href": "dev-cra/issue-8/branch/with/nested/names/f2aadc",
-        "pullRequestUrl": "https://github.com/Sauloxd/review-apps/pull/14"
-      }
-    ]
   }
 }
