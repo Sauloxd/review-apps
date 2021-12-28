@@ -85,7 +85,9 @@ function optionalBuildApp(params) {
     return __awaiter(this, void 0, void 0, function* () {
         const input = (0, user_input_1.userInput)();
         if (!input.buildCmd) {
-            core.info('-> NO "buildCmd" passed, skipping build phase');
+            core.info(`
+    -> NO "buildCmd" passed, skipping build phase
+    `);
             return;
         }
         const paths = fileManager.paths(params);

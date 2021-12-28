@@ -65,7 +65,9 @@ async function optionalBuildApp(params: SanitizedPayloadParams) {
   const input = userInput();
 
   if (!input.buildCmd) {
-    core.info('-> NO "buildCmd" passed, skipping build phase');
+    core.info(`
+    -> NO "buildCmd" passed, skipping build phase
+    `);
 
     return;
   }
