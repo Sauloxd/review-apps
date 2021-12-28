@@ -1,6 +1,6 @@
 export enum GithubTriggerActions {
   PUSH = 'push',
-  PULL_REQUEST = 'push',
+  PULL_REQUEST = 'pull_request',
 }
 
 export enum PullRequestAction {
