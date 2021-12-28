@@ -1,14 +1,17 @@
 import { exec } from '@actions/exec';
-import { SanitizedPayloadParams } from '../interface';
 import { userInput } from '../utils/user-input';
 import { withError } from './log-error';
 
-export const configure = withError(async function configure(
-  params: SanitizedPayloadParams
-) {
+export const configure = withError(async function configure({
+  name,
+  email,
+}: {
+  name: string;
+  email: string;
+}) {
   await exec('git', ['--version']);
-  await exec('git', ['config', '--global', 'user.name', params.user.name]);
-  await exec('git', ['config', '--global', 'user.email', params.user.email]);
+  await exec('git', ['config', '--global', 'user.name', name]);
+  await exec('git', ['config', '--global', 'user.email', email]);
   await exec('git', ['config', 'pull.rebase', 'true']);
 });
 

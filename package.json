@@ -1,18 +1,22 @@
 {
-  "name": "sxd",
+  "name": "review-apps",
   "workspaces": [
     "packages/*"
   ],
   "private": "true",
   "version": "0.0.1",
-  "main": "dist/index.js",
-  "repository": "git@github.com:Sauloxd/stories.git",
+  "main": "packages/action/dist/src/index.js",
+  "repository": "git@github.com:Sauloxd/review-apps.git",
   "author": "sauloxd <saulotoshi@gmail.com>",
   "license": "MIT",
   "scripts": {
     "build": "yarn workspace @sxd/review-apps-action run build",
     "cra:build": "SKIP_PREFLIGHT_CHECK=true yarn workspace @sxd/review-apps-action-cra-example run build",
     "cra:storybook": "yarn workspace @sxd/review-apps-action-cra-example run build-storybook",
-    "gatsby:build": "yarn workspace @sxd/review-apps-action-gatsby-example run build"
+    "gatsby:build": "yarn workspace @sxd/review-apps-action-gatsby-example run build",
+    "prepare": "husky install"
+  },
+  "devDependencies": {
+    "husky": "^7.0.4"
   }
 }

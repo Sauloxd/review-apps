@@ -1,7 +1,7 @@
 import * as fs from 'fs';
 import * as core from '@actions/core';
 import { App, Manifest, SanitizedPayloadParams } from '../interface';
-import { indexPage } from '../template/index-page';
+import { defaultPage } from '../template/default';
 import * as fileManager from './file-manager';
 import { userInput } from './user-input';
 import { withError } from './log-error';
@@ -11,8 +11,7 @@ export const removeApp = withError(async function removeApp(branch: string) {
 
   delete manifest[branch];
 
-  fs.writeFileSync('manifest.json', JSON.stringify(manifest, null, 2), 'utf-8');
-  fs.writeFileSync('index.html', indexPage(manifest), 'utf-8');
+  syncManifest(manifest);
 });
 
 export const replaceApp = withError(async function replaceApp(
@@ -35,9 +34,13 @@ export const replaceApp = withError(async function replaceApp(
     apps,
   };
 
-  fs.writeFileSync('manifest.json', JSON.stringify(manifest, null, 2), 'utf-8');
-  fs.writeFileSync('index.html', indexPage(manifest), 'utf-8');
+  syncManifest(manifest);
 });
+
+function syncManifest(manifest: Manifest) {
+  fs.writeFileSync('manifest.json', JSON.stringify(manifest, null, 2), 'utf-8');
+  fs.writeFileSync('index.html', defaultPage(manifest), 'utf-8');
+}
 
 function buildApp(params: SanitizedPayloadParams): App {
   const input = userInput();

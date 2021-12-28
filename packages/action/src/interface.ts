@@ -1,3 +1,8 @@
+export enum GithubTriggerActions {
+  PUSH = 'push',
+  PULL_REQUEST = 'pull_request',
+}
+
 export enum PullRequestAction {
   OPENED = 'opened',
   CLOSED = 'closed',
@@ -8,10 +13,6 @@ export enum PullRequestAction {
 
 export interface SanitizedPayloadParams {
   action?: PullRequestAction;
-  user: {
-    name: string;
-    email: string;
-  };
   repository: {
     name: string;
     owner: string;
@@ -22,23 +23,6 @@ export interface SanitizedPayloadParams {
     pullRequest: {
       url?: string;
     };
-  };
-}
-
-export interface GithubPullRequestPayload {
-  repository: {
-    name: string;
-  };
-  pull_request: {
-    head: {
-      ref: string;
-      sha: string;
-    };
-    html_url: string;
-  };
-  pusher: {
-    name: string;
-    email: string;
   };
 }
 

@@ -4,7 +4,7 @@ description: |
 
 runs:
   using: 'node16'
-  main: 'packages/action/dist/index.js'
+  main: 'packages/action/dist/src/index.js'
 
 inputs:
   build-cmd:
