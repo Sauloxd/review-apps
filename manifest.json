@@ -9,33 +9,5 @@
         "pullRequestUrl": "https://github.com/Sauloxd/review-apps/pull/14"
       }
     ]
-  },
-  "ft-deployment-status": {
-    "apps": [
-      {
-        "name": "dev-cra",
-        "headCommitId": "d9f913f7f2022a810db23ca77367e033f52542a2",
-        "updatedAt": "2021-12-29T20:34:43.290Z",
-        "href": "dev-cra/ft-deployment-status/d9f913",
-        "pullRequestUrl": "https://github.com/Sauloxd/review-apps/pull/16",
-        "githubPagesUrl": "https://Sauloxd.github.io/review-apps/dev-cra/ft-deployment-status/d9f913"
-      },
-      {
-        "name": "dev-cra-sb",
-        "headCommitId": "d9f913f7f2022a810db23ca77367e033f52542a2",
-        "updatedAt": "2021-12-29T20:35:13.312Z",
-        "href": "dev-cra-sb/ft-deployment-status/d9f913",
-        "pullRequestUrl": "https://github.com/Sauloxd/review-apps/pull/16",
-        "githubPagesUrl": "https://Sauloxd.github.io/review-apps/dev-cra-sb/ft-deployment-status/d9f913"
-      },
-      {
-        "name": "dev-gatsby",
-        "headCommitId": "d9f913f7f2022a810db23ca77367e033f52542a2",
-        "updatedAt": "2021-12-29T20:35:32.412Z",
-        "href": "dev-gatsby/ft-deployment-status/d9f913",
-        "pullRequestUrl": "https://github.com/Sauloxd/review-apps/pull/16",
-        "githubPagesUrl": "https://Sauloxd.github.io/review-apps/dev-gatsby/ft-deployment-status/d9f913"
-      }
-    ]
   }
 }
