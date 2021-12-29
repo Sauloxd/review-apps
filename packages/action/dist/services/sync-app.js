@@ -47,7 +47,7 @@ exports.syncApp = (0, log_error_1.withError)(function syncApp(params) {
     -> "https://${params.repository.owner}.github.io/${params.repository.name}"
 
     -> This app is served from:
-    -> "https://${params.repository.owner}.github.io/${params.repository.name}/${paths.byHeadCommit}"
+    -> "${manifest.githubPagesUrl(params)}"
 
   `);
         yield optionalBuildApp(params);

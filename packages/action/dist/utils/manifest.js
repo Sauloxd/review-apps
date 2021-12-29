@@ -28,7 +28,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.replaceApp = exports.removeApp = void 0;
+exports.githubPagesUrl = exports.getBranchPaths = exports.replaceApp = exports.removeApp = void 0;
 const fs = __importStar(require("fs"));
 const core = __importStar(require("@actions/core"));
 const default_1 = require("../template/default");
@@ -60,6 +60,16 @@ exports.replaceApp = (0, log_error_1.withError)(function replaceApp(params) {
         syncManifest(manifest);
     });
 });
+function getBranchPaths(branch) {
+    const manifest = getManifest();
+    return manifest[branch];
+}
+exports.getBranchPaths = getBranchPaths;
+function githubPagesUrl(params) {
+    const paths = fileManager.paths(params);
+    return `https://${params.repository.owner}.github.io/${params.repository.name}/${paths.byHeadCommit}`;
+}
+exports.githubPagesUrl = githubPagesUrl;
 function syncManifest(manifest) {
     fs.writeFileSync('manifest.json', JSON.stringify(manifest, null, 2), 'utf-8');
     fs.writeFileSync('index.html', (0, default_1.defaultPage)(manifest), 'utf-8');
@@ -73,6 +83,7 @@ function buildApp(params) {
         updatedAt: new Date(),
         href: paths.byHeadCommit,
         pullRequestUrl: params.branch.pullRequest.url,
+        githubPagesUrl: githubPagesUrl(params),
     };
 }
 function getManifest() {

@@ -37,6 +37,18 @@ export const replaceApp = withError(async function replaceApp(
   syncManifest(manifest);
 });
 
+export function getBranchPaths(branch: string) {
+  const manifest = getManifest();
+
+  return manifest[branch];
+}
+
+export function githubPagesUrl(params: SanitizedPayloadParams) {
+  const paths = fileManager.paths(params);
+
+  return `https://${params.repository.owner}.github.io/${params.repository.name}/${paths.byHeadCommit}`;
+}
+
 function syncManifest(manifest: Manifest) {
   fs.writeFileSync('manifest.json', JSON.stringify(manifest, null, 2), 'utf-8');
   fs.writeFileSync('index.html', defaultPage(manifest), 'utf-8');
@@ -52,6 +64,7 @@ function buildApp(params: SanitizedPayloadParams): App {
     updatedAt: new Date(),
     href: paths.byHeadCommit,
     pullRequestUrl: params.branch.pullRequest.url,
+    githubPagesUrl: githubPagesUrl(params),
   };
 }
 

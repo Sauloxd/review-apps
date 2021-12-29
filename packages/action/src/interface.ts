@@ -31,6 +31,7 @@ export interface UserInput {
   slug: string;
   branch: string;
   buildCmd: string;
+  githubToken: string;
 }
 
 export interface FileManagerPaths {
@@ -45,6 +46,7 @@ export type App = {
   updatedAt: Date;
   href: string;
   pullRequestUrl?: string;
+  githubPagesUrl: string;
 };
 
 export interface Manifest {

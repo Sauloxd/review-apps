@@ -20,7 +20,7 @@ export const syncApp = withError(async function syncApp(
     -> "https://${params.repository.owner}.github.io/${params.repository.name}"
 
     -> This app is served from:
-    -> "https://${params.repository.owner}.github.io/${params.repository.name}/${paths.byHeadCommit}"
+    -> "${manifest.githubPagesUrl(params)}"
 
   `);
 
