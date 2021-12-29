@@ -46,7 +46,7 @@ const getCommentBody = (branch: string) => {
   const body = `
   ${REVIEW_APP_ID}
   ## URLS
-  ${pathsForBranch.apps.map(formatToListedLink).join('')}
+${pathsForBranch.apps.map(formatToListedLink).join('')}
   ### Last updated at
   ${new Date().toString()}
  `;
@@ -54,7 +54,7 @@ const getCommentBody = (branch: string) => {
   return body;
 
   function formatToListedLink(app: App) {
-    return `- [${app.name}](${app.githubPagesUrl})\n`;
+    return `  - [${app.name}](${app.githubPagesUrl})\n`;
   }
 };
 const CommentApi = () => {
