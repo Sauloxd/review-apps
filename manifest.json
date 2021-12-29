@@ -14,11 +14,11 @@
     "apps": [
       {
         "name": "dev-cra",
-        "headCommitId": "69cba1c0863bcc42604aa3af5c6acc13e0a2d57f",
-        "updatedAt": "2021-12-29T20:16:55.092Z",
-        "href": "dev-cra/ft-deployment-status/69cba1",
+        "headCommitId": "bf8a9068aece679aea281e90d12ab82963c4e9f7",
+        "updatedAt": "2021-12-29T20:28:30.583Z",
+        "href": "dev-cra/ft-deployment-status/bf8a90",
         "pullRequestUrl": "https://github.com/Sauloxd/review-apps/pull/16",
-        "githubPagesUrl": "https://Sauloxd.github.io/review-apps/dev-cra/ft-deployment-status/69cba1"
+        "githubPagesUrl": "https://Sauloxd.github.io/review-apps/dev-cra/ft-deployment-status/bf8a90"
       }
     ]
   }
