@@ -8,6 +8,7 @@ import * as manifest from '../utils/manifest';
 import { retry } from '../utils/retry';
 import { withError } from '../utils/log-error';
 import { userInput } from '../utils/user-input';
+import { commentAppInfo } from './comment-app-info';
 
 export const syncApp = withError(async function syncApp(
   params: SanitizedPayloadParams
@@ -20,7 +21,7 @@ export const syncApp = withError(async function syncApp(
     -> "https://${params.repository.owner}.github.io/${params.repository.name}"
 
     -> This app is served from:
-    -> "https://${params.repository.owner}.github.io/${params.repository.name}/${paths.byHeadCommit}"
+    -> "${manifest.githubPagesUrl(params)}"
 
   `);
 
@@ -59,6 +60,7 @@ async function updateApp(params: SanitizedPayloadParams) {
   await git.stageChanges(paths.byHeadCommit, 'index.html', 'manifest.json');
   await git.commit(`Updating app ${paths.byHeadCommit}`);
   await git.push(input.branch);
+  await commentAppInfo(params);
 }
 
 async function optionalBuildApp(params: SanitizedPayloadParams) {

@@ -7,5 +7,6 @@ export function userInput(): UserInput {
     slug: getInput('slug'),
     branch: getInput('branch'),
     buildCmd: getInput('build-cmd'),
+    githubToken: getInput('GITHUB_TOKEN'),
   };
 }

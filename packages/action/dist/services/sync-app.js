@@ -38,6 +38,7 @@ const manifest = __importStar(require("../utils/manifest"));
 const retry_1 = require("../utils/retry");
 const log_error_1 = require("../utils/log-error");
 const user_input_1 = require("../utils/user-input");
+const comment_app_info_1 = require("./comment-app-info");
 exports.syncApp = (0, log_error_1.withError)(function syncApp(params) {
     return __awaiter(this, void 0, void 0, function* () {
         const input = (0, user_input_1.userInput)();
@@ -47,7 +48,7 @@ exports.syncApp = (0, log_error_1.withError)(function syncApp(params) {
     -> "https://${params.repository.owner}.github.io/${params.repository.name}"
 
     -> This app is served from:
-    -> "https://${params.repository.owner}.github.io/${params.repository.name}/${paths.byHeadCommit}"
+    -> "${manifest.githubPagesUrl(params)}"
 
   `);
         yield optionalBuildApp(params);
@@ -79,6 +80,7 @@ function updateApp(params) {
         yield git.stageChanges(paths.byHeadCommit, 'index.html', 'manifest.json');
         yield git.commit(`Updating app ${paths.byHeadCommit}`);
         yield git.push(input.branch);
+        yield (0, comment_app_info_1.commentAppInfo)(params);
     });
 }
 function optionalBuildApp(params) {
