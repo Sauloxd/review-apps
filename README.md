@@ -133,6 +133,14 @@ Please, if you find some bugs are some usecase not covered in this README, open 
 1. There is a workflow just for development, called "for-testing-this-project.yml".
   1. Create a branch named `ft-*` or `issue-*` and it will trigger the github action.
   1. This workflow is getting the action directly from the src code, so remember to build before testing the action: `yarn build`
+1. To explore what is possible with GH Action, you can
+  1. SSH by uncommenting the `mxschmitt/action-tmate@v2` action
+  1. Create a script there like `test.js`
+  1. Create alias to short the feedback loop:
+  ``` bash
+  alias v="vim test.js"
+  alias r="node test.js"
+  ```
 
 
 ## How to release
