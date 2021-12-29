@@ -9,5 +9,17 @@
         "pullRequestUrl": "https://github.com/Sauloxd/review-apps/pull/14"
       }
     ]
+  },
+  "ft-deployment-status": {
+    "apps": [
+      {
+        "name": "dev-cra",
+        "headCommitId": "69cba1c0863bcc42604aa3af5c6acc13e0a2d57f",
+        "updatedAt": "2021-12-29T20:16:55.092Z",
+        "href": "dev-cra/ft-deployment-status/69cba1",
+        "pullRequestUrl": "https://github.com/Sauloxd/review-apps/pull/16",
+        "githubPagesUrl": "https://Sauloxd.github.io/review-apps/dev-cra/ft-deployment-status/69cba1"
+      }
+    ]
   }
 }
