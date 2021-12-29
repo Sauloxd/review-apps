@@ -1,25 +1,25 @@
 {
   "files": {
-    "main.css": "/review-apps/dev-cra/ft-deployment-status/d9f913/static/css/main.5ecd60fb.chunk.css",
-    "main.js": "/review-apps/dev-cra/ft-deployment-status/d9f913/static/js/main.53bc1e8d.chunk.js",
-    "main.js.map": "/review-apps/dev-cra/ft-deployment-status/d9f913/static/js/main.53bc1e8d.chunk.js.map",
-    "runtime-main.js": "/review-apps/dev-cra/ft-deployment-status/d9f913/static/js/runtime-main.fbab958a.js",
-    "runtime-main.js.map": "/review-apps/dev-cra/ft-deployment-status/d9f913/static/js/runtime-main.fbab958a.js.map",
-    "static/js/2.a2a6c264.chunk.js": "/review-apps/dev-cra/ft-deployment-status/d9f913/static/js/2.a2a6c264.chunk.js",
-    "static/js/2.a2a6c264.chunk.js.map": "/review-apps/dev-cra/ft-deployment-status/d9f913/static/js/2.a2a6c264.chunk.js.map",
-    "index.html": "/review-apps/dev-cra/ft-deployment-status/d9f913/index.html",
-    "precache-manifest.9a89668cd4dae7488b469f4baddb3e47.js": "/review-apps/dev-cra/ft-deployment-status/d9f913/precache-manifest.9a89668cd4dae7488b469f4baddb3e47.js",
-    "service-worker.js": "/review-apps/dev-cra/ft-deployment-status/d9f913/service-worker.js",
-    "static/css/main.5ecd60fb.chunk.css.map": "/review-apps/dev-cra/ft-deployment-status/d9f913/static/css/main.5ecd60fb.chunk.css.map",
-    "static/js/2.a2a6c264.chunk.js.LICENSE.txt": "/review-apps/dev-cra/ft-deployment-status/d9f913/static/js/2.a2a6c264.chunk.js.LICENSE.txt",
-    "static/media/fox-combo-1.gif": "/review-apps/dev-cra/ft-deployment-status/d9f913/static/media/fox-combo-1.b8000ebc.gif",
-    "static/media/fox-multishine.gif": "/review-apps/dev-cra/ft-deployment-status/d9f913/static/media/fox-multishine.90b071d4.gif",
-    "static/media/fox-waveshine.gif": "/review-apps/dev-cra/ft-deployment-status/d9f913/static/media/fox-waveshine.7ec8b809.gif"
+    "main.css": "/review-apps/dev-cra/issue-10/skip-index-html/433ef9/static/css/main.5ecd60fb.chunk.css",
+    "main.js": "/review-apps/dev-cra/issue-10/skip-index-html/433ef9/static/js/main.952d7526.chunk.js",
+    "main.js.map": "/review-apps/dev-cra/issue-10/skip-index-html/433ef9/static/js/main.952d7526.chunk.js.map",
+    "runtime-main.js": "/review-apps/dev-cra/issue-10/skip-index-html/433ef9/static/js/runtime-main.e2e89bea.js",
+    "runtime-main.js.map": "/review-apps/dev-cra/issue-10/skip-index-html/433ef9/static/js/runtime-main.e2e89bea.js.map",
+    "static/js/2.a2a6c264.chunk.js": "/review-apps/dev-cra/issue-10/skip-index-html/433ef9/static/js/2.a2a6c264.chunk.js",
+    "static/js/2.a2a6c264.chunk.js.map": "/review-apps/dev-cra/issue-10/skip-index-html/433ef9/static/js/2.a2a6c264.chunk.js.map",
+    "index.html": "/review-apps/dev-cra/issue-10/skip-index-html/433ef9/index.html",
+    "precache-manifest.4c42cb3c087d1481ecb806b1edb2c834.js": "/review-apps/dev-cra/issue-10/skip-index-html/433ef9/precache-manifest.4c42cb3c087d1481ecb806b1edb2c834.js",
+    "service-worker.js": "/review-apps/dev-cra/issue-10/skip-index-html/433ef9/service-worker.js",
+    "static/css/main.5ecd60fb.chunk.css.map": "/review-apps/dev-cra/issue-10/skip-index-html/433ef9/static/css/main.5ecd60fb.chunk.css.map",
+    "static/js/2.a2a6c264.chunk.js.LICENSE.txt": "/review-apps/dev-cra/issue-10/skip-index-html/433ef9/static/js/2.a2a6c264.chunk.js.LICENSE.txt",
+    "static/media/fox-combo-1.gif": "/review-apps/dev-cra/issue-10/skip-index-html/433ef9/static/media/fox-combo-1.b8000ebc.gif",
+    "static/media/fox-multishine.gif": "/review-apps/dev-cra/issue-10/skip-index-html/433ef9/static/media/fox-multishine.90b071d4.gif",
+    "static/media/fox-waveshine.gif": "/review-apps/dev-cra/issue-10/skip-index-html/433ef9/static/media/fox-waveshine.7ec8b809.gif"
   },
   "entrypoints": [
-    "static/js/runtime-main.fbab958a.js",
+    "static/js/runtime-main.e2e89bea.js",
     "static/js/2.a2a6c264.chunk.js",
     "static/css/main.5ecd60fb.chunk.css",
-    "static/js/main.53bc1e8d.chunk.js"
+    "static/js/main.952d7526.chunk.js"
   ]
 }
