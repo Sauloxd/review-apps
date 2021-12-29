@@ -58,7 +58,6 @@ exports.syncApp = (0, log_error_1.withError)(function syncApp(params) {
   `);
         yield git.stageChanges(input.dist);
         yield git.commit(`Persisting dist output for ${input.slug}`);
-        yield (0, comment_app_info_1.commentAppInfo)(params);
         yield (0, retry_1.retry)(5)(updateApp.bind(null, params));
         core.debug('Return to original state');
         yield git.hardReset(params.branch.name);
@@ -81,6 +80,7 @@ function updateApp(params) {
         yield git.stageChanges(paths.byHeadCommit, 'index.html', 'manifest.json');
         yield git.commit(`Updating app ${paths.byHeadCommit}`);
         yield git.push(input.branch);
+        yield (0, comment_app_info_1.commentAppInfo)(params);
     });
 }
 function optionalBuildApp(params) {

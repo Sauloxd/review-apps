@@ -34,7 +34,6 @@ export const syncApp = withError(async function syncApp(
 
   await git.stageChanges(input.dist);
   await git.commit(`Persisting dist output for ${input.slug}`);
-  await commentAppInfo(params);
 
   await retry(5)(updateApp.bind(null, params));
 
@@ -61,6 +60,7 @@ async function updateApp(params: SanitizedPayloadParams) {
   await git.stageChanges(paths.byHeadCommit, 'index.html', 'manifest.json');
   await git.commit(`Updating app ${paths.byHeadCommit}`);
   await git.push(input.branch);
+  await commentAppInfo(params);
 }
 
 async function optionalBuildApp(params: SanitizedPayloadParams) {
