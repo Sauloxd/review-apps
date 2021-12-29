@@ -32,7 +32,7 @@ export const syncApp = withError(async function syncApp(
     -> Will move (and override) the build result on '${input.dist}' to '${paths.byHeadCommit}' in ${input.branch}"
   `);
 
-  await git.stageChanges(input.dist);
+  await git.stageChanges([input.dist]);
   await git.commit(`Persisting dist output for ${input.slug}`);
 
   await retry(5)(updateApp.bind(null, params));
@@ -57,7 +57,11 @@ async function updateApp(params: SanitizedPayloadParams) {
   });
   core.debug('Finished copying');
 
-  await git.stageChanges(paths.byHeadCommit, 'index.html', 'manifest.json');
+  await git.stageChanges([
+    paths.byHeadCommit,
+    !input.skipIndexHtml && 'index.html',
+    'manifest.json',
+  ]);
   await git.commit(`Updating app ${paths.byHeadCommit}`);
   await git.push(input.branch);
   await commentAppInfo(params);

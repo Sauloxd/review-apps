@@ -56,7 +56,7 @@ exports.syncApp = (0, log_error_1.withError)(function syncApp(params) {
     -> Current working branch: ${params.branch.name}"
     -> Will move (and override) the build result on '${input.dist}' to '${paths.byHeadCommit}' in ${input.branch}"
   `);
-        yield git.stageChanges(input.dist);
+        yield git.stageChanges([input.dist]);
         yield git.commit(`Persisting dist output for ${input.slug}`);
         yield (0, retry_1.retry)(5)(updateApp.bind(null, params));
         core.debug('Return to original state');
@@ -77,7 +77,11 @@ function updateApp(params) {
             force: true,
         });
         core.debug('Finished copying');
-        yield git.stageChanges(paths.byHeadCommit, 'index.html', 'manifest.json');
+        yield git.stageChanges([
+            paths.byHeadCommit,
+            !input.skipIndexHtml && 'index.html',
+            'manifest.json',
+        ]);
         yield git.commit(`Updating app ${paths.byHeadCommit}`);
         yield git.push(input.branch);
         yield (0, comment_app_info_1.commentAppInfo)(params);

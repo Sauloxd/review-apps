@@ -42,6 +42,7 @@ jobs:
           dist: 'packages/cra-example/build'
           slug: 'dev-cra'
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          skip-index-html: true
 
       # This is how you'll use the action
       - name: Building storybook example
@@ -52,6 +53,7 @@ jobs:
           dist: 'packages/cra-example/storybook-static'
           slug: 'dev-cra-sb'
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          skip-index-html: true
 
       # This is how you'll use the action
       - name: Building gatsby example
@@ -62,3 +64,4 @@ jobs:
           dist: 'packages/gatsby-example/public'
           slug: 'dev-gatsby'
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          skip-index-html: true
