@@ -10,6 +10,13 @@ const REVIEW_APP_ID = '# Review Apps';
 export const commentAppInfo = withError(async function commentAppInfo(
   params: SanitizedPayloadParams
 ) {
+  const { githubToken } = userInput();
+  if (!githubToken) {
+    info(
+      `   -> No GITHUB_TOKEN provided! Can't manage comments for this action`
+    );
+  }
+
   const commentApi = CommentApi();
   const comments = await commentApi.getReviewAppComments();
   const comment = comments[0];

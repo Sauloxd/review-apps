@@ -37,6 +37,10 @@ const manifest = __importStar(require("../utils/manifest"));
 const REVIEW_APP_ID = '# Review Apps';
 exports.commentAppInfo = (0, log_error_1.withError)(function commentAppInfo(params) {
     return __awaiter(this, void 0, void 0, function* () {
+        const { githubToken } = (0, user_input_1.userInput)();
+        if (!githubToken) {
+            (0, core_1.info)(`   -> No GITHUB_TOKEN provided! Can't manage comments for this action`);
+        }
         const commentApi = CommentApi();
         const comments = yield commentApi.getReviewAppComments();
         const comment = comments[0];

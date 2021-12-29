@@ -36,6 +36,11 @@ inputs:
       Example: If you want something like: https://sauloxd.github.io/my-app/storybooks/ft-home-1231bdhb, pass string "storybooks" so it doesn't override other apps inside same respository.
     default: 'review-apps'
 
+  GITHUB_TOKEN:
+    description: |
+      To allow action to comment the app urls in your pull request, please pass {{secrets.GITHUB_TOKEN}} to allow action to interact with your pull request.
+      To see why it is needed, see: https://github.com/actions/toolkit/tree/main/packages/github
+
 branding:
   icon: 'package'
   color: 'green'
