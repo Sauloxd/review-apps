@@ -28,9 +28,9 @@ export function decorateMessage(message: string) {
 }
 
 export const stageChanges = withError(async function stageChanges(
-  ...files: string[]
+  files: (string | boolean)[]
 ) {
-  await exec('git', ['add', '-f', ...files]);
+  await exec('git', ['add', '-f', ...(files.filter(Boolean) as string[])]);
 });
 
 export const commit = withError(async function commit(message: string) {

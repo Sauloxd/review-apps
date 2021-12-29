@@ -9,6 +9,7 @@ function userInput() {
         branch: (0, core_1.getInput)('branch'),
         buildCmd: (0, core_1.getInput)('build-cmd'),
         githubToken: (0, core_1.getInput)('GITHUB_TOKEN'),
+        skipIndexHtml: (0, core_1.getInput)('skip-index-html'),
     };
 }
 exports.userInput = userInput;

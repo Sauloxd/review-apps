@@ -33,9 +33,9 @@ function decorateMessage(message) {
     return `[skip ci] ${input.slug} - ${message}`;
 }
 exports.decorateMessage = decorateMessage;
-exports.stageChanges = (0, log_error_1.withError)(function stageChanges(...files) {
+exports.stageChanges = (0, log_error_1.withError)(function stageChanges(files) {
     return __awaiter(this, void 0, void 0, function* () {
-        yield (0, exec_1.exec)('git', ['add', '-f', ...files]);
+        yield (0, exec_1.exec)('git', ['add', '-f', ...files.filter(Boolean)]);
     });
 });
 exports.commit = (0, log_error_1.withError)(function commit(message) {

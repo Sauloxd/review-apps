@@ -43,7 +43,11 @@ exports.removeApp = (0, log_error_1.withError)(function removeApp(params) {
             yield git.hardReset(input.branch);
             yield fileManager.removeAllAppsFromBranch(params);
             manifest.removeApp(params.branch.name);
-            yield git.stageChanges(byHeadCommit, 'index.html', 'manifest.json');
+            yield git.stageChanges([
+                byHeadCommit,
+                !input.skipIndexHtml && 'index.html',
+                'manifest.json',
+            ]);
             yield git.commit(git.decorateMessage(`Removing branch: ${params.branch.name}`));
             yield git.push(input.branch);
         }));

@@ -54,8 +54,11 @@ export function githubPagesUrl(params: SanitizedPayloadParams) {
 }
 
 function syncManifest(manifest: Manifest) {
+  const input = userInput();
   fs.writeFileSync('manifest.json', JSON.stringify(manifest, null, 2), 'utf-8');
-  fs.writeFileSync('index.html', defaultPage(manifest), 'utf-8');
+  if (!input.skipIndexHtml) {
+    fs.writeFileSync('index.html', defaultPage(manifest), 'utf-8');
+  }
 }
 
 function buildApp(params: SanitizedPayloadParams): App {

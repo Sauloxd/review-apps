@@ -8,5 +8,6 @@ export function userInput(): UserInput {
     branch: getInput('branch'),
     buildCmd: getInput('build-cmd'),
     githubToken: getInput('GITHUB_TOKEN'),
+    skipIndexHtml: getInput('skip-index-html'),
   };
 }

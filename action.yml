@@ -41,6 +41,11 @@ inputs:
       To allow action to comment the app urls in your pull request, please pass {{secrets.GITHUB_TOKEN}} to allow action to interact with your pull request.
       To see why it is needed, see: https://github.com/actions/toolkit/tree/main/packages/github
 
+  skip-index-html:
+    description: |
+      Skip creating and overriden index.html in github pages branch.
+    default: false
+
 branding:
   icon: 'package'
   color: 'green'

@@ -16,7 +16,11 @@ export const removeApp = withError(async function removeApp(
     await git.hardReset(input.branch);
     await fileManager.removeAllAppsFromBranch(params);
     manifest.removeApp(params.branch.name);
-    await git.stageChanges(byHeadCommit, 'index.html', 'manifest.json');
+    await git.stageChanges([
+      byHeadCommit,
+      !input.skipIndexHtml && 'index.html',
+      'manifest.json',
+    ]);
     await git.commit(
       git.decorateMessage(`Removing branch: ${params.branch.name}`)
     );
