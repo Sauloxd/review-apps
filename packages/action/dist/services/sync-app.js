@@ -38,6 +38,7 @@ const manifest = __importStar(require("../utils/manifest"));
 const retry_1 = require("../utils/retry");
 const log_error_1 = require("../utils/log-error");
 const user_input_1 = require("../utils/user-input");
+const comment_app_info_1 = require("./comment-app-info");
 exports.syncApp = (0, log_error_1.withError)(function syncApp(params) {
     return __awaiter(this, void 0, void 0, function* () {
         const input = (0, user_input_1.userInput)();
@@ -57,6 +58,7 @@ exports.syncApp = (0, log_error_1.withError)(function syncApp(params) {
   `);
         yield git.stageChanges(input.dist);
         yield git.commit(`Persisting dist output for ${input.slug}`);
+        yield (0, comment_app_info_1.commentAppInfo)(params);
         yield (0, retry_1.retry)(5)(updateApp.bind(null, params));
         core.debug('Return to original state');
         yield git.hardReset(params.branch.name);

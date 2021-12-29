@@ -8,6 +8,7 @@ import * as manifest from '../utils/manifest';
 import { retry } from '../utils/retry';
 import { withError } from '../utils/log-error';
 import { userInput } from '../utils/user-input';
+import { commentAppInfo } from './comment-app-info';
 
 export const syncApp = withError(async function syncApp(
   params: SanitizedPayloadParams
@@ -33,6 +34,7 @@ export const syncApp = withError(async function syncApp(
 
   await git.stageChanges(input.dist);
   await git.commit(`Persisting dist output for ${input.slug}`);
+  await commentAppInfo(params);
 
   await retry(5)(updateApp.bind(null, params));
 

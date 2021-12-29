@@ -35,6 +35,9 @@ const default_1 = require("../template/default");
 const fileManager = __importStar(require("./file-manager"));
 const user_input_1 = require("./user-input");
 const log_error_1 = require("./log-error");
+// Due to poorly designed API,
+// All functions here that depends on `getManifest()`
+// will break if operations are called outside "github pages" branch!
 exports.removeApp = (0, log_error_1.withError)(function removeApp(branch) {
     return __awaiter(this, void 0, void 0, function* () {
         const manifest = getManifest();
@@ -87,6 +90,7 @@ function buildApp(params) {
     };
 }
 function getManifest() {
+    core.debug('You can only get manifest if you are in github actions page branch!');
     const manifest = JSON.parse(fs.readFileSync('manifest.json', 'utf-8'));
     core.debug('CALL getManifest');
     core.debug(JSON.stringify(manifest, null, 2));

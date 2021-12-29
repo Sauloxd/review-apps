@@ -6,6 +6,10 @@ import * as fileManager from './file-manager';
 import { userInput } from './user-input';
 import { withError } from './log-error';
 
+// Due to poorly designed API,
+// All functions here that depends on `getManifest()`
+// will break if operations are called outside "github pages" branch!
+
 export const removeApp = withError(async function removeApp(branch: string) {
   const manifest = getManifest();
 
@@ -69,6 +73,9 @@ function buildApp(params: SanitizedPayloadParams): App {
 }
 
 function getManifest(): Manifest {
+  core.debug(
+    'You can only get manifest if you are in github actions page branch!'
+  );
   const manifest = JSON.parse(fs.readFileSync('manifest.json', 'utf-8'));
   core.debug('CALL getManifest');
   core.debug(JSON.stringify(manifest, null, 2));
