@@ -72,7 +72,7 @@ const getCommentBody = (branch) => {
  `;
     return body;
     function formatToListedLink(app) {
-        return `- [${app.name}](app.githubPagesUrl)\n`;
+        return `- [${app.name}](${app.githubPagesUrl})\n`;
     }
 };
 const CommentApi = () => {
