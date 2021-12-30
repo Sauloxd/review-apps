@@ -79,12 +79,16 @@ function buildApp(params: SanitizedPayloadParams): App {
 }
 
 function getManifest(): Manifest {
+  core.debug('CALL getManifest');
   core.debug(
     'You can only get manifest if you are in github actions page branch!'
   );
-  const manifest = JSON.parse(fs.readFileSync('manifest.json', 'utf-8'));
-  core.debug('CALL getManifest');
-  core.debug(JSON.stringify(manifest, null, 2));
+  let manifest = {};
+  try {
+    manifest = JSON.parse(fs.readFileSync('manifest.json', 'utf-8'));
+  } catch (e) {
+    core.debug(JSON.stringify(manifest, null, 2));
+  }
 
   return manifest;
 }

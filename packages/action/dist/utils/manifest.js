@@ -97,9 +97,14 @@ function buildApp(params) {
     };
 }
 function getManifest() {
-    core.debug('You can only get manifest if you are in github actions page branch!');
-    const manifest = JSON.parse(fs.readFileSync('manifest.json', 'utf-8'));
     core.debug('CALL getManifest');
-    core.debug(JSON.stringify(manifest, null, 2));
+    core.debug('You can only get manifest if you are in github actions page branch!');
+    let manifest = {};
+    try {
+        manifest = JSON.parse(fs.readFileSync('manifest.json', 'utf-8'));
+    }
+    catch (e) {
+        core.debug(JSON.stringify(manifest, null, 2));
+    }
     return manifest;
 }

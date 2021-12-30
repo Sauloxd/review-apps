@@ -7,7 +7,7 @@ import * as git from './utils/git';
 import { userInput } from './utils/user-input';
 
 export const run = withError(async function run() {
-  debug(JSON.stringify(github, null, 2));
+  // debug(JSON.stringify(github, null, 2));
   const event = github.context.eventName as GithubTriggerActions;
   const input = userInput();
 
