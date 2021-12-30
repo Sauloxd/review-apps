@@ -40,7 +40,7 @@ jobs:
           build-cmd: 'yarn run cra:build'
           branch: 'review-apps'
           dist: 'packages/cra-example/build'
-          slug: 'dev-cra'
+          slug: 'My platform'
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       # This is how you'll use the action
@@ -50,7 +50,7 @@ jobs:
           build-cmd: 'yarn run cra:storybook'
           branch: 'review-apps'
           dist: 'packages/cra-example/storybook-static'
-          slug: 'dev-cra-sb'
+          slug: 'My Design System'
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       # This is how you'll use the action
@@ -60,5 +60,5 @@ jobs:
           build-cmd: 'yarn run gatsby:build'
           branch: 'review-apps'
           dist: 'packages/gatsby-example/public'
-          slug: 'dev-gatsby'
+          slug: 'My Blog'
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
