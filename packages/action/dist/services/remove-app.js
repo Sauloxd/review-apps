@@ -35,6 +35,7 @@ const manifest = __importStar(require("../utils/manifest"));
 const retry_1 = require("../utils/retry");
 const log_error_1 = require("../utils/log-error");
 const user_input_1 = require("../utils/user-input");
+const core_1 = require("@actions/core");
 exports.removeApp = (0, log_error_1.withError)(function removeApp(params) {
     return __awaiter(this, void 0, void 0, function* () {
         const { byHeadCommit } = fileManager.paths(params);
@@ -51,5 +52,7 @@ exports.removeApp = (0, log_error_1.withError)(function removeApp(params) {
             yield git.commit(git.decorateMessage(`Removing branch: ${params.branch.name}`));
             yield git.push(input.branch);
         }));
+        (0, core_1.debug)('Return to original state');
+        yield git.hardReset(params.branch.name);
     });
 });

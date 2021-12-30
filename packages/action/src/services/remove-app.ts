@@ -5,6 +5,7 @@ import { retry } from '../utils/retry';
 import { withError } from '../utils/log-error';
 import { SanitizedPayloadParams } from '../interface';
 import { userInput } from '../utils/user-input';
+import { debug } from '@actions/core';
 
 export const removeApp = withError(async function removeApp(
   params: SanitizedPayloadParams
@@ -26,4 +27,8 @@ export const removeApp = withError(async function removeApp(
     );
     await git.push(input.branch);
   });
+
+  debug('Return to original state');
+
+  await git.hardReset(params.branch.name);
 });

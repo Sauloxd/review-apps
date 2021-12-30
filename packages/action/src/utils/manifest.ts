@@ -57,7 +57,10 @@ function syncManifest(manifest: Manifest) {
   const input = userInput();
   fs.writeFileSync('manifest.json', JSON.stringify(manifest, null, 2), 'utf-8');
   if (!input.skipIndexHtml) {
+    core.debug('Creating index.html');
     fs.writeFileSync('index.html', defaultPage(manifest), 'utf-8');
+  } else {
+    core.debug('Skipping index.html');
   }
 }
 
@@ -76,12 +79,16 @@ function buildApp(params: SanitizedPayloadParams): App {
 }
 
 function getManifest(): Manifest {
+  core.debug('CALL getManifest');
   core.debug(
     'You can only get manifest if you are in github actions page branch!'
   );
-  const manifest = JSON.parse(fs.readFileSync('manifest.json', 'utf-8'));
-  core.debug('CALL getManifest');
-  core.debug(JSON.stringify(manifest, null, 2));
+  let manifest = {};
+  try {
+    manifest = JSON.parse(fs.readFileSync('manifest.json', 'utf-8'));
+  } catch (e) {
+    core.debug(JSON.stringify(manifest, null, 2));
+  }
 
   return manifest;
 }

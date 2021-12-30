@@ -35,11 +35,15 @@ const handlers = __importStar(require("./event-handlers"));
 const interface_1 = require("./interface");
 const log_error_1 = require("./utils/log-error");
 const git = __importStar(require("./utils/git"));
+const user_input_1 = require("./utils/user-input");
 exports.run = (0, log_error_1.withError)(function run() {
     return __awaiter(this, void 0, void 0, function* () {
-        (0, core_1.debug)(JSON.stringify(github, null, 2));
+        // debug(JSON.stringify(github, null, 2));
         const event = github.context.eventName;
+        const input = (0, user_input_1.userInput)();
         (0, core_1.info)('-> Review Apps start!');
+        (0, core_1.info)('-> Your input: ');
+        (0, core_1.info)(`-> ${JSON.stringify(input, null, 2)}`);
         yield git.configure({
             name: 'ReviewApps admin',
             email: 'review-apps@saulo.dev',

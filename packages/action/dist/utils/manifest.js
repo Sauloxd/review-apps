@@ -77,7 +77,11 @@ function syncManifest(manifest) {
     const input = (0, user_input_1.userInput)();
     fs.writeFileSync('manifest.json', JSON.stringify(manifest, null, 2), 'utf-8');
     if (!input.skipIndexHtml) {
+        core.debug('Creating index.html');
         fs.writeFileSync('index.html', (0, default_1.defaultPage)(manifest), 'utf-8');
+    }
+    else {
+        core.debug('Skipping index.html');
     }
 }
 function buildApp(params) {
@@ -93,9 +97,14 @@ function buildApp(params) {
     };
 }
 function getManifest() {
-    core.debug('You can only get manifest if you are in github actions page branch!');
-    const manifest = JSON.parse(fs.readFileSync('manifest.json', 'utf-8'));
     core.debug('CALL getManifest');
-    core.debug(JSON.stringify(manifest, null, 2));
+    core.debug('You can only get manifest if you are in github actions page branch!');
+    let manifest = {};
+    try {
+        manifest = JSON.parse(fs.readFileSync('manifest.json', 'utf-8'));
+    }
+    catch (e) {
+        core.debug(JSON.stringify(manifest, null, 2));
+    }
     return manifest;
 }

@@ -32,7 +32,7 @@ export interface UserInput {
   branch: string;
   buildCmd: string;
   githubToken: string;
-  skipIndexHtml: string;
+  skipIndexHtml: boolean;
 }
 
 export interface FileManagerPaths {
