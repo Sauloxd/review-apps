@@ -14,7 +14,7 @@
 importScripts("https://storage.googleapis.com/workbox-cdn/releases/4.3.1/workbox-sw.js");
 
 importScripts(
-  "/review-apps/My-platform/ft-showcase-review-app/2b4ca7/precache-manifest.2281dcd86661b2926412920523f20b53.js"
+  "/review-apps/My-platform/ft-showcase-review-app/e41790/precache-manifest.31a26adce1f70d8330e523b6cddbabb8.js"
 );
 
 self.addEventListener('message', (event) => {
@@ -33,7 +33,7 @@ workbox.core.clientsClaim();
 self.__precacheManifest = [].concat(self.__precacheManifest || []);
 workbox.precaching.precacheAndRoute(self.__precacheManifest, {});
 
-workbox.routing.registerNavigationRoute(workbox.precaching.getCacheKeyForURL("/review-apps/My-platform/ft-showcase-review-app/2b4ca7/index.html"), {
+workbox.routing.registerNavigationRoute(workbox.precaching.getCacheKeyForURL("/review-apps/My-platform/ft-showcase-review-app/e41790/index.html"), {
   
   blacklist: [/^\/_/,/\/[^/?]+\.[^/]+$/],
 });
