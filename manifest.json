@@ -1,1 +1,14 @@
-{}
+{
+  "ft-showcase-review-app": {
+    "apps": [
+      {
+        "name": "My-platform",
+        "headCommitId": "984bde7a20bae9761ab58ee825ae87a18d79e766",
+        "updatedAt": "2021-12-30T14:29:16.677Z",
+        "href": "My-platform/ft-showcase-review-app/984bde",
+        "pullRequestUrl": "https://github.com/Sauloxd/review-apps/pull/20",
+        "githubPagesUrl": "https://Sauloxd.github.io/review-apps/My-platform/ft-showcase-review-app/984bde"
+      }
+    ]
+  }
+}
