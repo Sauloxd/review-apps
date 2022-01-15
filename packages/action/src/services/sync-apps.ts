@@ -7,32 +7,32 @@ import * as git from '../utils/git';
 import * as manifest from '../utils/manifest';
 import { retry } from '../utils/retry';
 import { withError } from '../utils/log-error';
-import { userInput } from '../utils/user-input';
 import { commentAppInfo } from './comment-app-info';
+import { userInput } from '../utils/user-input';
 
 export const syncApps = withError(async function syncApps(
-  params: SanitizedPayloadParams,
-  userInput: UserInput
+  params: SanitizedPayloadParams
 ) {
   core.info(`
     -> Your apps will be hosted in github pages:
     -> "https://${params.repository.owner}.github.io/${params.repository.name}"
   `);
 
-  Promise.all(userInput.apps.map((app) => syncApp(params, app, userInput)));
+  Promise.all(userInput().apps.map((app) => syncApp(params, app)));
 });
 
 const syncApp = async (
   params: SanitizedPayloadParams,
-  app: UserInput['apps'][number],
-  userInput: UserInput
+  app: UserInput['apps'][number]
 ) => {
   await optionalBuildApp(params, app);
   const paths = fileManager.paths(params, app);
 
   core.debug(`
     -> Current working branch: ${params.branch.name}"
-    -> Will move (and override) the build result on '${app.dist}' to '${paths.byHeadCommit}' in ${userInput.ghPagesBranch}"
+    -> Will move (and override) the build result on '${app.dist}' to '${
+    paths.byHeadCommit
+  }' in ${userInput().ghPagesBranch}"
   `);
 
   await git.stageChanges([app.dist]);
@@ -49,9 +49,8 @@ async function updateApp(
   params: SanitizedPayloadParams,
   app: UserInput['apps'][number]
 ) {
-  const input = userInput();
   const paths = fileManager.paths(params, app);
-  await git.hardReset(input.ghPagesBranch);
+  await git.hardReset(userInput().ghPagesBranch);
   await git.getFilesFromOtherBranch(params.branch.name, app.dist);
   manifest.replaceApp(params, app);
 
@@ -65,11 +64,11 @@ async function updateApp(
 
   await git.stageChanges([
     paths.byHeadCommit,
-    !input.skipIndexHtml && 'index.html',
+    !userInput().skipIndexHtml && 'index.html',
     'manifest.json',
   ]);
   await git.commit(`Updating app ${paths.byHeadCommit}`);
-  await git.push(input.ghPagesBranch);
+  await git.push(userInput().ghPagesBranch);
   await commentAppInfo(params);
 }
 

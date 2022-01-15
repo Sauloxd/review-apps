@@ -34,14 +34,14 @@ const interface_1 = require("../../interface");
 const log_error_1 = require("../../utils/log-error");
 const on_closed_1 = require("./on-closed");
 const on_synchronized_1 = require("./on-synchronized");
-exports.onPullRequest = (0, log_error_1.withError)(function onPullRequest(userInput) {
+exports.onPullRequest = (0, log_error_1.withError)(function onPullRequest() {
     return __awaiter(this, void 0, void 0, function* () {
         const action = github.context.payload.action;
         switch (action) {
             case interface_1.PullRequestAction.CLOSED:
-                return yield (0, on_closed_1.onPullRequestClosed)(userInput);
+                return yield (0, on_closed_1.onPullRequestClosed)();
             default:
-                return yield (0, on_synchronized_1.onPullRequestSynchronized)(userInput);
+                return yield (0, on_synchronized_1.onPullRequestSynchronized)();
         }
     });
 });

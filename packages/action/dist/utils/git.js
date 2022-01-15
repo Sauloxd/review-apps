@@ -11,7 +11,6 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.getFilesFromOtherBranch = exports.push = exports.commit = exports.stageChanges = exports.decorateMessage = exports.hardReset = exports.configure = void 0;
 const exec_1 = require("@actions/exec");
-const user_input_1 = require("../utils/user-input");
 const log_error_1 = require("./log-error");
 exports.configure = (0, log_error_1.withError)(function configure({ name, email, }) {
     return __awaiter(this, void 0, void 0, function* () {
@@ -29,8 +28,7 @@ exports.hardReset = (0, log_error_1.withError)(function hardReset(branch) {
     });
 });
 function decorateMessage(message) {
-    const input = (0, user_input_1.userInput)();
-    return `[skip ci] ${input.slug} - ${message}`;
+    return `[skip ci] - ${message}`;
 }
 exports.decorateMessage = decorateMessage;
 exports.stageChanges = (0, log_error_1.withError)(function stageChanges(files) {

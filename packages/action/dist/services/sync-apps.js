@@ -37,23 +37,23 @@ const git = __importStar(require("../utils/git"));
 const manifest = __importStar(require("../utils/manifest"));
 const retry_1 = require("../utils/retry");
 const log_error_1 = require("../utils/log-error");
-const user_input_1 = require("../utils/user-input");
 const comment_app_info_1 = require("./comment-app-info");
-exports.syncApps = (0, log_error_1.withError)(function syncApps(params, userInput) {
+const user_input_1 = require("../utils/user-input");
+exports.syncApps = (0, log_error_1.withError)(function syncApps(params) {
     return __awaiter(this, void 0, void 0, function* () {
         core.info(`
     -> Your apps will be hosted in github pages:
     -> "https://${params.repository.owner}.github.io/${params.repository.name}"
   `);
-        Promise.all(userInput.apps.map((app) => syncApp(params, app, userInput)));
+        Promise.all((0, user_input_1.userInput)().apps.map((app) => syncApp(params, app)));
     });
 });
-const syncApp = (params, app, userInput) => __awaiter(void 0, void 0, void 0, function* () {
+const syncApp = (params, app) => __awaiter(void 0, void 0, void 0, function* () {
     yield optionalBuildApp(params, app);
     const paths = fileManager.paths(params, app);
     core.debug(`
     -> Current working branch: ${params.branch.name}"
-    -> Will move (and override) the build result on '${app.dist}' to '${paths.byHeadCommit}' in ${userInput.ghPagesBranch}"
+    -> Will move (and override) the build result on '${app.dist}' to '${paths.byHeadCommit}' in ${(0, user_input_1.userInput)().ghPagesBranch}"
   `);
     yield git.stageChanges([app.dist]);
     yield git.commit(`Persisting dist output for ${app.slug}`);
@@ -63,9 +63,8 @@ const syncApp = (params, app, userInput) => __awaiter(void 0, void 0, void 0, fu
 });
 function updateApp(params, app) {
     return __awaiter(this, void 0, void 0, function* () {
-        const input = (0, user_input_1.userInput)();
         const paths = fileManager.paths(params, app);
-        yield git.hardReset(input.ghPagesBranch);
+        yield git.hardReset((0, user_input_1.userInput)().ghPagesBranch);
         yield git.getFilesFromOtherBranch(params.branch.name, app.dist);
         manifest.replaceApp(params, app);
         core.debug('Copying from input.dist to -> ' + paths.byHeadCommit);
@@ -77,11 +76,11 @@ function updateApp(params, app) {
         core.debug('Finished copying');
         yield git.stageChanges([
             paths.byHeadCommit,
-            !input.skipIndexHtml && 'index.html',
+            !(0, user_input_1.userInput)().skipIndexHtml && 'index.html',
             'manifest.json',
         ]);
         yield git.commit(`Updating app ${paths.byHeadCommit}`);
-        yield git.push(input.ghPagesBranch);
+        yield git.push((0, user_input_1.userInput)().ghPagesBranch);
         yield (0, comment_app_info_1.commentAppInfo)(params);
     });
 }

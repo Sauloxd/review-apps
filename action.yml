@@ -46,6 +46,10 @@ inputs:
       Skip creating and overriden index.html in github pages branch.
     default: false
 
+  apps:
+    description: |
+      JSON config for all apps that will be managed by this action
+
 branding:
   icon: 'package'
   color: 'green'

@@ -1,5 +1,4 @@
 import { exec } from '@actions/exec';
-import { userInput } from '../utils/user-input';
 import { withError } from './log-error';
 
 export const configure = withError(async function configure({
@@ -22,9 +21,7 @@ export const hardReset = withError(async function hardReset(branch: string) {
 });
 
 export function decorateMessage(message: string) {
-  const input = userInput();
-
-  return `[skip ci] ${input.slug} - ${message}`;
+  return `[skip ci] - ${message}`;
 }
 
 export const stageChanges = withError(async function stageChanges(

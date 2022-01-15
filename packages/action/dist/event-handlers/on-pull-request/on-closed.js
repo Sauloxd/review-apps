@@ -12,10 +12,10 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.onPullRequestClosed = void 0;
 const remove_app_1 = require("../../services/remove-app");
 const params_1 = require("./params");
-function onPullRequestClosed(userInput) {
+function onPullRequestClosed() {
     return __awaiter(this, void 0, void 0, function* () {
         const params = (0, params_1.getParams)();
-        yield (0, remove_app_1.removeApp)(params, userInput);
+        yield (0, remove_app_1.removeApp)(params);
     });
 }
 exports.onPullRequestClosed = onPullRequestClosed;

@@ -35,19 +35,20 @@ const git = __importStar(require("../utils/git"));
 const manifest = __importStar(require("../utils/manifest"));
 const retry_1 = require("../utils/retry");
 const log_error_1 = require("../utils/log-error");
-exports.removeApp = (0, log_error_1.withError)(function removeApp(params, userInput) {
+const user_input_1 = require("../utils/user-input");
+exports.removeApp = (0, log_error_1.withError)(function removeApp(params) {
     return __awaiter(this, void 0, void 0, function* () {
         yield (0, retry_1.retry)(5)(() => __awaiter(this, void 0, void 0, function* () {
-            yield git.hardReset(userInput.ghPagesBranch);
+            yield git.hardReset((0, user_input_1.userInput)().ghPagesBranch);
             yield io.rmRF(params.branch.name);
             manifest.removeApp(params.branch.name);
             yield git.stageChanges([
                 params.branch.name,
-                !userInput.skipIndexHtml && 'index.html',
+                !(0, user_input_1.userInput)().skipIndexHtml && 'index.html',
                 'manifest.json',
             ]);
             yield git.commit(git.decorateMessage(`Removing branch: ${params.branch.name}`));
-            yield git.push(userInput.ghPagesBranch);
+            yield git.push((0, user_input_1.userInput)().ghPagesBranch);
         }));
         (0, core_1.debug)('Return to original state');
         yield git.hardReset(params.branch.name);

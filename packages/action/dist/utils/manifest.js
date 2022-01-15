@@ -73,9 +73,8 @@ function githubPagesUrl(params, app) {
 }
 exports.githubPagesUrl = githubPagesUrl;
 function syncManifest(manifest) {
-    const input = (0, user_input_1.userInput)();
     fs.writeFileSync('manifest.json', JSON.stringify(manifest, null, 2), 'utf-8');
-    if (!input.skipIndexHtml) {
+    if (!(0, user_input_1.userInput)().skipIndexHtml) {
         core.debug('Creating index.html');
         fs.writeFileSync('index.html', (0, default_1.defaultPage)(manifest), 'utf-8');
     }

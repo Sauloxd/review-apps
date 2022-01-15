@@ -57,9 +57,8 @@ export function githubPagesUrl(
 }
 
 function syncManifest(manifest: Manifest) {
-  const input = userInput();
   fs.writeFileSync('manifest.json', JSON.stringify(manifest, null, 2), 'utf-8');
-  if (!input.skipIndexHtml) {
+  if (!userInput().skipIndexHtml) {
     core.debug('Creating index.html');
     fs.writeFileSync('index.html', defaultPage(manifest), 'utf-8');
   } else {
