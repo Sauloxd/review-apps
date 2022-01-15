@@ -28,7 +28,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.syncApp = void 0;
+exports.syncApps = void 0;
 const core = __importStar(require("@actions/core"));
 const io = __importStar(require("@actions/io"));
 const exec_1 = require("@actions/exec");
@@ -39,40 +39,38 @@ const retry_1 = require("../utils/retry");
 const log_error_1 = require("../utils/log-error");
 const user_input_1 = require("../utils/user-input");
 const comment_app_info_1 = require("./comment-app-info");
-exports.syncApp = (0, log_error_1.withError)(function syncApp(params) {
+exports.syncApps = (0, log_error_1.withError)(function syncApps(params, userInput) {
     return __awaiter(this, void 0, void 0, function* () {
-        const input = (0, user_input_1.userInput)();
-        const paths = fileManager.paths(params);
         core.info(`
-    -> Your app will be hosted in github pages:
+    -> Your apps will be hosted in github pages:
     -> "https://${params.repository.owner}.github.io/${params.repository.name}"
-
-    -> This app is served from:
-    -> "${manifest.githubPagesUrl(params)}"
-
   `);
-        yield optionalBuildApp(params);
-        core.info(`
-    -> Current working branch: ${params.branch.name}"
-    -> Will move (and override) the build result on '${input.dist}' to '${paths.byHeadCommit}' in ${input.branch}"
-  `);
-        yield git.stageChanges([input.dist]);
-        yield git.commit(`Persisting dist output for ${input.slug}`);
-        yield (0, retry_1.retry)(5)(updateApp.bind(null, params));
-        core.debug('Return to original state');
-        yield git.hardReset(params.branch.name);
+        Promise.all(userInput.apps.map((app) => syncApp(params, app, userInput)));
     });
 });
-function updateApp(params) {
+const syncApp = (params, app, userInput) => __awaiter(void 0, void 0, void 0, function* () {
+    yield optionalBuildApp(params, app);
+    const paths = fileManager.paths(params, app);
+    core.debug(`
+    -> Current working branch: ${params.branch.name}"
+    -> Will move (and override) the build result on '${app.dist}' to '${paths.byHeadCommit}' in ${userInput.ghPagesBranch}"
+  `);
+    yield git.stageChanges([app.dist]);
+    yield git.commit(`Persisting dist output for ${app.slug}`);
+    yield (0, retry_1.retry)(5)(updateApp.bind(null, params, app));
+    core.debug('Return to original state');
+    yield git.hardReset(params.branch.name);
+});
+function updateApp(params, app) {
     return __awaiter(this, void 0, void 0, function* () {
         const input = (0, user_input_1.userInput)();
-        const paths = fileManager.paths(params);
-        yield git.hardReset(input.branch);
-        yield git.getFilesFromOtherBranch(params.branch.name, input.dist);
-        manifest.replaceApp(params);
+        const paths = fileManager.paths(params, app);
+        yield git.hardReset(input.ghPagesBranch);
+        yield git.getFilesFromOtherBranch(params.branch.name, app.dist);
+        manifest.replaceApp(params, app);
         core.debug('Copying from input.dist to -> ' + paths.byHeadCommit);
-        core.debug(input.dist + '->' + paths.byHeadCommit);
-        yield io.cp(input.dist, paths.byHeadCommit, {
+        core.debug(app.dist + '->' + paths.byHeadCommit);
+        yield io.cp(app.dist, paths.byHeadCommit, {
             recursive: true,
             force: true,
         });
@@ -83,20 +81,19 @@ function updateApp(params) {
             'manifest.json',
         ]);
         yield git.commit(`Updating app ${paths.byHeadCommit}`);
-        yield git.push(input.branch);
+        yield git.push(input.ghPagesBranch);
         yield (0, comment_app_info_1.commentAppInfo)(params);
     });
 }
-function optionalBuildApp(params) {
+function optionalBuildApp(params, app) {
     return __awaiter(this, void 0, void 0, function* () {
-        const input = (0, user_input_1.userInput)();
-        if (!input.buildCmd) {
+        if (!app.build) {
             core.info(`
     -> NO "buildCmd" passed, skipping build phase
     `);
             return;
         }
-        const paths = fileManager.paths(params);
+        const paths = fileManager.paths(params, app);
         const PUBLIC_URL = `/${paths.byRepo}/${paths.byHeadCommit}`;
         core.info(`
     -> BUILDING APP
@@ -109,6 +106,6 @@ function optionalBuildApp(params) {
   `);
         yield git.hardReset(params.branch.name);
         core.exportVariable('PUBLIC_URL', PUBLIC_URL);
-        yield (0, exec_1.exec)(input.buildCmd);
+        yield (0, exec_1.exec)(app.build);
     });
 }

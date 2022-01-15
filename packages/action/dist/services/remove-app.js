@@ -29,28 +29,25 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.removeApp = void 0;
-const fileManager = __importStar(require("../utils/file-manager"));
+const core_1 = require("@actions/core");
+const io = __importStar(require("@actions/io"));
 const git = __importStar(require("../utils/git"));
 const manifest = __importStar(require("../utils/manifest"));
 const retry_1 = require("../utils/retry");
 const log_error_1 = require("../utils/log-error");
-const user_input_1 = require("../utils/user-input");
-const core_1 = require("@actions/core");
-exports.removeApp = (0, log_error_1.withError)(function removeApp(params) {
+exports.removeApp = (0, log_error_1.withError)(function removeApp(params, userInput) {
     return __awaiter(this, void 0, void 0, function* () {
-        const { byHeadCommit } = fileManager.paths(params);
-        const input = (0, user_input_1.userInput)();
         yield (0, retry_1.retry)(5)(() => __awaiter(this, void 0, void 0, function* () {
-            yield git.hardReset(input.branch);
-            yield fileManager.removeAllAppsFromBranch(params);
+            yield git.hardReset(userInput.ghPagesBranch);
+            yield io.rmRF(params.branch.name);
             manifest.removeApp(params.branch.name);
             yield git.stageChanges([
-                byHeadCommit,
-                !input.skipIndexHtml && 'index.html',
+                params.branch.name,
+                !userInput.skipIndexHtml && 'index.html',
                 'manifest.json',
             ]);
             yield git.commit(git.decorateMessage(`Removing branch: ${params.branch.name}`));
-            yield git.push(input.branch);
+            yield git.push(userInput.ghPagesBranch);
         }));
         (0, core_1.debug)('Return to original state');
         yield git.hardReset(params.branch.name);

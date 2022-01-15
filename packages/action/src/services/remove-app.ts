@@ -1,31 +1,28 @@
-import * as fileManager from '../utils/file-manager';
+import { debug } from '@actions/core';
+import * as io from '@actions/io';
 import * as git from '../utils/git';
 import * as manifest from '../utils/manifest';
 import { retry } from '../utils/retry';
 import { withError } from '../utils/log-error';
-import { SanitizedPayloadParams } from '../interface';
-import { userInput } from '../utils/user-input';
-import { debug } from '@actions/core';
+import { SanitizedPayloadParams, UserInput } from '../interface';
 
 export const removeApp = withError(async function removeApp(
-  params: SanitizedPayloadParams
+  params: SanitizedPayloadParams,
+  userInput: UserInput
 ) {
-  const { byHeadCommit } = fileManager.paths(params);
-  const input = userInput();
-
   await retry(5)(async () => {
-    await git.hardReset(input.branch);
-    await fileManager.removeAllAppsFromBranch(params);
+    await git.hardReset(userInput.ghPagesBranch);
+    await io.rmRF(params.branch.name);
     manifest.removeApp(params.branch.name);
     await git.stageChanges([
-      byHeadCommit,
-      !input.skipIndexHtml && 'index.html',
+      params.branch.name,
+      !userInput.skipIndexHtml && 'index.html',
       'manifest.json',
     ]);
     await git.commit(
       git.decorateMessage(`Removing branch: ${params.branch.name}`)
     );
-    await git.push(input.branch);
+    await git.push(userInput.ghPagesBranch);
   });
 
   debug('Return to original state');

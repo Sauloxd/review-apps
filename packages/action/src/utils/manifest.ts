@@ -1,6 +1,6 @@
 import * as fs from 'fs';
 import * as core from '@actions/core';
-import { App, Manifest, SanitizedPayloadParams } from '../interface';
+import { App, Manifest, SanitizedPayloadParams, UserInput } from '../interface';
 import { defaultPage } from '../template/default';
 import * as fileManager from './file-manager';
 import { userInput } from './user-input';
@@ -19,13 +19,13 @@ export const removeApp = withError(async function removeApp(branch: string) {
 });
 
 export const replaceApp = withError(async function replaceApp(
-  params: SanitizedPayloadParams
+  params: SanitizedPayloadParams,
+  appInput: UserInput['apps'][number]
 ) {
   const manifest = getManifest();
-  const input = userInput();
   const apps = manifest[params.branch.name]?.apps || [];
-  const index = apps.findIndex((app) => app.name === input.slug);
-  const newApp = buildApp(params);
+  const index = apps.findIndex((app) => app.name === appInput.slug);
+  const newApp = buildApp(params, appInput);
 
   if (index > -1) {
     apps[index] = newApp;
@@ -47,8 +47,11 @@ export function getBranchPaths(branch: string) {
   return manifest[branch];
 }
 
-export function githubPagesUrl(params: SanitizedPayloadParams) {
-  const paths = fileManager.paths(params);
+export function githubPagesUrl(
+  params: SanitizedPayloadParams,
+  app: UserInput['apps'][number]
+) {
+  const paths = fileManager.paths(params, app);
 
   return `https://${params.repository.owner}.github.io/${params.repository.name}/${paths.byHeadCommit}`;
 }
@@ -64,17 +67,19 @@ function syncManifest(manifest: Manifest) {
   }
 }
 
-function buildApp(params: SanitizedPayloadParams): App {
-  const input = userInput();
-  const paths = fileManager.paths(params);
+function buildApp(
+  params: SanitizedPayloadParams,
+  app: UserInput['apps'][number]
+): App {
+  const paths = fileManager.paths(params, app);
 
   return {
-    name: input.slug,
+    name: app.slug,
     headCommitId: params.branch.headCommit,
     updatedAt: new Date(),
     href: paths.byHeadCommit,
     pullRequestUrl: params.branch.pullRequest.url,
-    githubPagesUrl: githubPagesUrl(params),
+    githubPagesUrl: githubPagesUrl(params, app),
   };
 }
 

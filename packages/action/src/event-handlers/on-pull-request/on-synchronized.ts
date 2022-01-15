@@ -1,7 +1,8 @@
-import { syncApp } from '../../services/sync-app';
+import { UserInput } from '../../interface';
+import { syncApps } from '../../services/sync-apps';
 import { getParams } from './params';
 
-export async function onPullRequestSynchronized() {
+export async function onPullRequestSynchronized(userInput: UserInput) {
   const params = getParams();
-  await syncApp(params);
+  await syncApps(params, userInput);
 }

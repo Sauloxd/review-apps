@@ -1,7 +1,7 @@
 import * as core from '@actions/core';
 import * as io from '@actions/io';
 import { exec } from '@actions/exec';
-import { SanitizedPayloadParams } from '../interface';
+import { SanitizedPayloadParams, UserInput } from '../interface';
 import * as fileManager from '../utils/file-manager';
 import * as git from '../utils/git';
 import * as manifest from '../utils/manifest';
@@ -10,48 +10,54 @@ import { withError } from '../utils/log-error';
 import { userInput } from '../utils/user-input';
 import { commentAppInfo } from './comment-app-info';
 
-export const syncApp = withError(async function syncApp(
-  params: SanitizedPayloadParams
+export const syncApps = withError(async function syncApps(
+  params: SanitizedPayloadParams,
+  userInput: UserInput
 ) {
-  const input = userInput();
-  const paths = fileManager.paths(params);
-
   core.info(`
-    -> Your app will be hosted in github pages:
+    -> Your apps will be hosted in github pages:
     -> "https://${params.repository.owner}.github.io/${params.repository.name}"
-
-    -> This app is served from:
-    -> "${manifest.githubPagesUrl(params)}"
-
   `);
 
-  await optionalBuildApp(params);
+  Promise.all(userInput.apps.map((app) => syncApp(params, app, userInput)));
+});
 
-  core.info(`
+const syncApp = async (
+  params: SanitizedPayloadParams,
+  app: UserInput['apps'][number],
+  userInput: UserInput
+) => {
+  await optionalBuildApp(params, app);
+  const paths = fileManager.paths(params, app);
+
+  core.debug(`
     -> Current working branch: ${params.branch.name}"
-    -> Will move (and override) the build result on '${input.dist}' to '${paths.byHeadCommit}' in ${input.branch}"
+    -> Will move (and override) the build result on '${app.dist}' to '${paths.byHeadCommit}' in ${userInput.ghPagesBranch}"
   `);
 
-  await git.stageChanges([input.dist]);
-  await git.commit(`Persisting dist output for ${input.slug}`);
+  await git.stageChanges([app.dist]);
+  await git.commit(`Persisting dist output for ${app.slug}`);
 
-  await retry(5)(updateApp.bind(null, params));
+  await retry(5)(updateApp.bind(null, params, app));
 
   core.debug('Return to original state');
 
   await git.hardReset(params.branch.name);
-});
+};
 
-async function updateApp(params: SanitizedPayloadParams) {
+async function updateApp(
+  params: SanitizedPayloadParams,
+  app: UserInput['apps'][number]
+) {
   const input = userInput();
-  const paths = fileManager.paths(params);
-  await git.hardReset(input.branch);
-  await git.getFilesFromOtherBranch(params.branch.name, input.dist);
-  manifest.replaceApp(params);
+  const paths = fileManager.paths(params, app);
+  await git.hardReset(input.ghPagesBranch);
+  await git.getFilesFromOtherBranch(params.branch.name, app.dist);
+  manifest.replaceApp(params, app);
 
   core.debug('Copying from input.dist to -> ' + paths.byHeadCommit);
-  core.debug(input.dist + '->' + paths.byHeadCommit);
-  await io.cp(input.dist, paths.byHeadCommit, {
+  core.debug(app.dist + '->' + paths.byHeadCommit);
+  await io.cp(app.dist, paths.byHeadCommit, {
     recursive: true,
     force: true,
   });
@@ -63,21 +69,22 @@ async function updateApp(params: SanitizedPayloadParams) {
     'manifest.json',
   ]);
   await git.commit(`Updating app ${paths.byHeadCommit}`);
-  await git.push(input.branch);
+  await git.push(input.ghPagesBranch);
   await commentAppInfo(params);
 }
 
-async function optionalBuildApp(params: SanitizedPayloadParams) {
-  const input = userInput();
-
-  if (!input.buildCmd) {
+async function optionalBuildApp(
+  params: SanitizedPayloadParams,
+  app: UserInput['apps'][number]
+) {
+  if (!app.build) {
     core.info(`
     -> NO "buildCmd" passed, skipping build phase
     `);
 
     return;
   }
-  const paths = fileManager.paths(params);
+  const paths = fileManager.paths(params, app);
   const PUBLIC_URL = `/${paths.byRepo}/${paths.byHeadCommit}`;
 
   core.info(`
@@ -94,5 +101,5 @@ async function optionalBuildApp(params: SanitizedPayloadParams) {
 
   core.exportVariable('PUBLIC_URL', PUBLIC_URL);
 
-  await exec(input.buildCmd);
+  await exec(app.build);
 }

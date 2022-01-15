@@ -22,9 +22,9 @@ export const run = withError(async function run() {
 
   switch (event) {
     case GithubTriggerActions.PULL_REQUEST:
-      return await handlers.onPullRequest();
+      return await handlers.onPullRequest(input);
     case GithubTriggerActions.PUSH:
-      return await handlers.onPush();
+      return await handlers.onPush(input);
     default:
       debug(JSON.stringify(github.context, null, 2));
       setFailed(`-> Invalid trigger for this workflow: ${event}`);

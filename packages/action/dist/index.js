@@ -14280,9 +14280,9 @@ exports.run = (0, log_error_1.withError)(function run() {
         });
         switch (event) {
             case interface_1.GithubTriggerActions.PULL_REQUEST:
-                return yield handlers.onPullRequest();
+                return yield handlers.onPullRequest(input);
             case interface_1.GithubTriggerActions.PUSH:
-                return yield handlers.onPush();
+                return yield handlers.onPush(input);
             default:
                 (0, core_1.debug)(JSON.stringify(github.context, null, 2));
                 (0, core_1.setFailed)(`-> Invalid trigger for this workflow: ${event}`);

@@ -34,31 +34,24 @@ jobs:
       #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       # This is how  you'll use the action
-      - name: Building create-react-app example
+      - name: Build review apps
         uses: ./ # Replace here with sauloxd/review-apps@X.X.X
         with:
-          build-cmd: 'yarn run cra:build'
-          branch: 'review-apps'
-          dist: 'packages/cra-example/build'
-          slug: 'My platform'
+          branch: "review-apps"
+          skip-index-html: true
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      # This is how you'll use the action
-      - name: Building storybook example
-        uses: ./ # Replace here with sauloxd/review-apps@X.X.X
-        with:
-          build-cmd: 'yarn run cra:storybook'
-          branch: 'review-apps'
-          dist: 'packages/cra-example/storybook-static'
-          slug: 'My Design System'
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      # This is how you'll use the action
-      - name: Building gatsby example
-        uses: ./ # Replace here with sauloxd/review-apps@X.X.X
-        with:
-          build-cmd: 'yarn run gatsby:build'
-          branch: 'review-apps'
-          dist: 'packages/gatsby-example/public'
-          slug: 'My Blog'
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          apps: |
+            {
+              "dev-cra": {
+                "build": "yarn run cra:build",
+                "dist": "packages/cra-example/build"
+              },
+              "dev-cra-storybook": {
+                "build": "yarn run cra:storybook",
+                "dist": "packages/cra-example/storybook-static"
+              },
+              "dev-gatsby": {
+                "build": "yarn run gatsby:build",
+                "dist": "packages/gatsby-example/public"
+              }
+            }
