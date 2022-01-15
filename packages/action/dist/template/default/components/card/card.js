@@ -2,8 +2,17 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Card = void 0;
 const mustache_1 = require("mustache");
-const to_html_1 = require("../../to-html");
-const html = (0, to_html_1.toHtml)(__dirname, 'card.html');
+const html = `
+<div class="card" style="width: 18rem;">
+  <div class="card-body">
+    <h5 class="card-title">{{name}}</h5>
+    <h6 class="card-subtitle mb-2 text-muted">#{{headCommitShort}}</h6>
+    <h6 class="card-subtitle mb-2 text-muted">{{updatedAt}}</h6>
+    <a href="{{href}}" class="card-link">App</a>
+    {{> children}}
+  </div>
+</div>
+`;
 const Card = (app) => (0, mustache_1.render)(html, {
     name: app.name,
     headCommitShort: app.headCommitId.slice(0, 12),

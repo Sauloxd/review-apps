@@ -2,9 +2,22 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.ReviewAppList = void 0;
 const mustache_1 = require("mustache");
-const to_html_1 = require("../../to-html");
 const card_1 = require("../card/card");
-const html = (0, to_html_1.toHtml)(__dirname, 'review-app-list.html');
+const html = `
+<div>
+  <div class="row">
+    <div class="col-sm">
+      <h2 style="margin-top: 30px;">
+        {{slug}}
+      </h2>
+    </div>
+  </div>
+  <div class="row">
+    {{emptyPlaceholder}}
+    {{> children}}
+  </div>
+</div>
+`;
 const ReviewAppList = (reviewApps) => {
     return Object.entries(reviewApps)
         .map(([slug, reviewApp]) => {

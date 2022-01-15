@@ -14633,9 +14633,20 @@ function optionalBuildApp(params) {
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.Body = void 0;
 const mustache_1 = __nccwpck_require__(5639);
-const to_html_1 = __nccwpck_require__(4961);
 const review_app_list_1 = __nccwpck_require__(388);
-const html = (0, to_html_1.toHtml)(__dirname, 'body.html');
+const html = `
+<div class="container">
+  <div class="row">
+    <div class="col-sm">
+      <h1 style="margin-top: 32px; margin-bottom: 16px;">
+        {{pageTitle}}
+      </h1>
+    </div>
+  </div>
+  {{emptyPlaceholder}}
+  {{> children}}
+</div>
+`;
 const Body = ({ reviewApps }) => {
     const emptyPlaceholder = Object.keys(reviewApps).length === 0 ? 'No apps available yet' : '';
     return (0, mustache_1.render)(html, {
@@ -14658,8 +14669,17 @@ exports.Body = Body;
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.Card = void 0;
 const mustache_1 = __nccwpck_require__(5639);
-const to_html_1 = __nccwpck_require__(4961);
-const html = (0, to_html_1.toHtml)(__dirname, 'card.html');
+const html = `
+<div class="card" style="width: 18rem;">
+  <div class="card-body">
+    <h5 class="card-title">{{name}}</h5>
+    <h6 class="card-subtitle mb-2 text-muted">#{{headCommitShort}}</h6>
+    <h6 class="card-subtitle mb-2 text-muted">{{updatedAt}}</h6>
+    <a href="{{href}}" class="card-link">App</a>
+    {{> children}}
+  </div>
+</div>
+`;
 const Card = (app) => (0, mustache_1.render)(html, {
     name: app.name,
     headCommitShort: app.headCommitId.slice(0, 12),
@@ -14685,9 +14705,22 @@ exports.Card = Card;
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.ReviewAppList = void 0;
 const mustache_1 = __nccwpck_require__(5639);
-const to_html_1 = __nccwpck_require__(4961);
 const card_1 = __nccwpck_require__(6987);
-const html = (0, to_html_1.toHtml)(__dirname, 'review-app-list.html');
+const html = `
+<div>
+  <div class="row">
+    <div class="col-sm">
+      <h2 style="margin-top: 30px;">
+        {{slug}}
+      </h2>
+    </div>
+  </div>
+  <div class="row">
+    {{emptyPlaceholder}}
+    {{> children}}
+  </div>
+</div>
+`;
 const ReviewAppList = (reviewApps) => {
     return Object.entries(reviewApps)
         .map(([slug, reviewApp]) => {
@@ -14737,73 +14770,35 @@ exports.defaultPage = defaultPage;
 /***/ }),
 
 /***/ 3489:
-/***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
-var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
-}) : (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    o[k2] = m[k];
-}));
-var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
-    Object.defineProperty(o, "default", { enumerable: true, value: v });
-}) : function(o, v) {
-    o["default"] = v;
-});
-var __importStar = (this && this.__importStar) || function (mod) {
-    if (mod && mod.__esModule) return mod;
-    var result = {};
-    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
-    __setModuleDefault(result, mod);
-    return result;
-};
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.layout = void 0;
-const fs = __importStar(__nccwpck_require__(7147));
-const path = __importStar(__nccwpck_require__(1017));
 const mustache_1 = __nccwpck_require__(5639);
-const html = fs.readFileSync(path.resolve(__dirname, './layout.html'), 'utf-8');
+const html = `
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Review apps</title>
+    <meta name="description" content="QA every PR effortlessly">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
+    <style>
+      body { font-family: Roboto; }
+    </style>
+  </head>
+  <body>
+    {{> children}}
+  </body>
+</html>
+`;
 const layout = ({ children }) => {
     return (0, mustache_1.render)(html, {}, { children });
 };
 exports.layout = layout;
-
-
-/***/ }),
-
-/***/ 4961:
-/***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
-
-"use strict";
-
-var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
-}) : (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    o[k2] = m[k];
-}));
-var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
-    Object.defineProperty(o, "default", { enumerable: true, value: v });
-}) : function(o, v) {
-    o["default"] = v;
-});
-var __importStar = (this && this.__importStar) || function (mod) {
-    if (mod && mod.__esModule) return mod;
-    var result = {};
-    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
-    __setModuleDefault(result, mod);
-    return result;
-};
-Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.toHtml = void 0;
-const fs = __importStar(__nccwpck_require__(7147));
-const path = __importStar(__nccwpck_require__(1017));
-const toHtml = (dirname, filename) => fs.readFileSync(path.resolve(dirname, filename), 'utf-8');
-exports.toHtml = toHtml;
 
 
 /***/ }),
