@@ -3,9 +3,10 @@
   "version": "0.0.1",
   "main": "dist/index.js",
   "scripts": {
-    "build": "yarn build:clean && yarn build:ts && yarn build:html",
+    "build": "yarn build:clean && yarn build:ts && yarn build:html && yarn build:package",
     "build:clean": "rimraf dist",
     "build:ts": "tsc -p tsconfig.json",
+    "build:package": "ncc build --source-map --license licenses.txt",
     "build:html": "yarn copyfiles -u 1 \"src/**/*.html\" dist",
     "dev:tmpl": "nodemon -e ts,tsx spec/template/default/index.ts"
   },
@@ -19,7 +20,7 @@
   },
   "devDependencies": {
     "@types/mustache": "^4.1.2",
-    "@vercel/ncc": "^0.24.0",
+    "@vercel/ncc": "^0.33.1",
     "eslint-config-sxd": "^1.1.2",
     "nodemon": "^2.0.4",
     "ts-node": "^10.4.0",

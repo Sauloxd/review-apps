@@ -1,9 +1,22 @@
 import { render } from 'mustache';
 import { Manifest } from '../../../../interface';
-import { toHtml } from '../../to-html';
 import { Card } from '../card/card';
 
-const html = toHtml(__dirname, 'review-app-list.html');
+const html = `
+<div>
+  <div class="row">
+    <div class="col-sm">
+      <h2 style="margin-top: 30px;">
+        {{slug}}
+      </h2>
+    </div>
+  </div>
+  <div class="row">
+    {{emptyPlaceholder}}
+    {{> children}}
+  </div>
+</div>
+`;
 
 export const ReviewAppList = (reviewApps: Manifest) => {
   return Object.entries(reviewApps)
