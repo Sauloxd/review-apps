@@ -1,4 +1,3 @@
-import { debug } from '@actions/core';
 import * as io from '@actions/io';
 import * as git from '../utils/git';
 import * as manifest from '../utils/manifest';
@@ -24,8 +23,4 @@ export const removeApp = withError(async function removeApp(
     );
     await git.push(userInput().ghPagesBranch);
   });
-
-  debug('Return to original state');
-
-  await git.hardReset(params.branch.name);
 });

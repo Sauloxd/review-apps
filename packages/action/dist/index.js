@@ -14471,7 +14471,6 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.removeApp = void 0;
-const core_1 = __nccwpck_require__(7117);
 const io = __importStar(__nccwpck_require__(6890));
 const git = __importStar(__nccwpck_require__(5809));
 const manifest = __importStar(__nccwpck_require__(274));
@@ -14492,8 +14491,6 @@ exports.removeApp = (0, log_error_1.withError)(function removeApp(params) {
             yield git.commit(git.decorateMessage(`Removing branch: ${params.branch.name}`));
             yield git.push((0, user_input_1.userInput)().ghPagesBranch);
         }));
-        (0, core_1.debug)('Return to original state');
-        yield git.hardReset(params.branch.name);
     });
 });
 

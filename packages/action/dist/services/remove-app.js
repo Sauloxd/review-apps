@@ -29,7 +29,6 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.removeApp = void 0;
-const core_1 = require("@actions/core");
 const io = __importStar(require("@actions/io"));
 const git = __importStar(require("../utils/git"));
 const manifest = __importStar(require("../utils/manifest"));
@@ -50,7 +49,5 @@ exports.removeApp = (0, log_error_1.withError)(function removeApp(params) {
             yield git.commit(git.decorateMessage(`Removing branch: ${params.branch.name}`));
             yield git.push((0, user_input_1.userInput)().ghPagesBranch);
         }));
-        (0, core_1.debug)('Return to original state');
-        yield git.hardReset(params.branch.name);
     });
 });
