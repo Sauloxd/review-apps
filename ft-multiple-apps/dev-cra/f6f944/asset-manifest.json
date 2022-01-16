@@ -1,0 +1,25 @@
+{
+  "files": {
+    "main.css": "/review-apps/ft-multiple-apps/dev-cra/f6f944/static/css/main.5ecd60fb.chunk.css",
+    "main.js": "/review-apps/ft-multiple-apps/dev-cra/f6f944/static/js/main.bf380dcd.chunk.js",
+    "main.js.map": "/review-apps/ft-multiple-apps/dev-cra/f6f944/static/js/main.bf380dcd.chunk.js.map",
+    "runtime-main.js": "/review-apps/ft-multiple-apps/dev-cra/f6f944/static/js/runtime-main.eb9915b0.js",
+    "runtime-main.js.map": "/review-apps/ft-multiple-apps/dev-cra/f6f944/static/js/runtime-main.eb9915b0.js.map",
+    "static/js/2.a2a6c264.chunk.js": "/review-apps/ft-multiple-apps/dev-cra/f6f944/static/js/2.a2a6c264.chunk.js",
+    "static/js/2.a2a6c264.chunk.js.map": "/review-apps/ft-multiple-apps/dev-cra/f6f944/static/js/2.a2a6c264.chunk.js.map",
+    "index.html": "/review-apps/ft-multiple-apps/dev-cra/f6f944/index.html",
+    "precache-manifest.f787aa66ada3e71f6a30c7f283a460f2.js": "/review-apps/ft-multiple-apps/dev-cra/f6f944/precache-manifest.f787aa66ada3e71f6a30c7f283a460f2.js",
+    "service-worker.js": "/review-apps/ft-multiple-apps/dev-cra/f6f944/service-worker.js",
+    "static/css/main.5ecd60fb.chunk.css.map": "/review-apps/ft-multiple-apps/dev-cra/f6f944/static/css/main.5ecd60fb.chunk.css.map",
+    "static/js/2.a2a6c264.chunk.js.LICENSE.txt": "/review-apps/ft-multiple-apps/dev-cra/f6f944/static/js/2.a2a6c264.chunk.js.LICENSE.txt",
+    "static/media/fox-combo-1.gif": "/review-apps/ft-multiple-apps/dev-cra/f6f944/static/media/fox-combo-1.b8000ebc.gif",
+    "static/media/fox-multishine.gif": "/review-apps/ft-multiple-apps/dev-cra/f6f944/static/media/fox-multishine.90b071d4.gif",
+    "static/media/fox-waveshine.gif": "/review-apps/ft-multiple-apps/dev-cra/f6f944/static/media/fox-waveshine.7ec8b809.gif"
+  },
+  "entrypoints": [
+    "static/js/runtime-main.eb9915b0.js",
+    "static/js/2.a2a6c264.chunk.js",
+    "static/css/main.5ecd60fb.chunk.css",
+    "static/js/main.bf380dcd.chunk.js"
+  ]
+}
