@@ -31,11 +31,27 @@
     "apps": [
       {
         "name": "dev-cra",
-        "headCommitId": "dd0840f350af6703f1f9dba1fbf64f2f95601c6e",
-        "updatedAt": "2022-01-16T14:21:19.095Z",
-        "href": "ft-multiple-apps/dev-cra/dd0840",
+        "headCommitId": "22cee9fe01fd2938dd4ef4a0bed32b45ed1af3b0",
+        "updatedAt": "2022-01-16T15:14:10.361Z",
+        "href": "ft-multiple-apps/dev-cra/22cee9",
         "pullRequestUrl": "https://github.com/Sauloxd/review-apps/pull/22",
-        "githubPagesUrl": "https://Sauloxd.github.io/review-apps/ft-multiple-apps/dev-cra/dd0840"
+        "githubPagesUrl": "https://Sauloxd.github.io/review-apps/ft-multiple-apps/dev-cra/22cee9"
+      },
+      {
+        "name": "dev-cra-storybook",
+        "headCommitId": "22cee9fe01fd2938dd4ef4a0bed32b45ed1af3b0",
+        "updatedAt": "2022-01-16T15:14:10.727Z",
+        "href": "ft-multiple-apps/dev-cra-storybook/22cee9",
+        "pullRequestUrl": "https://github.com/Sauloxd/review-apps/pull/22",
+        "githubPagesUrl": "https://Sauloxd.github.io/review-apps/ft-multiple-apps/dev-cra-storybook/22cee9"
+      },
+      {
+        "name": "dev-gatsby",
+        "headCommitId": "22cee9fe01fd2938dd4ef4a0bed32b45ed1af3b0",
+        "updatedAt": "2022-01-16T15:14:12.651Z",
+        "href": "ft-multiple-apps/dev-gatsby/22cee9",
+        "pullRequestUrl": "https://github.com/Sauloxd/review-apps/pull/22",
+        "githubPagesUrl": "https://Sauloxd.github.io/review-apps/ft-multiple-apps/dev-gatsby/22cee9"
       }
     ]
   }

@@ -1,0 +1,25 @@
+{
+  "files": {
+    "main.css": "/static/css/main.5ecd60fb.chunk.css",
+    "main.js": "/static/js/main.47ffe715.chunk.js",
+    "main.js.map": "/static/js/main.47ffe715.chunk.js.map",
+    "runtime-main.js": "/static/js/runtime-main.ad6bfc7c.js",
+    "runtime-main.js.map": "/static/js/runtime-main.ad6bfc7c.js.map",
+    "static/js/2.a2a6c264.chunk.js": "/static/js/2.a2a6c264.chunk.js",
+    "static/js/2.a2a6c264.chunk.js.map": "/static/js/2.a2a6c264.chunk.js.map",
+    "index.html": "/index.html",
+    "precache-manifest.d65f0ee20a8b5c2b35a93d80acc13bbb.js": "/precache-manifest.d65f0ee20a8b5c2b35a93d80acc13bbb.js",
+    "service-worker.js": "/service-worker.js",
+    "static/css/main.5ecd60fb.chunk.css.map": "/static/css/main.5ecd60fb.chunk.css.map",
+    "static/js/2.a2a6c264.chunk.js.LICENSE.txt": "/static/js/2.a2a6c264.chunk.js.LICENSE.txt",
+    "static/media/fox-combo-1.gif": "/static/media/fox-combo-1.b8000ebc.gif",
+    "static/media/fox-multishine.gif": "/static/media/fox-multishine.90b071d4.gif",
+    "static/media/fox-waveshine.gif": "/static/media/fox-waveshine.7ec8b809.gif"
+  },
+  "entrypoints": [
+    "static/js/runtime-main.ad6bfc7c.js",
+    "static/js/2.a2a6c264.chunk.js",
+    "static/css/main.5ecd60fb.chunk.css",
+    "static/js/main.47ffe715.chunk.js"
+  ]
+}
