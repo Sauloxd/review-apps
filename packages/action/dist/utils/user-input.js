@@ -24,6 +24,7 @@ function userInput() {
         buildCmd: (0, core_2.getInput)('build-cmd'),
         githubToken: (0, core_2.getInput)('GITHUB_TOKEN'),
         skipIndexHtml: (0, core_2.getInput)('skip-index-html') === 'true',
+        tmpDir: '.tmp-review-apps',
         apps,
     };
     const appsSanitized = Object.entries(sanitizedInput.apps || {

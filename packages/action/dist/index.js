@@ -14562,11 +14562,9 @@ exports.syncApps = (0, log_error_1.withError)(function syncApps(params) {
         yield git.hardReset((0, user_input_1.userInput)().ghPagesBranch);
         for (const app of (0, user_input_1.userInput)().apps) {
             const paths = fileManager.paths(params, app);
-            yield git.getFilesFromOtherBranch(params.branch.name, app.dist);
             manifest.replaceApp(params, app);
-            core.debug('Copying from input.dist to -> ' + paths.byHeadCommit);
-            core.debug(app.dist + '->' + paths.byHeadCommit);
-            yield io.cp(app.dist, paths.byHeadCommit, {
+            const tmpDir = (0, user_input_1.userInput)().tmpDir + '/' + paths.byHeadCommit;
+            yield io.cp(tmpDir, paths.byHeadCommit, {
                 recursive: true,
                 force: true,
             });
@@ -14586,26 +14584,31 @@ exports.syncApps = (0, log_error_1.withError)(function syncApps(params) {
 });
 const optionalBuildApp = (0, log_error_1.withError)(function optionalBuildApp(params, app) {
     return __awaiter(this, void 0, void 0, function* () {
-        if (!app.build) {
+        const paths = fileManager.paths(params, app);
+        if (app.build) {
+            const PUBLIC_URL = `/${paths.byRepo}/${paths.byHeadCommit}`;
+            core.info(`
+      -> BUILDING APP: ${app.slug}
+
+      -> We'll build your app with the proper PUBLIC_URL: ${PUBLIC_URL}
+      -> That way you can use relative links inside your app.
+      -> For more info:
+      -> https://github.com/facebook/create-react-app/pull/937/files#diff-9b26877ecf8d15b7987c96e5a17502f6
+      -> https://www.gatsbyjs.com/docs/path-prefix/
+    `);
+            yield (0, log_error_1.withError)(exec_1.exec)(app.build);
+        }
+        else {
             core.info(`
     -> NO "buildCmd" passed, skipping build phase
     `);
-            return;
         }
-        const paths = fileManager.paths(params, app);
-        const PUBLIC_URL = `/${paths.byRepo}/${paths.byHeadCommit}`;
-        core.info(`
-    -> BUILDING APP: ${app.slug}
-
-    -> We'll build your app with the proper PUBLIC_URL: ${PUBLIC_URL}
-    -> That way you can use relative links inside your app.
-    -> For more info:
-    -> https://github.com/facebook/create-react-app/pull/937/files#diff-9b26877ecf8d15b7987c96e5a17502f6
-    -> https://www.gatsbyjs.com/docs/path-prefix/
-  `);
-        yield (0, log_error_1.withError)(exec_1.exec)(app.build);
-        yield git.stageChanges([app.dist]);
-        yield git.commit(`Persisting dist output for ${app.slug}`);
+        const tmpDir = (0, user_input_1.userInput)().tmpDir + '/' + paths.byHeadCommit;
+        core.info('-> Copying from input.dist to -> ' + paths.byHeadCommit);
+        yield io.cp(app.dist, tmpDir, {
+            recursive: true,
+            force: true,
+        });
     });
 });
 
@@ -14827,15 +14830,17 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.getFilesFromOtherBranch = exports.push = exports.commit = exports.stageChanges = exports.decorateMessage = exports.hardReset = exports.configure = void 0;
+exports.push = exports.commit = exports.stageChanges = exports.decorateMessage = exports.hardReset = exports.configure = void 0;
 const exec_1 = __nccwpck_require__(6473);
 const log_error_1 = __nccwpck_require__(7175);
+const user_input_1 = __nccwpck_require__(2103);
 exports.configure = (0, log_error_1.withError)(function configure({ name, email, }) {
     return __awaiter(this, void 0, void 0, function* () {
         yield (0, exec_1.exec)('git', ['--version']);
         yield (0, exec_1.exec)('git', ['config', '--global', 'user.name', name]);
         yield (0, exec_1.exec)('git', ['config', '--global', 'user.email', email]);
         yield (0, exec_1.exec)('git', ['config', 'pull.rebase', 'true']);
+        yield (0, exec_1.exec)(`echo "${(0, user_input_1.userInput)().tmpDir}" >> .git/info/exclude`);
     });
 });
 exports.hardReset = (0, log_error_1.withError)(function hardReset(branch) {
@@ -14862,11 +14867,6 @@ exports.commit = (0, log_error_1.withError)(function commit(message) {
 exports.push = (0, log_error_1.withError)(function push(branch) {
     return __awaiter(this, void 0, void 0, function* () {
         yield (0, exec_1.exec)('git', ['push', 'origin', branch]);
-    });
-});
-exports.getFilesFromOtherBranch = (0, log_error_1.withError)(function getFilesFromOtherBranch(branch, fileOrDirName) {
-    return __awaiter(this, void 0, void 0, function* () {
-        yield (0, exec_1.exec)('git', ['checkout', '-f', branch, fileOrDirName]);
     });
 });
 
@@ -15135,6 +15135,7 @@ function userInput() {
         buildCmd: (0, core_2.getInput)('build-cmd'),
         githubToken: (0, core_2.getInput)('GITHUB_TOKEN'),
         skipIndexHtml: (0, core_2.getInput)('skip-index-html') === 'true',
+        tmpDir: '.tmp-review-apps',
         apps,
     };
     const appsSanitized = Object.entries(sanitizedInput.apps || {

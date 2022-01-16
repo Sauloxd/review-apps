@@ -40,6 +40,7 @@ export function userInput(): UserInput {
     buildCmd: getInput('build-cmd'),
     githubToken: getInput('GITHUB_TOKEN'),
     skipIndexHtml: getInput('skip-index-html') === 'true',
+    tmpDir: '.tmp-review-apps',
     apps,
   };
   const appsSanitized = Object.entries(

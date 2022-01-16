@@ -34,11 +34,12 @@ export const syncApps = withError(async function syncApps(
 
   for (const app of userInput().apps) {
     const paths = fileManager.paths(params, app);
-    await git.getFilesFromOtherBranch(params.branch.name, app.dist);
+
     manifest.replaceApp(params, app);
-    core.debug('Copying from input.dist to -> ' + paths.byHeadCommit);
-    core.debug(app.dist + '->' + paths.byHeadCommit);
-    await io.cp(app.dist, paths.byHeadCommit, {
+
+    const tmpDir = userInput().tmpDir + '/' + paths.byHeadCommit;
+
+    await io.cp(tmpDir, paths.byHeadCommit, {
       recursive: true,
       force: true,
     });
@@ -63,27 +64,34 @@ const optionalBuildApp = withError(async function optionalBuildApp(
   params: SanitizedPayloadParams,
   app: UserInput['apps'][number]
 ) {
-  if (!app.build) {
+  const paths = fileManager.paths(params, app);
+
+  if (app.build) {
+    const PUBLIC_URL = `/${paths.byRepo}/${paths.byHeadCommit}`;
+
+    core.info(`
+      -> BUILDING APP: ${app.slug}
+
+      -> We'll build your app with the proper PUBLIC_URL: ${PUBLIC_URL}
+      -> That way you can use relative links inside your app.
+      -> For more info:
+      -> https://github.com/facebook/create-react-app/pull/937/files#diff-9b26877ecf8d15b7987c96e5a17502f6
+      -> https://www.gatsbyjs.com/docs/path-prefix/
+    `);
+
+    await withError(exec)(app.build);
+  } else {
     core.info(`
     -> NO "buildCmd" passed, skipping build phase
     `);
-
-    return;
   }
-  const paths = fileManager.paths(params, app);
-  const PUBLIC_URL = `/${paths.byRepo}/${paths.byHeadCommit}`;
 
-  core.info(`
-    -> BUILDING APP: ${app.slug}
+  const tmpDir = userInput().tmpDir + '/' + paths.byHeadCommit;
 
-    -> We'll build your app with the proper PUBLIC_URL: ${PUBLIC_URL}
-    -> That way you can use relative links inside your app.
-    -> For more info:
-    -> https://github.com/facebook/create-react-app/pull/937/files#diff-9b26877ecf8d15b7987c96e5a17502f6
-    -> https://www.gatsbyjs.com/docs/path-prefix/
-  `);
+  core.info('-> Copying from input.dist to -> ' + paths.byHeadCommit);
 
-  await withError(exec)(app.build);
-  await git.stageChanges([app.dist]);
-  await git.commit(`Persisting dist output for ${app.slug}`);
+  await io.cp(app.dist, tmpDir, {
+    recursive: true,
+    force: true,
+  });
 });

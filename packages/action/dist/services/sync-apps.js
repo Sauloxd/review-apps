@@ -56,11 +56,9 @@ exports.syncApps = (0, log_error_1.withError)(function syncApps(params) {
         yield git.hardReset((0, user_input_1.userInput)().ghPagesBranch);
         for (const app of (0, user_input_1.userInput)().apps) {
             const paths = fileManager.paths(params, app);
-            yield git.getFilesFromOtherBranch(params.branch.name, app.dist);
             manifest.replaceApp(params, app);
-            core.debug('Copying from input.dist to -> ' + paths.byHeadCommit);
-            core.debug(app.dist + '->' + paths.byHeadCommit);
-            yield io.cp(app.dist, paths.byHeadCommit, {
+            const tmpDir = (0, user_input_1.userInput)().tmpDir + '/' + paths.byHeadCommit;
+            yield io.cp(tmpDir, paths.byHeadCommit, {
                 recursive: true,
                 force: true,
             });
@@ -80,25 +78,30 @@ exports.syncApps = (0, log_error_1.withError)(function syncApps(params) {
 });
 const optionalBuildApp = (0, log_error_1.withError)(function optionalBuildApp(params, app) {
     return __awaiter(this, void 0, void 0, function* () {
-        if (!app.build) {
+        const paths = fileManager.paths(params, app);
+        if (app.build) {
+            const PUBLIC_URL = `/${paths.byRepo}/${paths.byHeadCommit}`;
+            core.info(`
+      -> BUILDING APP: ${app.slug}
+
+      -> We'll build your app with the proper PUBLIC_URL: ${PUBLIC_URL}
+      -> That way you can use relative links inside your app.
+      -> For more info:
+      -> https://github.com/facebook/create-react-app/pull/937/files#diff-9b26877ecf8d15b7987c96e5a17502f6
+      -> https://www.gatsbyjs.com/docs/path-prefix/
+    `);
+            yield (0, log_error_1.withError)(exec_1.exec)(app.build);
+        }
+        else {
             core.info(`
     -> NO "buildCmd" passed, skipping build phase
     `);
-            return;
         }
-        const paths = fileManager.paths(params, app);
-        const PUBLIC_URL = `/${paths.byRepo}/${paths.byHeadCommit}`;
-        core.info(`
-    -> BUILDING APP: ${app.slug}
-
-    -> We'll build your app with the proper PUBLIC_URL: ${PUBLIC_URL}
-    -> That way you can use relative links inside your app.
-    -> For more info:
-    -> https://github.com/facebook/create-react-app/pull/937/files#diff-9b26877ecf8d15b7987c96e5a17502f6
-    -> https://www.gatsbyjs.com/docs/path-prefix/
-  `);
-        yield (0, log_error_1.withError)(exec_1.exec)(app.build);
-        yield git.stageChanges([app.dist]);
-        yield git.commit(`Persisting dist output for ${app.slug}`);
+        const tmpDir = (0, user_input_1.userInput)().tmpDir + '/' + paths.byHeadCommit;
+        core.info('-> Copying from input.dist to -> ' + paths.byHeadCommit);
+        yield io.cp(app.dist, tmpDir, {
+            recursive: true,
+            force: true,
+        });
     });
 });

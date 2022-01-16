@@ -1,5 +1,6 @@
 import { exec } from '@actions/exec';
 import { withError } from './log-error';
+import { userInput } from './user-input';
 
 export const configure = withError(async function configure({
   name,
@@ -12,6 +13,7 @@ export const configure = withError(async function configure({
   await exec('git', ['config', '--global', 'user.name', name]);
   await exec('git', ['config', '--global', 'user.email', email]);
   await exec('git', ['config', 'pull.rebase', 'true']);
+  await exec(`echo "${userInput().tmpDir}" >> .git/info/exclude`);
 });
 
 export const hardReset = withError(async function hardReset(branch: string) {
@@ -37,12 +39,3 @@ export const commit = withError(async function commit(message: string) {
 export const push = withError(async function push(branch: string) {
   await exec('git', ['push', 'origin', branch]);
 });
-
-export const getFilesFromOtherBranch = withError(
-  async function getFilesFromOtherBranch(
-    branch: string,
-    fileOrDirName: string
-  ) {
-    await exec('git', ['checkout', '-f', branch, fileOrDirName]);
-  }
-);

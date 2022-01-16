@@ -33,6 +33,7 @@ export interface UserInput {
   buildCmd: string;
   githubToken: string;
   skipIndexHtml: boolean;
+  tmpDir: string;
   apps: {
     dist: string;
     build?: string;

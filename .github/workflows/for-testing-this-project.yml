@@ -51,7 +51,7 @@ jobs:
             }
 
       # Use this action to SSH to github action machine.
-      - name: Setup tmate session (ssh)
-        uses: mxschmitt/action-tmate@v2
-        with:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      # - name: Setup tmate session (ssh)
+      #   uses: mxschmitt/action-tmate@v2
+      #   with:
+      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
