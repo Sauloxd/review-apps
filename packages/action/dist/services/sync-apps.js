@@ -45,22 +45,26 @@ exports.syncApps = (0, log_error_1.withError)(function syncApps(params) {
     -> Your apps will be hosted in github pages:
     -> "https://${params.repository.owner}.github.io/${params.repository.name}"
   `);
-        Promise.all((0, user_input_1.userInput)().apps.map((app) => syncApp(params, app)));
+        for (const app of (0, user_input_1.userInput)().apps) {
+            yield syncApp(params, app);
+        }
     });
 });
-const syncApp = (0, log_error_1.withError)((params, app) => __awaiter(void 0, void 0, void 0, function* () {
-    yield optionalBuildApp(params, app);
-    const paths = fileManager.paths(params, app);
-    core.debug(`
+const syncApp = (0, log_error_1.withError)(function syncApp(params, app) {
+    return __awaiter(this, void 0, void 0, function* () {
+        yield optionalBuildApp(params, app);
+        const paths = fileManager.paths(params, app);
+        core.debug(`
     -> Current working branch: ${params.branch.name}"
     -> Will move (and override) the build result on '${app.dist}' to '${paths.byHeadCommit}' in ${(0, user_input_1.userInput)().ghPagesBranch}"
   `);
-    yield git.stageChanges([app.dist]);
-    yield git.commit(`Persisting dist output for ${app.slug}`);
-    yield (0, retry_1.retry)(5)(updateApp.bind(null, params, app));
-    core.debug('Return to original state');
-    yield git.hardReset(params.branch.name);
-}));
+        yield git.stageChanges([app.dist]);
+        yield git.commit(`Persisting dist output for ${app.slug}`);
+        yield (0, retry_1.retry)(5)(updateApp.bind(null, params, app));
+        core.debug('Return to original state');
+        yield git.hardReset(params.branch.name);
+    });
+});
 function updateApp(params, app) {
     return __awaiter(this, void 0, void 0, function* () {
         const paths = fileManager.paths(params, app);

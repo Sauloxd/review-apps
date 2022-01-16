@@ -18,31 +18,34 @@ export const syncApps = withError(async function syncApps(
     -> "https://${params.repository.owner}.github.io/${params.repository.name}"
   `);
 
-  Promise.all(userInput().apps.map((app) => syncApp(params, app)));
+  for (const app of userInput().apps) {
+    await syncApp(params, app);
+  }
 });
 
-const syncApp = withError(
-  async (params: SanitizedPayloadParams, app: UserInput['apps'][number]) => {
-    await optionalBuildApp(params, app);
-    const paths = fileManager.paths(params, app);
+const syncApp = withError(async function syncApp(
+  params: SanitizedPayloadParams,
+  app: UserInput['apps'][number]
+) {
+  await optionalBuildApp(params, app);
+  const paths = fileManager.paths(params, app);
 
-    core.debug(`
+  core.debug(`
     -> Current working branch: ${params.branch.name}"
     -> Will move (and override) the build result on '${app.dist}' to '${
-      paths.byHeadCommit
-    }' in ${userInput().ghPagesBranch}"
+    paths.byHeadCommit
+  }' in ${userInput().ghPagesBranch}"
   `);
 
-    await git.stageChanges([app.dist]);
-    await git.commit(`Persisting dist output for ${app.slug}`);
+  await git.stageChanges([app.dist]);
+  await git.commit(`Persisting dist output for ${app.slug}`);
 
-    await retry(5)(updateApp.bind(null, params, app));
+  await retry(5)(updateApp.bind(null, params, app));
 
-    core.debug('Return to original state');
+  core.debug('Return to original state');
 
-    await git.hardReset(params.branch.name);
-  }
-);
+  await git.hardReset(params.branch.name);
+});
 
 async function updateApp(
   params: SanitizedPayloadParams,
