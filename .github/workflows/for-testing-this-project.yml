@@ -27,12 +27,6 @@ jobs:
       - name: Install deps checking cache hit
         run: yarn install --frozen-lockfile
 
-      # Use this action to SSH to github action machine.
-      # - name: Setup tmate session (ssh)
-      #   uses: mxschmitt/action-tmate@v2
-      #   with:
-      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
       # This is how  you'll use the action
       - name: Build review apps
         uses: ./ # Replace here with sauloxd/review-apps@X.X.X
@@ -55,3 +49,9 @@ jobs:
                 "dist": "packages/gatsby-example/public"
               }
             }
+
+      # Use this action to SSH to github action machine.
+      - name: Setup tmate session (ssh)
+        uses: mxschmitt/action-tmate@v2
+        with:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

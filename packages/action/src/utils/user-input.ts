@@ -16,6 +16,23 @@ export function userInput(): UserInput {
 
   info('-> Validating user input');
 
+  let apps: InputApp;
+  try {
+    apps = JSON.parse(getInput('apps'));
+  } catch (e) {
+    setFailed(
+      `Invalid "apps" value, it must be a valid JSON. Received ${getInput(
+        'apps'
+      )}`
+    );
+    debug(
+      `Invalid "apps" value, it must be a valid JSON. Received ${getInput(
+        'apps'
+      )}`
+    );
+    throw e;
+  }
+
   const sanitizedInput = {
     dist: getInput('dist'),
     slug: (getInput('slug') || 'FAILED_TO_GET_SLUG').replace(/ /g, '-'),
@@ -23,29 +40,33 @@ export function userInput(): UserInput {
     buildCmd: getInput('build-cmd'),
     githubToken: getInput('GITHUB_TOKEN'),
     skipIndexHtml: getInput('skip-index-html') === 'true',
-    apps: JSON.parse(getInput('apps')),
+    apps,
   };
-
-  validateApps(sanitizedInput.apps);
-
-  sanitizedUserInput = {
-    ...sanitizedInput,
-    apps: Object.entries({
-      ...sanitizedInput.apps,
+  const appsSanitized = Object.entries(
+    sanitizedInput.apps || {
       [sanitizedInput.slug]: {
         build: sanitizedInput.buildCmd,
         dist: sanitizedInput.dist,
       },
-    } as InputApp).map(([slug, app]) => ({
-      slug,
-      ...app,
-    })),
+    }
+  ).map(([slug, app]) => ({
+    slug,
+    ...app,
+  }));
+
+  validateApps(appsSanitized);
+
+  sanitizedUserInput = {
+    ...sanitizedInput,
+    apps: appsSanitized,
   };
 
-  return sanitizedInput;
+  return sanitizedUserInput;
 }
 
-const validateApps = (apps: InputApp) => {
+const validateApps = (apps: UserInput['apps']) => {
+  if (!apps) return;
+
   Object.entries(apps).forEach(([_key, value]) => {
     if (!value.dist) {
       setFailed('-> Invalid user input: input.apps.dist is mandatory!');
