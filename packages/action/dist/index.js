@@ -14551,9 +14551,12 @@ exports.syncApps = (0, log_error_1.withError)(function syncApps(params) {
     -> Your apps will be hosted in github pages:
     -> "https://${params.repository.owner}.github.io/${params.repository.name}"
   `);
+        yield git.hardReset(params.branch.name);
         for (const app of (0, user_input_1.userInput)().apps) {
             yield syncApp(params, app);
         }
+        core.debug('Return to original state');
+        yield git.hardReset(params.branch.name);
     });
 });
 const syncApp = (0, log_error_1.withError)(function syncApp(params, app) {
@@ -14564,11 +14567,7 @@ const syncApp = (0, log_error_1.withError)(function syncApp(params, app) {
     -> Current working branch: ${params.branch.name}"
     -> Will move (and override) the build result on '${app.dist}' to '${paths.byHeadCommit}' in ${(0, user_input_1.userInput)().ghPagesBranch}"
   `);
-        yield git.stageChanges([app.dist]);
-        yield git.commit(`Persisting dist output for ${app.slug}`);
         yield (0, retry_1.retry)(5)(updateApp.bind(null, params, app));
-        core.debug('Return to original state');
-        yield git.hardReset(params.branch.name);
     });
 });
 function updateApp(params, app) {
@@ -14613,9 +14612,9 @@ const optionalBuildApp = (0, log_error_1.withError)(function optionalBuildApp(pa
     -> https://github.com/facebook/create-react-app/pull/937/files#diff-9b26877ecf8d15b7987c96e5a17502f6
     -> https://www.gatsbyjs.com/docs/path-prefix/
   `);
-        yield git.hardReset(params.branch.name);
-        core.exportVariable('PUBLIC_URL', PUBLIC_URL);
         yield (0, log_error_1.withError)(exec_1.exec)(app.build);
+        yield git.stageChanges([app.dist]);
+        yield git.commit(`Persisting dist output for ${app.slug}`);
     });
 });
 

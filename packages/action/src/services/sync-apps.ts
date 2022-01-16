@@ -18,9 +18,15 @@ export const syncApps = withError(async function syncApps(
     -> "https://${params.repository.owner}.github.io/${params.repository.name}"
   `);
 
+  await git.hardReset(params.branch.name);
+
   for (const app of userInput().apps) {
     await syncApp(params, app);
   }
+
+  core.debug('Return to original state');
+
+  await git.hardReset(params.branch.name);
 });
 
 const syncApp = withError(async function syncApp(
@@ -36,15 +42,7 @@ const syncApp = withError(async function syncApp(
     paths.byHeadCommit
   }' in ${userInput().ghPagesBranch}"
   `);
-
-  await git.stageChanges([app.dist]);
-  await git.commit(`Persisting dist output for ${app.slug}`);
-
   await retry(5)(updateApp.bind(null, params, app));
-
-  core.debug('Return to original state');
-
-  await git.hardReset(params.branch.name);
 });
 
 async function updateApp(
@@ -98,9 +96,7 @@ const optionalBuildApp = withError(async function optionalBuildApp(
     -> https://www.gatsbyjs.com/docs/path-prefix/
   `);
 
-  await git.hardReset(params.branch.name);
-
-  core.exportVariable('PUBLIC_URL', PUBLIC_URL);
-
   await withError(exec)(app.build);
+  await git.stageChanges([app.dist]);
+  await git.commit(`Persisting dist output for ${app.slug}`);
 });
