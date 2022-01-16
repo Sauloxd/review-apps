@@ -14554,7 +14554,7 @@ exports.syncApps = (0, log_error_1.withError)(function syncApps(params) {
         Promise.all((0, user_input_1.userInput)().apps.map((app) => syncApp(params, app)));
     });
 });
-const syncApp = (params, app) => __awaiter(void 0, void 0, void 0, function* () {
+const syncApp = (0, log_error_1.withError)((params, app) => __awaiter(void 0, void 0, void 0, function* () {
     yield optionalBuildApp(params, app);
     const paths = fileManager.paths(params, app);
     core.debug(`
@@ -14566,7 +14566,7 @@ const syncApp = (params, app) => __awaiter(void 0, void 0, void 0, function* () 
     yield (0, retry_1.retry)(5)(updateApp.bind(null, params, app));
     core.debug('Return to original state');
     yield git.hardReset(params.branch.name);
-});
+}));
 function updateApp(params, app) {
     return __awaiter(this, void 0, void 0, function* () {
         const paths = fileManager.paths(params, app);
@@ -14590,7 +14590,7 @@ function updateApp(params, app) {
         yield (0, comment_app_info_1.commentAppInfo)(params);
     });
 }
-function optionalBuildApp(params, app) {
+const optionalBuildApp = (0, log_error_1.withError)(function optionalBuildApp(params, app) {
     return __awaiter(this, void 0, void 0, function* () {
         if (!app.build) {
             core.info(`
@@ -14601,7 +14601,7 @@ function optionalBuildApp(params, app) {
         const paths = fileManager.paths(params, app);
         const PUBLIC_URL = `/${paths.byRepo}/${paths.byHeadCommit}`;
         core.info(`
-    -> BUILDING APP
+    -> BUILDING APP: ${app.slug}
 
     -> We'll build your app with the proper PUBLIC_URL: ${PUBLIC_URL}
     -> That way you can use relative links inside your app.
@@ -14611,9 +14611,9 @@ function optionalBuildApp(params, app) {
   `);
         yield git.hardReset(params.branch.name);
         core.exportVariable('PUBLIC_URL', PUBLIC_URL);
-        yield (0, exec_1.exec)(app.build);
+        yield (0, log_error_1.withError)(exec_1.exec)(app.build);
     });
-}
+});
 
 
 /***/ }),
@@ -14915,21 +14915,6 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.withError = void 0;
 const core = __importStar(__nccwpck_require__(7117));
-// export const withError =
-//   <P, R>(
-//     cb: (...params: P[]) => Promise<R>
-//   ): ((...params: P[]) => Promise<R>) =>
-//   async (...args) => {
-//     core.debug(`CALL ${cb.name}`);
-//     core.debug(`WITH ${JSON.stringify(args, null, 2)}`);
-//     try {
-//       return await cb(...args);
-//     } catch (e) {
-//       core.setFailed(`FAILED ${cb.name}`);
-//       core.debug((e as any).message as string);
-//       throw e;
-//     }
-//   };
 function withError(cb) {
     // Return a new function that tracks how long the original took
     return (...args) => __awaiter(this, void 0, void 0, function* () {

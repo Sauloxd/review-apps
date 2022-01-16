@@ -21,29 +21,28 @@ export const syncApps = withError(async function syncApps(
   Promise.all(userInput().apps.map((app) => syncApp(params, app)));
 });
 
-const syncApp = async (
-  params: SanitizedPayloadParams,
-  app: UserInput['apps'][number]
-) => {
-  await optionalBuildApp(params, app);
-  const paths = fileManager.paths(params, app);
+const syncApp = withError(
+  async (params: SanitizedPayloadParams, app: UserInput['apps'][number]) => {
+    await optionalBuildApp(params, app);
+    const paths = fileManager.paths(params, app);
 
-  core.debug(`
+    core.debug(`
     -> Current working branch: ${params.branch.name}"
     -> Will move (and override) the build result on '${app.dist}' to '${
-    paths.byHeadCommit
-  }' in ${userInput().ghPagesBranch}"
+      paths.byHeadCommit
+    }' in ${userInput().ghPagesBranch}"
   `);
 
-  await git.stageChanges([app.dist]);
-  await git.commit(`Persisting dist output for ${app.slug}`);
+    await git.stageChanges([app.dist]);
+    await git.commit(`Persisting dist output for ${app.slug}`);
 
-  await retry(5)(updateApp.bind(null, params, app));
+    await retry(5)(updateApp.bind(null, params, app));
 
-  core.debug('Return to original state');
+    core.debug('Return to original state');
 
-  await git.hardReset(params.branch.name);
-};
+    await git.hardReset(params.branch.name);
+  }
+);
 
 async function updateApp(
   params: SanitizedPayloadParams,
@@ -72,7 +71,7 @@ async function updateApp(
   await commentAppInfo(params);
 }
 
-async function optionalBuildApp(
+const optionalBuildApp = withError(async function optionalBuildApp(
   params: SanitizedPayloadParams,
   app: UserInput['apps'][number]
 ) {
@@ -87,7 +86,7 @@ async function optionalBuildApp(
   const PUBLIC_URL = `/${paths.byRepo}/${paths.byHeadCommit}`;
 
   core.info(`
-    -> BUILDING APP
+    -> BUILDING APP: ${app.slug}
 
     -> We'll build your app with the proper PUBLIC_URL: ${PUBLIC_URL}
     -> That way you can use relative links inside your app.
@@ -100,5 +99,5 @@ async function optionalBuildApp(
 
   core.exportVariable('PUBLIC_URL', PUBLIC_URL);
 
-  await exec(app.build);
-}
+  await withError(exec)(app.build);
+});
