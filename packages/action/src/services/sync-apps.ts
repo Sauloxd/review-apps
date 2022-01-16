@@ -5,7 +5,6 @@ import { SanitizedPayloadParams, UserInput } from '../interface';
 import * as fileManager from '../utils/file-manager';
 import * as git from '../utils/git';
 import * as manifest from '../utils/manifest';
-import { retry } from '../utils/retry';
 import { withError } from '../utils/log-error';
 import { commentAppInfo } from './comment-app-info';
 import { userInput } from '../utils/user-input';
@@ -21,56 +20,44 @@ export const syncApps = withError(async function syncApps(
   await git.hardReset(params.branch.name);
 
   for (const app of userInput().apps) {
-    await syncApp(params, app);
+    const paths = fileManager.paths(params, app);
+    await optionalBuildApp(params, app);
+    core.debug(`
+      -> Current working branch: ${params.branch.name}"
+      -> Will move (and override) the build result on '${app.dist}' to '${
+      paths.byHeadCommit
+    }' in ${userInput().ghPagesBranch}"
+    `);
   }
+
+  await git.hardReset(userInput().ghPagesBranch);
+
+  for (const app of userInput().apps) {
+    const paths = fileManager.paths(params, app);
+    await git.getFilesFromOtherBranch(params.branch.name, app.dist);
+    manifest.replaceApp(params, app);
+    core.debug('Copying from input.dist to -> ' + paths.byHeadCommit);
+    core.debug(app.dist + '->' + paths.byHeadCommit);
+    await io.cp(app.dist, paths.byHeadCommit, {
+      recursive: true,
+      force: true,
+    });
+    await git.stageChanges([paths.byHeadCommit]);
+    core.debug('Finished copying');
+  }
+
+  await git.stageChanges([
+    !userInput().skipIndexHtml && 'index.html',
+    'manifest.json',
+  ]);
+  await git.commit(`Updating branch ${params.branch.name}`);
+  await git.push(userInput().ghPagesBranch);
+  await commentAppInfo(params);
 
   core.debug('Return to original state');
 
   await git.hardReset(params.branch.name);
 });
-
-const syncApp = withError(async function syncApp(
-  params: SanitizedPayloadParams,
-  app: UserInput['apps'][number]
-) {
-  await optionalBuildApp(params, app);
-  const paths = fileManager.paths(params, app);
-
-  core.debug(`
-    -> Current working branch: ${params.branch.name}"
-    -> Will move (and override) the build result on '${app.dist}' to '${
-    paths.byHeadCommit
-  }' in ${userInput().ghPagesBranch}"
-  `);
-  await retry(5)(updateApp.bind(null, params, app));
-});
-
-async function updateApp(
-  params: SanitizedPayloadParams,
-  app: UserInput['apps'][number]
-) {
-  const paths = fileManager.paths(params, app);
-  await git.hardReset(userInput().ghPagesBranch);
-  await git.getFilesFromOtherBranch(params.branch.name, app.dist);
-  manifest.replaceApp(params, app);
-
-  core.debug('Copying from input.dist to -> ' + paths.byHeadCommit);
-  core.debug(app.dist + '->' + paths.byHeadCommit);
-  await io.cp(app.dist, paths.byHeadCommit, {
-    recursive: true,
-    force: true,
-  });
-  core.debug('Finished copying');
-
-  await git.stageChanges([
-    paths.byHeadCommit,
-    !userInput().skipIndexHtml && 'index.html',
-    'manifest.json',
-  ]);
-  await git.commit(`Updating app ${paths.byHeadCommit}`);
-  await git.push(userInput().ghPagesBranch);
-  await commentAppInfo(params);
-}
 
 const optionalBuildApp = withError(async function optionalBuildApp(
   params: SanitizedPayloadParams,
