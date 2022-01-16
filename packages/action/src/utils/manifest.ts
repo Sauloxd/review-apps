@@ -18,7 +18,7 @@ export const removeApp = withError(async function removeApp(branch: string) {
   syncManifest(manifest);
 });
 
-export const replaceApp = withError(async function replaceApp(
+export const replaceApp = async function replaceApp(
   params: SanitizedPayloadParams,
   appInput: UserInput['apps'][number]
 ) {
@@ -39,7 +39,7 @@ export const replaceApp = withError(async function replaceApp(
   };
 
   syncManifest(manifest);
-});
+};
 
 export function getBranchPaths(branch: string) {
   const manifest = getManifest();
@@ -83,10 +83,6 @@ function buildApp(
 }
 
 function getManifest(): Manifest {
-  core.debug('CALL getManifest');
-  core.debug(
-    'You can only get manifest if you are in github actions page branch!'
-  );
   let manifest = {};
   try {
     manifest = JSON.parse(fs.readFileSync('manifest.json', 'utf-8'));

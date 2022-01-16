@@ -45,7 +45,7 @@ exports.removeApp = (0, log_error_1.withError)(function removeApp(branch) {
         syncManifest(manifest);
     });
 });
-exports.replaceApp = (0, log_error_1.withError)(function replaceApp(params, appInput) {
+const replaceApp = function replaceApp(params, appInput) {
     var _a;
     return __awaiter(this, void 0, void 0, function* () {
         const manifest = getManifest();
@@ -61,7 +61,8 @@ exports.replaceApp = (0, log_error_1.withError)(function replaceApp(params, appI
         manifest[params.branch.name] = Object.assign(Object.assign({}, manifest[params.branch.name]), { apps });
         syncManifest(manifest);
     });
-});
+};
+exports.replaceApp = replaceApp;
 function getBranchPaths(branch) {
     const manifest = getManifest();
     return manifest[branch];
@@ -94,8 +95,6 @@ function buildApp(params, app) {
     };
 }
 function getManifest() {
-    core.debug('CALL getManifest');
-    core.debug('You can only get manifest if you are in github actions page branch!');
     let manifest = {};
     try {
         manifest = JSON.parse(fs.readFileSync('manifest.json', 'utf-8'));

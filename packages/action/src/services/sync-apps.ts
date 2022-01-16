@@ -68,7 +68,7 @@ const optionalBuildApp = withError(async function optionalBuildApp(
 
   if (app.build) {
     const PUBLIC_URL = `/${paths.byRepo}/${paths.byHeadCommit}`;
-
+    core.exportVariable('PUBLIC_URL', PUBLIC_URL);
     core.info(`
       -> BUILDING APP: ${app.slug}
 

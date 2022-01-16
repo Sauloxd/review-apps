@@ -81,6 +81,7 @@ const optionalBuildApp = (0, log_error_1.withError)(function optionalBuildApp(pa
         const paths = fileManager.paths(params, app);
         if (app.build) {
             const PUBLIC_URL = `/${paths.byRepo}/${paths.byHeadCommit}`;
+            core.exportVariable('PUBLIC_URL', PUBLIC_URL);
             core.info(`
       -> BUILDING APP: ${app.slug}
 

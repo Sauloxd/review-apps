@@ -14587,6 +14587,7 @@ const optionalBuildApp = (0, log_error_1.withError)(function optionalBuildApp(pa
         const paths = fileManager.paths(params, app);
         if (app.build) {
             const PUBLIC_URL = `/${paths.byRepo}/${paths.byHeadCommit}`;
+            core.exportVariable('PUBLIC_URL', PUBLIC_URL);
             core.info(`
       -> BUILDING APP: ${app.slug}
 
@@ -14832,9 +14833,8 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.push = exports.commit = exports.stageChanges = exports.decorateMessage = exports.hardReset = exports.configure = void 0;
 const exec_1 = __nccwpck_require__(6473);
-const log_error_1 = __nccwpck_require__(7175);
 const user_input_1 = __nccwpck_require__(2103);
-exports.configure = (0, log_error_1.withError)(function configure({ name, email, }) {
+const configure = function configure({ name, email, }) {
     return __awaiter(this, void 0, void 0, function* () {
         yield (0, exec_1.exec)('git', ['--version']);
         yield (0, exec_1.exec)('git', ['config', '--global', 'user.name', name]);
@@ -14842,33 +14842,38 @@ exports.configure = (0, log_error_1.withError)(function configure({ name, email,
         yield (0, exec_1.exec)('git', ['config', 'pull.rebase', 'true']);
         yield (0, exec_1.exec)(`echo "${(0, user_input_1.userInput)().tmpDir}" >> .git/info/exclude`);
     });
-});
-exports.hardReset = (0, log_error_1.withError)(function hardReset(branch) {
+};
+exports.configure = configure;
+const hardReset = function hardReset(branch) {
     return __awaiter(this, void 0, void 0, function* () {
         yield (0, exec_1.exec)('git', ['fetch', 'origin', branch]);
         yield (0, exec_1.exec)('git', ['checkout', '-f', branch]);
         yield (0, exec_1.exec)('git', ['reset', '--hard', 'origin/' + branch]);
     });
-});
+};
+exports.hardReset = hardReset;
 function decorateMessage(message) {
     return `[skip ci] - ${message}`;
 }
 exports.decorateMessage = decorateMessage;
-exports.stageChanges = (0, log_error_1.withError)(function stageChanges(files) {
+const stageChanges = function stageChanges(files) {
     return __awaiter(this, void 0, void 0, function* () {
         yield (0, exec_1.exec)('git', ['add', '-f', ...files.filter(Boolean)]);
     });
-});
-exports.commit = (0, log_error_1.withError)(function commit(message) {
+};
+exports.stageChanges = stageChanges;
+const commit = function commit(message) {
     return __awaiter(this, void 0, void 0, function* () {
         yield (0, exec_1.exec)('git', ['commit', '--no-verify', '-m', decorateMessage(message)]);
     });
-});
-exports.push = (0, log_error_1.withError)(function push(branch) {
+};
+exports.commit = commit;
+const push = function push(branch) {
     return __awaiter(this, void 0, void 0, function* () {
         yield (0, exec_1.exec)('git', ['push', 'origin', branch]);
     });
-});
+};
+exports.push = push;
 
 
 /***/ }),
@@ -14980,7 +14985,7 @@ exports.removeApp = (0, log_error_1.withError)(function removeApp(branch) {
         syncManifest(manifest);
     });
 });
-exports.replaceApp = (0, log_error_1.withError)(function replaceApp(params, appInput) {
+const replaceApp = function replaceApp(params, appInput) {
     var _a;
     return __awaiter(this, void 0, void 0, function* () {
         const manifest = getManifest();
@@ -14996,7 +15001,8 @@ exports.replaceApp = (0, log_error_1.withError)(function replaceApp(params, appI
         manifest[params.branch.name] = Object.assign(Object.assign({}, manifest[params.branch.name]), { apps });
         syncManifest(manifest);
     });
-});
+};
+exports.replaceApp = replaceApp;
 function getBranchPaths(branch) {
     const manifest = getManifest();
     return manifest[branch];
@@ -15029,8 +15035,6 @@ function buildApp(params, app) {
     };
 }
 function getManifest() {
-    core.debug('CALL getManifest');
-    core.debug('You can only get manifest if you are in github actions page branch!');
     let manifest = {};
     try {
         manifest = JSON.parse(fs.readFileSync('manifest.json', 'utf-8'));
