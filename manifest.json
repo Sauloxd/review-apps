@@ -26,5 +26,17 @@
         "githubPagesUrl": "https://Sauloxd.github.io/review-apps/My-Blog/ft-showcase-review-app/984bde"
       }
     ]
+  },
+  "ft-multiple-apps": {
+    "apps": [
+      {
+        "name": "dev-cra",
+        "headCommitId": "dd0840f350af6703f1f9dba1fbf64f2f95601c6e",
+        "updatedAt": "2022-01-16T14:21:19.095Z",
+        "href": "ft-multiple-apps/dev-cra/dd0840",
+        "pullRequestUrl": "https://github.com/Sauloxd/review-apps/pull/22",
+        "githubPagesUrl": "https://Sauloxd.github.io/review-apps/ft-multiple-apps/dev-cra/dd0840"
+      }
+    ]
   }
 }
