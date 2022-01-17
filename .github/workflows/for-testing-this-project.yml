@@ -32,7 +32,6 @@ jobs:
         uses: ./ # Replace here with sauloxd/review-apps@X.X.X
         with:
           branch: "review-apps"
-          skip-index-html: true
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           apps: |
             {
