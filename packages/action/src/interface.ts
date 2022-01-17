@@ -29,10 +29,16 @@ export interface SanitizedPayloadParams {
 export interface UserInput {
   dist: string;
   slug: string;
-  branch: string;
+  ghPagesBranch: string;
   buildCmd: string;
   githubToken: string;
   skipIndexHtml: boolean;
+  tmpDir: string;
+  apps: {
+    dist: string;
+    build?: string;
+    slug: string;
+  }[];
 }
 
 export interface FileManagerPaths {

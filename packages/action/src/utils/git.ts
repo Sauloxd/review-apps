@@ -1,8 +1,7 @@
 import { exec } from '@actions/exec';
-import { userInput } from '../utils/user-input';
-import { withError } from './log-error';
+import { userInput } from './user-input';
 
-export const configure = withError(async function configure({
+export const configure = async function configure({
   name,
   email,
 }: {
@@ -13,39 +12,29 @@ export const configure = withError(async function configure({
   await exec('git', ['config', '--global', 'user.name', name]);
   await exec('git', ['config', '--global', 'user.email', email]);
   await exec('git', ['config', 'pull.rebase', 'true']);
-});
+  await exec(`echo "${userInput().tmpDir}" >> .git/info/exclude`);
+};
 
-export const hardReset = withError(async function hardReset(branch: string) {
+export const hardReset = async function hardReset(branch: string) {
   await exec('git', ['fetch', 'origin', branch]);
   await exec('git', ['checkout', '-f', branch]);
   await exec('git', ['reset', '--hard', 'origin/' + branch]);
-});
+};
 
 export function decorateMessage(message: string) {
-  const input = userInput();
-
-  return `[skip ci] ${input.slug} - ${message}`;
+  return `[skip ci] - ${message}`;
 }
 
-export const stageChanges = withError(async function stageChanges(
+export const stageChanges = async function stageChanges(
   files: (string | boolean)[]
 ) {
   await exec('git', ['add', '-f', ...(files.filter(Boolean) as string[])]);
-});
+};
 
-export const commit = withError(async function commit(message: string) {
+export const commit = async function commit(message: string) {
   await exec('git', ['commit', '--no-verify', '-m', decorateMessage(message)]);
-});
+};
 
-export const push = withError(async function push(branch: string) {
+export const push = async function push(branch: string) {
   await exec('git', ['push', 'origin', branch]);
-});
-
-export const getFilesFromOtherBranch = withError(
-  async function getFilesFromOtherBranch(
-    branch: string,
-    fileOrDirName: string
-  ) {
-    await exec('git', ['checkout', '-f', branch, fileOrDirName]);
-  }
-);
+};

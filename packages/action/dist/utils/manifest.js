@@ -45,14 +45,13 @@ exports.removeApp = (0, log_error_1.withError)(function removeApp(branch) {
         syncManifest(manifest);
     });
 });
-exports.replaceApp = (0, log_error_1.withError)(function replaceApp(params) {
+const replaceApp = function replaceApp(params, appInput) {
     var _a;
     return __awaiter(this, void 0, void 0, function* () {
         const manifest = getManifest();
-        const input = (0, user_input_1.userInput)();
         const apps = ((_a = manifest[params.branch.name]) === null || _a === void 0 ? void 0 : _a.apps) || [];
-        const index = apps.findIndex((app) => app.name === input.slug);
-        const newApp = buildApp(params);
+        const index = apps.findIndex((app) => app.name === appInput.slug);
+        const newApp = buildApp(params, appInput);
         if (index > -1) {
             apps[index] = newApp;
         }
@@ -62,21 +61,21 @@ exports.replaceApp = (0, log_error_1.withError)(function replaceApp(params) {
         manifest[params.branch.name] = Object.assign(Object.assign({}, manifest[params.branch.name]), { apps });
         syncManifest(manifest);
     });
-});
+};
+exports.replaceApp = replaceApp;
 function getBranchPaths(branch) {
     const manifest = getManifest();
     return manifest[branch];
 }
 exports.getBranchPaths = getBranchPaths;
-function githubPagesUrl(params) {
-    const paths = fileManager.paths(params);
+function githubPagesUrl(params, app) {
+    const paths = fileManager.paths(params, app);
     return `https://${params.repository.owner}.github.io/${params.repository.name}/${paths.byHeadCommit}`;
 }
 exports.githubPagesUrl = githubPagesUrl;
 function syncManifest(manifest) {
-    const input = (0, user_input_1.userInput)();
     fs.writeFileSync('manifest.json', JSON.stringify(manifest, null, 2), 'utf-8');
-    if (!input.skipIndexHtml) {
+    if (!(0, user_input_1.userInput)().skipIndexHtml) {
         core.debug('Creating index.html');
         fs.writeFileSync('index.html', (0, default_1.defaultPage)(manifest), 'utf-8');
     }
@@ -84,21 +83,18 @@ function syncManifest(manifest) {
         core.debug('Skipping index.html');
     }
 }
-function buildApp(params) {
-    const input = (0, user_input_1.userInput)();
-    const paths = fileManager.paths(params);
+function buildApp(params, app) {
+    const paths = fileManager.paths(params, app);
     return {
-        name: input.slug,
+        name: app.slug,
         headCommitId: params.branch.headCommit,
         updatedAt: new Date(),
         href: paths.byHeadCommit,
         pullRequestUrl: params.branch.pullRequest.url,
-        githubPagesUrl: githubPagesUrl(params),
+        githubPagesUrl: githubPagesUrl(params, app),
     };
 }
 function getManifest() {
-    core.debug('CALL getManifest');
-    core.debug('You can only get manifest if you are in github actions page branch!');
     let manifest = {};
     try {
         manifest = JSON.parse(fs.readFileSync('manifest.json', 'utf-8'));

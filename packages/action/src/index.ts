@@ -9,11 +9,10 @@ import { userInput } from './utils/user-input';
 export const run = withError(async function run() {
   // debug(JSON.stringify(github, null, 2));
   const event = github.context.eventName as GithubTriggerActions;
-  const input = userInput();
 
   info('-> Review Apps start!');
   info('-> Your input: ');
-  info(`-> ${JSON.stringify(input, null, 2)}`);
+  info(`-> ${JSON.stringify(userInput(), null, 2)}`);
 
   await git.configure({
     name: 'ReviewApps admin',

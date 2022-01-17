@@ -27,38 +27,30 @@ jobs:
       - name: Install deps checking cache hit
         run: yarn install --frozen-lockfile
 
+      # This is how  you'll use the action
+      - name: Build review apps
+        uses: ./ # Replace here with sauloxd/review-apps@X.X.X
+        with:
+          branch: "review-apps"
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          apps: |
+            {
+              "dev-cra": {
+                "build": "yarn run cra:build",
+                "dist": "packages/cra-example/build"
+              },
+              "dev-cra-storybook": {
+                "build": "yarn run cra:storybook",
+                "dist": "packages/cra-example/storybook-static"
+              },
+              "dev-gatsby": {
+                "build": "yarn run gatsby:build",
+                "dist": "packages/gatsby-example/public"
+              }
+            }
+
       # Use this action to SSH to github action machine.
       # - name: Setup tmate session (ssh)
       #   uses: mxschmitt/action-tmate@v2
       #   with:
       #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      # This is how  you'll use the action
-      - name: Building create-react-app example
-        uses: ./ # Replace here with sauloxd/review-apps@X.X.X
-        with:
-          build-cmd: 'yarn run cra:build'
-          branch: 'review-apps'
-          dist: 'packages/cra-example/build'
-          slug: 'My platform'
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      # This is how you'll use the action
-      - name: Building storybook example
-        uses: ./ # Replace here with sauloxd/review-apps@X.X.X
-        with:
-          build-cmd: 'yarn run cra:storybook'
-          branch: 'review-apps'
-          dist: 'packages/cra-example/storybook-static'
-          slug: 'My Design System'
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      # This is how you'll use the action
-      - name: Building gatsby example
-        uses: ./ # Replace here with sauloxd/review-apps@X.X.X
-        with:
-          build-cmd: 'yarn run gatsby:build'
-          branch: 'review-apps'
-          dist: 'packages/gatsby-example/public'
-          slug: 'My Blog'
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

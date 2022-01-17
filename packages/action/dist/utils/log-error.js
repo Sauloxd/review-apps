@@ -30,16 +30,19 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.withError = void 0;
 const core = __importStar(require("@actions/core"));
-const withError = (cb) => (...args) => __awaiter(void 0, void 0, void 0, function* () {
-    core.debug(`CALL ${cb.name}`);
-    core.debug(`WITH ${JSON.stringify(args, null, 2)}`);
-    try {
-        return yield cb(...args);
-    }
-    catch (e) {
-        core.setFailed(`FAILED ${cb.name}`);
-        core.debug(e.message);
-        throw e;
-    }
-});
+function withError(cb) {
+    // Return a new function that tracks how long the original took
+    return (...args) => __awaiter(this, void 0, void 0, function* () {
+        core.debug(`CALL ${cb.name}`);
+        core.debug(`WITH ${JSON.stringify(args, null, 2)}`);
+        try {
+            return yield cb(...args);
+        }
+        catch (e) {
+            core.setFailed(`FAILED ${cb.name}`);
+            core.debug(e.message);
+            throw e;
+        }
+    });
+}
 exports.withError = withError;

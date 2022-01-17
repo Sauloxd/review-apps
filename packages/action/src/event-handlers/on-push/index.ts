@@ -1,7 +1,7 @@
 import { getParams } from './params';
-import { syncApp } from '../../services/sync-app';
+import { syncApps } from '../../services/sync-apps';
 
 export const onPush = async function onPush() {
   const params = getParams();
-  await syncApp(params);
+  await syncApps(params);
 };

@@ -3,11 +3,10 @@
   "version": "0.0.1",
   "main": "dist/index.js",
   "scripts": {
-    "build": "yarn build:clean && yarn build:ts && yarn build:html && yarn build:package",
+    "build": "yarn build:clean && yarn build:ts && yarn build:package",
     "build:clean": "rimraf dist",
     "build:ts": "tsc -p tsconfig.json",
     "build:package": "ncc build --source-map --license licenses.txt",
-    "build:html": "yarn copyfiles -u 1 \"src/**/*.html\" dist",
     "dev:tmpl": "nodemon -e ts,tsx spec/template/default/index.ts"
   },
   "dependencies": {

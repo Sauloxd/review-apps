@@ -11,11 +11,11 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.onPush = void 0;
 const params_1 = require("./params");
-const sync_app_1 = require("../../services/sync-app");
+const sync_apps_1 = require("../../services/sync-apps");
 const onPush = function onPush() {
     return __awaiter(this, void 0, void 0, function* () {
         const params = (0, params_1.getParams)();
-        yield (0, sync_app_1.syncApp)(params);
+        yield (0, sync_apps_1.syncApps)(params);
     });
 };
 exports.onPush = onPush;

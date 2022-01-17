@@ -1,5 +1,5 @@
 import * as github from '@actions/github';
-import { PullRequestAction } from '../../interface';
+import { PullRequestAction, UserInput } from '../../interface';
 import { withError } from '../../utils/log-error';
 import { onPullRequestClosed } from './on-closed';
 import { onPullRequestSynchronized } from './on-synchronized';

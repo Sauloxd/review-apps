@@ -14085,12 +14085,12 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.onPullRequestSynchronized = void 0;
-const sync_app_1 = __nccwpck_require__(504);
+const sync_apps_1 = __nccwpck_require__(3578);
 const params_1 = __nccwpck_require__(1890);
 function onPullRequestSynchronized() {
     return __awaiter(this, void 0, void 0, function* () {
         const params = (0, params_1.getParams)();
-        yield (0, sync_app_1.syncApp)(params);
+        yield (0, sync_apps_1.syncApps)(params);
     });
 }
 exports.onPullRequestSynchronized = onPullRequestSynchronized;
@@ -14164,11 +14164,11 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.onPush = void 0;
 const params_1 = __nccwpck_require__(5227);
-const sync_app_1 = __nccwpck_require__(504);
+const sync_apps_1 = __nccwpck_require__(3578);
 const onPush = function onPush() {
     return __awaiter(this, void 0, void 0, function* () {
         const params = (0, params_1.getParams)();
-        yield (0, sync_app_1.syncApp)(params);
+        yield (0, sync_apps_1.syncApps)(params);
     });
 };
 exports.onPush = onPush;
@@ -14270,10 +14270,9 @@ exports.run = (0, log_error_1.withError)(function run() {
     return __awaiter(this, void 0, void 0, function* () {
         // debug(JSON.stringify(github, null, 2));
         const event = github.context.eventName;
-        const input = (0, user_input_1.userInput)();
         (0, core_1.info)('-> Review Apps start!');
         (0, core_1.info)('-> Your input: ');
-        (0, core_1.info)(`-> ${JSON.stringify(input, null, 2)}`);
+        (0, core_1.info)(`-> ${JSON.stringify((0, user_input_1.userInput)(), null, 2)}`);
         yield git.configure({
             name: 'ReviewApps admin',
             email: 'review-apps@saulo.dev',
@@ -14472,38 +14471,33 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.removeApp = void 0;
-const fileManager = __importStar(__nccwpck_require__(2679));
+const io = __importStar(__nccwpck_require__(6890));
 const git = __importStar(__nccwpck_require__(5809));
 const manifest = __importStar(__nccwpck_require__(274));
 const retry_1 = __nccwpck_require__(8815);
 const log_error_1 = __nccwpck_require__(7175);
 const user_input_1 = __nccwpck_require__(2103);
-const core_1 = __nccwpck_require__(7117);
 exports.removeApp = (0, log_error_1.withError)(function removeApp(params) {
     return __awaiter(this, void 0, void 0, function* () {
-        const { byHeadCommit } = fileManager.paths(params);
-        const input = (0, user_input_1.userInput)();
         yield (0, retry_1.retry)(5)(() => __awaiter(this, void 0, void 0, function* () {
-            yield git.hardReset(input.branch);
-            yield fileManager.removeAllAppsFromBranch(params);
+            yield git.hardReset((0, user_input_1.userInput)().ghPagesBranch);
+            yield io.rmRF(params.branch.name);
             manifest.removeApp(params.branch.name);
             yield git.stageChanges([
-                byHeadCommit,
-                !input.skipIndexHtml && 'index.html',
+                params.branch.name,
+                !(0, user_input_1.userInput)().skipIndexHtml && 'index.html',
                 'manifest.json',
             ]);
             yield git.commit(git.decorateMessage(`Removing branch: ${params.branch.name}`));
-            yield git.push(input.branch);
+            yield git.push((0, user_input_1.userInput)().ghPagesBranch);
         }));
-        (0, core_1.debug)('Return to original state');
-        yield git.hardReset(params.branch.name);
     });
 });
 
 
 /***/ }),
 
-/***/ 504:
+/***/ 3578:
 /***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
 
 "use strict";
@@ -14537,90 +14531,84 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.syncApp = void 0;
+exports.syncApps = void 0;
 const core = __importStar(__nccwpck_require__(7117));
 const io = __importStar(__nccwpck_require__(6890));
 const exec_1 = __nccwpck_require__(6473);
 const fileManager = __importStar(__nccwpck_require__(2679));
 const git = __importStar(__nccwpck_require__(5809));
 const manifest = __importStar(__nccwpck_require__(274));
-const retry_1 = __nccwpck_require__(8815);
 const log_error_1 = __nccwpck_require__(7175);
-const user_input_1 = __nccwpck_require__(2103);
 const comment_app_info_1 = __nccwpck_require__(1115);
-exports.syncApp = (0, log_error_1.withError)(function syncApp(params) {
+const user_input_1 = __nccwpck_require__(2103);
+exports.syncApps = (0, log_error_1.withError)(function syncApps(params) {
     return __awaiter(this, void 0, void 0, function* () {
-        const input = (0, user_input_1.userInput)();
-        const paths = fileManager.paths(params);
         core.info(`
-    -> Your app will be hosted in github pages:
+    -> Your apps will be hosted in github pages:
     -> "https://${params.repository.owner}.github.io/${params.repository.name}"
-
-    -> This app is served from:
-    -> "${manifest.githubPagesUrl(params)}"
-
   `);
-        yield optionalBuildApp(params);
-        core.info(`
-    -> Current working branch: ${params.branch.name}"
-    -> Will move (and override) the build result on '${input.dist}' to '${paths.byHeadCommit}' in ${input.branch}"
-  `);
-        yield git.stageChanges([input.dist]);
-        yield git.commit(`Persisting dist output for ${input.slug}`);
-        yield (0, retry_1.retry)(5)(updateApp.bind(null, params));
+        yield git.hardReset(params.branch.name);
+        for (const app of (0, user_input_1.userInput)().apps) {
+            const paths = fileManager.paths(params, app);
+            yield optionalBuildApp(params, app);
+            core.debug(`
+      -> Current working branch: ${params.branch.name}"
+      -> Will move (and override) the build result on '${app.dist}' to '${paths.byHeadCommit}' in ${(0, user_input_1.userInput)().ghPagesBranch}"
+    `);
+        }
+        yield git.hardReset((0, user_input_1.userInput)().ghPagesBranch);
+        for (const app of (0, user_input_1.userInput)().apps) {
+            const paths = fileManager.paths(params, app);
+            manifest.replaceApp(params, app);
+            const tmpDir = (0, user_input_1.userInput)().tmpDir + '/' + paths.byHeadCommit;
+            yield io.cp(tmpDir, paths.byHeadCommit, {
+                recursive: true,
+                force: true,
+            });
+            yield git.stageChanges([paths.byHeadCommit]);
+            core.debug('Finished copying');
+        }
+        yield git.stageChanges([
+            !(0, user_input_1.userInput)().skipIndexHtml && 'index.html',
+            'manifest.json',
+        ]);
+        yield git.commit(`Updating branch ${params.branch.name}`);
+        yield git.push((0, user_input_1.userInput)().ghPagesBranch);
+        yield (0, comment_app_info_1.commentAppInfo)(params);
         core.debug('Return to original state');
         yield git.hardReset(params.branch.name);
     });
 });
-function updateApp(params) {
+const optionalBuildApp = (0, log_error_1.withError)(function optionalBuildApp(params, app) {
     return __awaiter(this, void 0, void 0, function* () {
-        const input = (0, user_input_1.userInput)();
-        const paths = fileManager.paths(params);
-        yield git.hardReset(input.branch);
-        yield git.getFilesFromOtherBranch(params.branch.name, input.dist);
-        manifest.replaceApp(params);
-        core.debug('Copying from input.dist to -> ' + paths.byHeadCommit);
-        core.debug(input.dist + '->' + paths.byHeadCommit);
-        yield io.cp(input.dist, paths.byHeadCommit, {
-            recursive: true,
-            force: true,
-        });
-        core.debug('Finished copying');
-        yield git.stageChanges([
-            paths.byHeadCommit,
-            !input.skipIndexHtml && 'index.html',
-            'manifest.json',
-        ]);
-        yield git.commit(`Updating app ${paths.byHeadCommit}`);
-        yield git.push(input.branch);
-        yield (0, comment_app_info_1.commentAppInfo)(params);
-    });
-}
-function optionalBuildApp(params) {
-    return __awaiter(this, void 0, void 0, function* () {
-        const input = (0, user_input_1.userInput)();
-        if (!input.buildCmd) {
+        const paths = fileManager.paths(params, app);
+        if (app.build) {
+            const PUBLIC_URL = `/${paths.byRepo}/${paths.byHeadCommit}`;
+            core.exportVariable('PUBLIC_URL', PUBLIC_URL);
+            core.info(`
+      -> BUILDING APP: ${app.slug}
+
+      -> We'll build your app with the proper PUBLIC_URL: ${PUBLIC_URL}
+      -> That way you can use relative links inside your app.
+      -> For more info:
+      -> https://github.com/facebook/create-react-app/pull/937/files#diff-9b26877ecf8d15b7987c96e5a17502f6
+      -> https://www.gatsbyjs.com/docs/path-prefix/
+    `);
+            yield (0, log_error_1.withError)(exec_1.exec)(app.build);
+        }
+        else {
             core.info(`
     -> NO "buildCmd" passed, skipping build phase
     `);
-            return;
         }
-        const paths = fileManager.paths(params);
-        const PUBLIC_URL = `/${paths.byRepo}/${paths.byHeadCommit}`;
-        core.info(`
-    -> BUILDING APP
-
-    -> We'll build your app with the proper PUBLIC_URL: ${PUBLIC_URL}
-    -> That way you can use relative links inside your app.
-    -> For more info:
-    -> https://github.com/facebook/create-react-app/pull/937/files#diff-9b26877ecf8d15b7987c96e5a17502f6
-    -> https://www.gatsbyjs.com/docs/path-prefix/
-  `);
-        yield git.hardReset(params.branch.name);
-        core.exportVariable('PUBLIC_URL', PUBLIC_URL);
-        yield (0, exec_1.exec)(input.buildCmd);
+        const tmpDir = (0, user_input_1.userInput)().tmpDir + '/' + paths.byHeadCommit;
+        core.info('-> Copying from input.dist to -> ' + paths.byHeadCommit);
+        yield io.cp(app.dist, tmpDir, {
+            recursive: true,
+            force: true,
+        });
     });
-}
+});
 
 
 /***/ }),
@@ -14804,48 +14792,16 @@ exports.layout = layout;
 /***/ }),
 
 /***/ 2679:
-/***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
+/***/ ((__unused_webpack_module, exports) => {
 
 "use strict";
 
-var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
-}) : (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    o[k2] = m[k];
-}));
-var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
-    Object.defineProperty(o, "default", { enumerable: true, value: v });
-}) : function(o, v) {
-    o["default"] = v;
-});
-var __importStar = (this && this.__importStar) || function (mod) {
-    if (mod && mod.__esModule) return mod;
-    var result = {};
-    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
-    __setModuleDefault(result, mod);
-    return result;
-};
-var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.removeAllAppsFromBranch = exports.paths = void 0;
-const io = __importStar(__nccwpck_require__(6890));
-const log_error_1 = __nccwpck_require__(7175);
-const user_input_1 = __nccwpck_require__(2103);
-function paths({ branch, repository, }) {
-    const { slug } = (0, user_input_1.userInput)();
-    const byRepo = repository.name;
-    const byBranch = `${slug}/${branch.name}`;
-    const byHeadCommit = `${byBranch}/${branch.headCommit.slice(0, 6)}`;
+exports.paths = void 0;
+function paths(params, app) {
+    const byRepo = params.repository.name;
+    const byBranch = `${params.branch.name}/${app.slug}`;
+    const byHeadCommit = `${byBranch}/${params.branch.headCommit.slice(0, 6)}`;
     return {
         byRepo,
         byBranch,
@@ -14853,12 +14809,6 @@ function paths({ branch, repository, }) {
     };
 }
 exports.paths = paths;
-exports.removeAllAppsFromBranch = (0, log_error_1.withError)(function removeAllAppsFromBranch(params) {
-    return __awaiter(this, void 0, void 0, function* () {
-        const { byBranch } = paths(params);
-        yield io.rmRF(byBranch);
-    });
-});
 
 
 /***/ }),
@@ -14878,50 +14828,49 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.getFilesFromOtherBranch = exports.push = exports.commit = exports.stageChanges = exports.decorateMessage = exports.hardReset = exports.configure = void 0;
+exports.push = exports.commit = exports.stageChanges = exports.decorateMessage = exports.hardReset = exports.configure = void 0;
 const exec_1 = __nccwpck_require__(6473);
 const user_input_1 = __nccwpck_require__(2103);
-const log_error_1 = __nccwpck_require__(7175);
-exports.configure = (0, log_error_1.withError)(function configure({ name, email, }) {
+const configure = function configure({ name, email, }) {
     return __awaiter(this, void 0, void 0, function* () {
         yield (0, exec_1.exec)('git', ['--version']);
         yield (0, exec_1.exec)('git', ['config', '--global', 'user.name', name]);
         yield (0, exec_1.exec)('git', ['config', '--global', 'user.email', email]);
         yield (0, exec_1.exec)('git', ['config', 'pull.rebase', 'true']);
+        yield (0, exec_1.exec)(`echo "${(0, user_input_1.userInput)().tmpDir}" >> .git/info/exclude`);
     });
-});
-exports.hardReset = (0, log_error_1.withError)(function hardReset(branch) {
+};
+exports.configure = configure;
+const hardReset = function hardReset(branch) {
     return __awaiter(this, void 0, void 0, function* () {
         yield (0, exec_1.exec)('git', ['fetch', 'origin', branch]);
         yield (0, exec_1.exec)('git', ['checkout', '-f', branch]);
         yield (0, exec_1.exec)('git', ['reset', '--hard', 'origin/' + branch]);
     });
-});
+};
+exports.hardReset = hardReset;
 function decorateMessage(message) {
-    const input = (0, user_input_1.userInput)();
-    return `[skip ci] ${input.slug} - ${message}`;
+    return `[skip ci] - ${message}`;
 }
 exports.decorateMessage = decorateMessage;
-exports.stageChanges = (0, log_error_1.withError)(function stageChanges(files) {
+const stageChanges = function stageChanges(files) {
     return __awaiter(this, void 0, void 0, function* () {
         yield (0, exec_1.exec)('git', ['add', '-f', ...files.filter(Boolean)]);
     });
-});
-exports.commit = (0, log_error_1.withError)(function commit(message) {
+};
+exports.stageChanges = stageChanges;
+const commit = function commit(message) {
     return __awaiter(this, void 0, void 0, function* () {
         yield (0, exec_1.exec)('git', ['commit', '--no-verify', '-m', decorateMessage(message)]);
     });
-});
-exports.push = (0, log_error_1.withError)(function push(branch) {
+};
+exports.commit = commit;
+const push = function push(branch) {
     return __awaiter(this, void 0, void 0, function* () {
         yield (0, exec_1.exec)('git', ['push', 'origin', branch]);
     });
-});
-exports.getFilesFromOtherBranch = (0, log_error_1.withError)(function getFilesFromOtherBranch(branch, fileOrDirName) {
-    return __awaiter(this, void 0, void 0, function* () {
-        yield (0, exec_1.exec)('git', ['checkout', '-f', branch, fileOrDirName]);
-    });
-});
+};
+exports.push = push;
 
 
 /***/ }),
@@ -14962,18 +14911,21 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.withError = void 0;
 const core = __importStar(__nccwpck_require__(7117));
-const withError = (cb) => (...args) => __awaiter(void 0, void 0, void 0, function* () {
-    core.debug(`CALL ${cb.name}`);
-    core.debug(`WITH ${JSON.stringify(args, null, 2)}`);
-    try {
-        return yield cb(...args);
-    }
-    catch (e) {
-        core.setFailed(`FAILED ${cb.name}`);
-        core.debug(e.message);
-        throw e;
-    }
-});
+function withError(cb) {
+    // Return a new function that tracks how long the original took
+    return (...args) => __awaiter(this, void 0, void 0, function* () {
+        core.debug(`CALL ${cb.name}`);
+        core.debug(`WITH ${JSON.stringify(args, null, 2)}`);
+        try {
+            return yield cb(...args);
+        }
+        catch (e) {
+            core.setFailed(`FAILED ${cb.name}`);
+            core.debug(e.message);
+            throw e;
+        }
+    });
+}
 exports.withError = withError;
 
 
@@ -15030,14 +14982,13 @@ exports.removeApp = (0, log_error_1.withError)(function removeApp(branch) {
         syncManifest(manifest);
     });
 });
-exports.replaceApp = (0, log_error_1.withError)(function replaceApp(params) {
+const replaceApp = function replaceApp(params, appInput) {
     var _a;
     return __awaiter(this, void 0, void 0, function* () {
         const manifest = getManifest();
-        const input = (0, user_input_1.userInput)();
         const apps = ((_a = manifest[params.branch.name]) === null || _a === void 0 ? void 0 : _a.apps) || [];
-        const index = apps.findIndex((app) => app.name === input.slug);
-        const newApp = buildApp(params);
+        const index = apps.findIndex((app) => app.name === appInput.slug);
+        const newApp = buildApp(params, appInput);
         if (index > -1) {
             apps[index] = newApp;
         }
@@ -15047,21 +14998,21 @@ exports.replaceApp = (0, log_error_1.withError)(function replaceApp(params) {
         manifest[params.branch.name] = Object.assign(Object.assign({}, manifest[params.branch.name]), { apps });
         syncManifest(manifest);
     });
-});
+};
+exports.replaceApp = replaceApp;
 function getBranchPaths(branch) {
     const manifest = getManifest();
     return manifest[branch];
 }
 exports.getBranchPaths = getBranchPaths;
-function githubPagesUrl(params) {
-    const paths = fileManager.paths(params);
+function githubPagesUrl(params, app) {
+    const paths = fileManager.paths(params, app);
     return `https://${params.repository.owner}.github.io/${params.repository.name}/${paths.byHeadCommit}`;
 }
 exports.githubPagesUrl = githubPagesUrl;
 function syncManifest(manifest) {
-    const input = (0, user_input_1.userInput)();
     fs.writeFileSync('manifest.json', JSON.stringify(manifest, null, 2), 'utf-8');
-    if (!input.skipIndexHtml) {
+    if (!(0, user_input_1.userInput)().skipIndexHtml) {
         core.debug('Creating index.html');
         fs.writeFileSync('index.html', (0, default_1.defaultPage)(manifest), 'utf-8');
     }
@@ -15069,21 +15020,18 @@ function syncManifest(manifest) {
         core.debug('Skipping index.html');
     }
 }
-function buildApp(params) {
-    const input = (0, user_input_1.userInput)();
-    const paths = fileManager.paths(params);
+function buildApp(params, app) {
+    const paths = fileManager.paths(params, app);
     return {
-        name: input.slug,
+        name: app.slug,
         headCommitId: params.branch.headCommit,
         updatedAt: new Date(),
         href: paths.byHeadCommit,
         pullRequestUrl: params.branch.pullRequest.url,
-        githubPagesUrl: githubPagesUrl(params),
+        githubPagesUrl: githubPagesUrl(params, app),
     };
 }
 function getManifest() {
-    core.debug('CALL getManifest');
-    core.debug('You can only get manifest if you are in github actions page branch!');
     let manifest = {};
     try {
         manifest = JSON.parse(fs.readFileSync('manifest.json', 'utf-8'));
@@ -15166,17 +15114,52 @@ exports.retry = retry;
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.userInput = void 0;
 const core_1 = __nccwpck_require__(7117);
+const core_2 = __nccwpck_require__(7117);
+let sanitizedUserInput = null;
 function userInput() {
-    return {
-        dist: (0, core_1.getInput)('dist'),
-        slug: ((0, core_1.getInput)('slug') || 'FAILED_TO_GET_SLUG').replace(/ /g, '-'),
-        branch: (0, core_1.getInput)('branch'),
-        buildCmd: (0, core_1.getInput)('build-cmd'),
-        githubToken: (0, core_1.getInput)('GITHUB_TOKEN'),
-        skipIndexHtml: (0, core_1.getInput)('skip-index-html') === 'true',
+    if (sanitizedUserInput)
+        return sanitizedUserInput;
+    (0, core_1.info)('-> Validating user input');
+    let apps;
+    try {
+        apps = JSON.parse((0, core_2.getInput)('apps'));
+    }
+    catch (e) {
+        (0, core_1.setFailed)(`Invalid "apps" value, it must be a valid JSON. Received ${(0, core_2.getInput)('apps')}`);
+        (0, core_1.debug)(`Invalid "apps" value, it must be a valid JSON. Received ${(0, core_2.getInput)('apps')}`);
+        throw e;
+    }
+    const sanitizedInput = {
+        dist: (0, core_2.getInput)('dist'),
+        slug: ((0, core_2.getInput)('slug') || 'FAILED_TO_GET_SLUG').replace(/ /g, '-'),
+        ghPagesBranch: (0, core_2.getInput)('branch'),
+        buildCmd: (0, core_2.getInput)('build-cmd'),
+        githubToken: (0, core_2.getInput)('GITHUB_TOKEN'),
+        skipIndexHtml: (0, core_2.getInput)('skip-index-html') === 'true',
+        tmpDir: '.tmp-review-apps',
+        apps,
     };
+    const appsSanitized = Object.entries(sanitizedInput.apps || {
+        [sanitizedInput.slug]: {
+            build: sanitizedInput.buildCmd,
+            dist: sanitizedInput.dist,
+        },
+    }).map(([slug, app]) => (Object.assign({ slug }, app)));
+    validateApps(appsSanitized);
+    sanitizedUserInput = Object.assign(Object.assign({}, sanitizedInput), { apps: appsSanitized });
+    return sanitizedUserInput;
 }
 exports.userInput = userInput;
+const validateApps = (apps) => {
+    if (!apps)
+        return;
+    Object.entries(apps).forEach(([_key, value]) => {
+        if (!value.dist) {
+            (0, core_1.setFailed)('-> Invalid user input: input.apps.dist is mandatory!');
+            (0, core_1.debug)(`-> Invalid user input: input.apps.dist is mandatory! ${JSON.stringify(value)}`);
+        }
+    });
+};
 
 
 /***/ }),
