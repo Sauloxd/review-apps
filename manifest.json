@@ -1,1 +1,30 @@
-{}
+{
+  "ft-showcase-review-app": {
+    "apps": [
+      {
+        "name": "dev-cra",
+        "headCommitId": "810e388cc332bc50cdf721d23f3b5588b700bf1a",
+        "updatedAt": "2022-03-16T14:16:59.487Z",
+        "href": "ft-showcase-review-app/dev-cra/810e38",
+        "pullRequestUrl": "https://github.com/Sauloxd/review-apps/pull/20",
+        "githubPagesUrl": "https://Sauloxd.github.io/review-apps/ft-showcase-review-app/dev-cra/810e38"
+      },
+      {
+        "name": "dev-cra-storybook",
+        "headCommitId": "810e388cc332bc50cdf721d23f3b5588b700bf1a",
+        "updatedAt": "2022-03-16T14:16:59.487Z",
+        "href": "ft-showcase-review-app/dev-cra-storybook/810e38",
+        "pullRequestUrl": "https://github.com/Sauloxd/review-apps/pull/20",
+        "githubPagesUrl": "https://Sauloxd.github.io/review-apps/ft-showcase-review-app/dev-cra-storybook/810e38"
+      },
+      {
+        "name": "dev-gatsby",
+        "headCommitId": "810e388cc332bc50cdf721d23f3b5588b700bf1a",
+        "updatedAt": "2022-03-16T14:16:59.487Z",
+        "href": "ft-showcase-review-app/dev-gatsby/810e38",
+        "pullRequestUrl": "https://github.com/Sauloxd/review-apps/pull/20",
+        "githubPagesUrl": "https://Sauloxd.github.io/review-apps/ft-showcase-review-app/dev-gatsby/810e38"
+      }
+    ]
+  }
+}
