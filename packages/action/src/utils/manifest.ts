@@ -10,7 +10,7 @@ import { withError } from './log-error';
 // All functions here that depends on `getManifest()`
 // will break if operations are called outside "github pages" branch!
 
-export const removeApp = withError(async function removeApp(branch: string) {
+export const removeApps = withError(async function removeApp(branch: string) {
   const manifest = getManifest();
 
   delete manifest[branch];
@@ -18,18 +18,11 @@ export const removeApp = withError(async function removeApp(branch: string) {
   syncManifest(manifest);
 });
 
-export const replaceApp = async function replaceApp(
-  params: SanitizedPayloadParams,
-  appInput: UserInput['apps'][number]
-) {
+export const addApps = async function addApp(params: SanitizedPayloadParams) {
   const manifest = getManifest();
-  const apps = manifest[params.branch.name]?.apps || [];
-  const index = apps.findIndex((app) => app.name === appInput.slug);
-  const newApp = buildApp(params, appInput);
-
-  if (index > -1) {
-    apps[index] = newApp;
-  } else {
+  const apps: App[] = [];
+  for (const app of userInput().apps) {
+    const newApp = buildApp(params, app);
     apps.push(newApp);
   }
 

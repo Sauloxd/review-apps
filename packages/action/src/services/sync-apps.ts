@@ -30,13 +30,12 @@ export const syncApps = withError(async function syncApps(
     `);
   }
 
+  await manifest.removeApps(params.branch.name);
+
   await git.hardReset(userInput().ghPagesBranch);
 
   for (const app of userInput().apps) {
     const paths = fileManager.paths(params, app);
-
-    manifest.replaceApp(params, app);
-
     const tmpDir = userInput().tmpDir + '/' + paths.byHeadCommit;
 
     await io.cp(tmpDir, paths.byHeadCommit, {
@@ -46,6 +45,8 @@ export const syncApps = withError(async function syncApps(
     await git.stageChanges([paths.byHeadCommit]);
     core.debug('Finished copying');
   }
+
+  await manifest.addApps(params);
 
   await git.stageChanges([
     !userInput().skipIndexHtml && 'index.html',

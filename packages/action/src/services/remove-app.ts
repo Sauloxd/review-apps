@@ -12,7 +12,7 @@ export const removeApp = withError(async function removeApp(
   await retry(5)(async () => {
     await git.hardReset(userInput().ghPagesBranch);
     await io.rmRF(params.branch.name);
-    manifest.removeApp(params.branch.name);
+    await manifest.removeApps(params.branch.name);
     await git.stageChanges([
       params.branch.name,
       !userInput().skipIndexHtml && 'index.html',

@@ -40,7 +40,7 @@ exports.removeApp = (0, log_error_1.withError)(function removeApp(params) {
         yield (0, retry_1.retry)(5)(() => __awaiter(this, void 0, void 0, function* () {
             yield git.hardReset((0, user_input_1.userInput)().ghPagesBranch);
             yield io.rmRF(params.branch.name);
-            manifest.removeApp(params.branch.name);
+            yield manifest.removeApps(params.branch.name);
             yield git.stageChanges([
                 params.branch.name,
                 !(0, user_input_1.userInput)().skipIndexHtml && 'index.html',

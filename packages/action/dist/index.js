@@ -14397,7 +14397,7 @@ ${pathsForBranch.apps.map(formatToListedLink).join('')}
  `;
     return body;
     function formatToListedLink(app) {
-        return `  - [${app.name}](${app.githubPagesUrl})\n`;
+        return `  - [${app.name}](${encodeURI(app.githubPagesUrl)})\n`;
     }
 };
 const CommentApi = () => {
@@ -14483,7 +14483,7 @@ exports.removeApp = (0, log_error_1.withError)(function removeApp(params) {
         yield (0, retry_1.retry)(5)(() => __awaiter(this, void 0, void 0, function* () {
             yield git.hardReset((0, user_input_1.userInput)().ghPagesBranch);
             yield io.rmRF(params.branch.name);
-            manifest.removeApp(params.branch.name);
+            yield manifest.removeApps(params.branch.name);
             yield git.stageChanges([
                 params.branch.name,
                 !(0, user_input_1.userInput)().skipIndexHtml && 'index.html',
@@ -14557,10 +14557,10 @@ exports.syncApps = (0, log_error_1.withError)(function syncApps(params) {
       -> Will move (and override) the build result on '${app.dist}' to '${paths.byHeadCommit}' in ${(0, user_input_1.userInput)().ghPagesBranch}"
     `);
         }
+        yield manifest.removeApps(params.branch.name);
         yield git.hardReset((0, user_input_1.userInput)().ghPagesBranch);
         for (const app of (0, user_input_1.userInput)().apps) {
             const paths = fileManager.paths(params, app);
-            manifest.replaceApp(params, app);
             const tmpDir = (0, user_input_1.userInput)().tmpDir + '/' + paths.byHeadCommit;
             yield io.cp(tmpDir, paths.byHeadCommit, {
                 recursive: true,
@@ -14569,6 +14569,7 @@ exports.syncApps = (0, log_error_1.withError)(function syncApps(params) {
             yield git.stageChanges([paths.byHeadCommit]);
             core.debug('Finished copying');
         }
+        yield manifest.addApps(params);
         yield git.stageChanges([
             !(0, user_input_1.userInput)().skipIndexHtml && 'index.html',
             'manifest.json',
@@ -14966,7 +14967,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.githubPagesUrl = exports.getBranchPaths = exports.replaceApp = exports.removeApp = void 0;
+exports.githubPagesUrl = exports.getBranchPaths = exports.addApps = exports.removeApps = void 0;
 const fs = __importStar(__nccwpck_require__(7147));
 const core = __importStar(__nccwpck_require__(7117));
 const default_1 = __nccwpck_require__(5493);
@@ -14976,31 +14977,26 @@ const log_error_1 = __nccwpck_require__(7175);
 // Due to poorly designed API,
 // All functions here that depends on `getManifest()`
 // will break if operations are called outside "github pages" branch!
-exports.removeApp = (0, log_error_1.withError)(function removeApp(branch) {
+exports.removeApps = (0, log_error_1.withError)(function removeApp(branch) {
     return __awaiter(this, void 0, void 0, function* () {
         const manifest = getManifest();
         delete manifest[branch];
         syncManifest(manifest);
     });
 });
-const replaceApp = function replaceApp(params, appInput) {
-    var _a;
+const addApps = function addApp(params) {
     return __awaiter(this, void 0, void 0, function* () {
         const manifest = getManifest();
-        const apps = ((_a = manifest[params.branch.name]) === null || _a === void 0 ? void 0 : _a.apps) || [];
-        const index = apps.findIndex((app) => app.name === appInput.slug);
-        const newApp = buildApp(params, appInput);
-        if (index > -1) {
-            apps[index] = newApp;
-        }
-        else {
+        const apps = [];
+        for (const app of (0, user_input_1.userInput)().apps) {
+            const newApp = buildApp(params, app);
             apps.push(newApp);
         }
         manifest[params.branch.name] = Object.assign(Object.assign({}, manifest[params.branch.name]), { apps });
         syncManifest(manifest);
     });
 };
-exports.replaceApp = replaceApp;
+exports.addApps = addApps;
 function getBranchPaths(branch) {
     const manifest = getManifest();
     return manifest[branch];
