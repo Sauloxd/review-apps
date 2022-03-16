@@ -54,9 +54,10 @@ Example of usage:
 ```
 
 3. If the action succeeds, your review apps will live, respectively:
- 1. `https://{ username }.github.io/{ repository }/platform/{ branchName }/{ commitId }`.
- 1. `https://{ username }.github.io/{ repository }/storybook/{ branchName }/{ commitId }`.
- 1. `https://{ username }.github.io/{ repository }/blog/{ branchName }/{ commitId }`.
+
+   1. `https://{ username }.github.io/{ repository }/platform/{ branchName }/{ commitId }`.
+   1. `https://{ username }.github.io/{ repository }/storybook/{ branchName }/{ commitId }`.
+   1. `https://{ username }.github.io/{ repository }/blog/{ branchName }/{ commitId }`.
 
 example:
 https://sauloxd.github.io/review-apps/issue-11/fix-build/dev-cra/7186f2
