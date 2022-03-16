@@ -3,14 +3,15 @@
 This action manages your "github pages" branch, so you can host multiple apps inside the same app for free.
 It will manage the built artifacts and organize it by branch/commit inside `github pages` branch.
 
-See an example in this Pull Request here:
-1. https://github.com/Sauloxd/review-apps/pull/20
-2. https://sauloxd.github.io/review-apps/
+See an example in this [show case Pull Request](https://github.com/Sauloxd/review-apps/pull/20)
+
+![image](https://user-images.githubusercontent.com/11878589/158598612-1f9a7bd8-dba8-4452-a531-15dd18cce036.png)
+
 
 There are 2 packages inside this monorepo, simulating projects inside a real monorepo.
 In every Pull Request, the action will deploy the apps and organize them inside your `github pages` branch, and will also comment the pull request with URLs for each deployed app.
 
-Optionally you can skip the "index.html" page, that shows all apps from all branches in all Pull Requests, since you can always access them via url in comments made by the bot.
+Optionally you can skip the "index.html" page (the image above), that shows all apps from all branches in all Pull Requests (in case you have another static app in gh-pages), since you can always access them via url in comments made by the bot.
 
 ## Why?
 Have ever seen yourself in this situation, where you are developing a `Select` component, and you're not quite right the interaction you've built is good enough? So you need to share what you've built so far with your UX/UI/QA team, just to see if you're following in the right direction?
