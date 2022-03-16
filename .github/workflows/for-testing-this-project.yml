@@ -28,7 +28,7 @@ jobs:
         run: yarn install --frozen-lockfile
 
       # This is how  you'll use the action
-      - name: Build review Apps
+      - name: Build review apps
         uses: ./ # Replace here with sauloxd/review-apps@X.X.X
         with:
           branch: "review-apps"

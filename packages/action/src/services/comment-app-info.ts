@@ -15,6 +15,8 @@ export const commentAppInfo = withError(async function commentAppInfo(
     info(
       `   -> No GITHUB_TOKEN provided! Can't manage comments for this action`
     );
+
+    return;
   }
 
   const commentApi = CommentApi();
