@@ -28,7 +28,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.githubPagesUrl = exports.getBranchPaths = exports.replaceApp = exports.removeApp = void 0;
+exports.githubPagesUrl = exports.getBranchPaths = exports.addApps = exports.removeApps = void 0;
 const fs = __importStar(require("fs"));
 const core = __importStar(require("@actions/core"));
 const default_1 = require("../template/default");
@@ -38,31 +38,26 @@ const log_error_1 = require("./log-error");
 // Due to poorly designed API,
 // All functions here that depends on `getManifest()`
 // will break if operations are called outside "github pages" branch!
-exports.removeApp = (0, log_error_1.withError)(function removeApp(branch) {
+exports.removeApps = (0, log_error_1.withError)(function removeApp(branch) {
     return __awaiter(this, void 0, void 0, function* () {
         const manifest = getManifest();
         delete manifest[branch];
         syncManifest(manifest);
     });
 });
-const replaceApp = function replaceApp(params, appInput) {
-    var _a;
+const addApps = function addApp(params) {
     return __awaiter(this, void 0, void 0, function* () {
         const manifest = getManifest();
-        const apps = ((_a = manifest[params.branch.name]) === null || _a === void 0 ? void 0 : _a.apps) || [];
-        const index = apps.findIndex((app) => app.name === appInput.slug);
-        const newApp = buildApp(params, appInput);
-        if (index > -1) {
-            apps[index] = newApp;
-        }
-        else {
+        const apps = [];
+        for (const app of (0, user_input_1.userInput)().apps) {
+            const newApp = buildApp(params, app);
             apps.push(newApp);
         }
         manifest[params.branch.name] = Object.assign(Object.assign({}, manifest[params.branch.name]), { apps });
         syncManifest(manifest);
     });
 };
-exports.replaceApp = replaceApp;
+exports.addApps = addApps;
 function getBranchPaths(branch) {
     const manifest = getManifest();
     return manifest[branch];

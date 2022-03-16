@@ -56,7 +56,7 @@ ${pathsForBranch.apps.map(formatToListedLink).join('')}
   return body;
 
   function formatToListedLink(app: App) {
-    return `  - [${app.name}](${app.githubPagesUrl})\n`;
+    return `  - [${app.name}](${encodeURI(app.githubPagesUrl)})\n`;
   }
 };
 const CommentApi = () => {

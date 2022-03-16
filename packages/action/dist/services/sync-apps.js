@@ -53,10 +53,10 @@ exports.syncApps = (0, log_error_1.withError)(function syncApps(params) {
       -> Will move (and override) the build result on '${app.dist}' to '${paths.byHeadCommit}' in ${(0, user_input_1.userInput)().ghPagesBranch}"
     `);
         }
+        yield manifest.removeApps(params.branch.name);
         yield git.hardReset((0, user_input_1.userInput)().ghPagesBranch);
         for (const app of (0, user_input_1.userInput)().apps) {
             const paths = fileManager.paths(params, app);
-            manifest.replaceApp(params, app);
             const tmpDir = (0, user_input_1.userInput)().tmpDir + '/' + paths.byHeadCommit;
             yield io.cp(tmpDir, paths.byHeadCommit, {
                 recursive: true,
@@ -65,6 +65,7 @@ exports.syncApps = (0, log_error_1.withError)(function syncApps(params) {
             yield git.stageChanges([paths.byHeadCommit]);
             core.debug('Finished copying');
         }
+        yield manifest.addApps(params);
         yield git.stageChanges([
             !(0, user_input_1.userInput)().skipIndexHtml && 'index.html',
             'manifest.json',
