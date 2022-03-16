@@ -40,6 +40,7 @@ exports.commentAppInfo = (0, log_error_1.withError)(function commentAppInfo(para
         const { githubToken } = (0, user_input_1.userInput)();
         if (!githubToken) {
             (0, core_1.info)(`   -> No GITHUB_TOKEN provided! Can't manage comments for this action`);
+            return;
         }
         const commentApi = CommentApi();
         const comments = yield commentApi.getReviewAppComments();

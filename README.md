@@ -1,13 +1,14 @@
 # Review apps action
 
 This action manages your "github pages" branch, so you can host multiple apps inside the same app for free.
-It will manage the build artifacts and organize it by branch/commit inside the `github pages` branch.
+It will manage the built artifacts and organize it by branch/commit inside `github pages` branch.
 
 See an example in this Pull Request here:
-https://github.com/Sauloxd/review-apps/pull/20
+1. https://github.com/Sauloxd/review-apps/pull/20
+2. https://sauloxd.github.io/review-apps/
 
 There are 2 packages inside this monorepo, simulating projects inside a real monorepo.
-In every Pull Request, the action will deploy the 3 compiled apps and organize them inside your `github pages` branch, and will also comment in your pull request with URLs for each deployed app.
+In every Pull Request, the action will deploy the apps and organize them inside your `github pages` branch, and will also comment the pull request with URLs for each deployed app.
 
 Optionally you can skip the "index.html" page, that shows all apps from all branches in all Pull Requests, since you can always access them via url in comments made by the bot.
 
@@ -30,40 +31,76 @@ Example of usage:
 ``` yml
 # See .github/workflows/example.yml
   steps:
-     - name: Build and deploy to gh-pages
-        uses: sauloxd/review-apps@X.X.X # replace with correct version
+     - name: Build and deploy apps to gh-pages
+        uses: sauloxd/review-apps@X.X.X # replace with desired version
         with:
-          build-cmd: 'yarn build'
-          branch: 'gh-pages' # The branch you chose to be your github-pages source
-          dist: 'build' # The dist folder where your "yarn build" command will place the build artifacts
-          slug: 'react' # The partial URL where your apps will live. This is useful if you want to deploy both your react app and storybook app inside the same repository
+          branch: "gh-pages" # The branch you chose to be your github-pages source
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # Optional, if you want the apps URL commented in your PR
+          apps: |
+            {
+              "platform": { # SLUG, the partial URL for your app, see step 3.
+                "build": "yarn run cra:build", # Build command
+                "dist": "packages/cra-example/build" # The dist folder where your "yarn build" command will place the build artifacts
+              },
+              "storybook": {
+                "build": "yarn run cra:storybook",
+                "dist": "packages/cra-example/storybook-static"
+              },
+              "blog": {
+                "build": "yarn run gatsby:build",
+                "dist": "packages/gatsby-example/public"
+              }
+            }
 ```
-3. If the action succeeds, your review apps will live in `https://{ username }.github.io/{ repository }/react/{ branchName }/{ commitId }`.
 
-If you want to also deploy, for example, a storybook app, just add another step with a *different slug* and it will have it's unique url for it!
+3. If the action succeeds, your review apps will live, respectively:
+ 1. `https://{ username }.github.io/{ repository }/platform/{ branchName }/{ commitId }`.
+ 1. `https://{ username }.github.io/{ repository }/storybook/{ branchName }/{ commitId }`.
+ 1. `https://{ username }.github.io/{ repository }/blog/{ branchName }/{ commitId }`.
+
+example:
+https://sauloxd.github.io/review-apps/issue-11/fix-build/dev-cra/7186f2
 
 4. The CLEANUP will only happen when the action receives an event of PR closed. Currently there is no other way, unless you manually remove the app yourself in the github pages branch.
 
 ## Inputs
-
-### `build-cmd`
-
-**Required** The command used for building your app. Internally we will pass a PUBLIC_URL env var with the correct path prefix, so your application can live in a nested URL besides the root. If don't use hashRouting you'll probably need to do some adjustments. See PUBLIC_URL in FAQ bellow
 
 ### `branch`
 Default: `gh-pages`.
 The GithubPages source branch. Follow this guide https://pages.github.com for more info.
 ⚠️This action will not work if this branch is not properly configured!
 
-### `dist`
-Default: `dist`
-The output directory for your build command.
-It's usually the dist folder at the root of your project, but could be somewhere else (see the example.yml workflow in this repo)
+### `GITHUB_TOKEN`
+**optional** This allows the action to comment the apps url in your PR
 
-### `slug`
-Default: `review-apps`
-The name for each type of app you'll deploy. This needs to be unique per repository.
-This is only useful if you want to deploy multiple apps (e.g. you `main app` and a `storybook app`)
+### `apps`
+
+**Required** JSON configuring all apps built by this action:
+
+``` typescript
+type apps = {
+  [slug: string]: {
+    build: string;
+    dist: string;
+  }
+}
+```
+
+
+#### `slug`
+The name for each type of app you'll deploy (storybook, blog, platform, admin).
+
+#### `build`
+
+The command used for building your app.
+
+OBS: Internally we will expose PUBLIC_URL env var with the correct path prefix, so your application can live in a nested URL. If don't use hashRouting you'll probably need to do some adjustments. See PUBLIC_URL in FAQ bellow
+
+
+#### `dist`
+The output directory for your build command.
+It's usually the dist folder at the root of your project, but could be somewhere else (see the this [workflow](./.github/workflows/real-life-use-case.yml) in this repo)
+
 
 ## FAQ
 
@@ -82,15 +119,15 @@ git push origin $BRANCH_NAME
 
 2. My images and my navigation links inside my app is not working
 
-This is probably because you're app is not prepared to be served in a prefixed URL.
+This is probably because your app is not prepared to be served in a prefixed URL.
 For example, in ReactRouter, if you don't configure a `basename` in `<Router />` component, it will not append the prefix in the links it generates.
 See the examples in this repo:
  - Create-react-app with React-router - [link](https://github.com/Sauloxd/review-apps/tree/master/packages/cra-example)
  - Gatsby example with path-prefix config - [link](https://github.com/Sauloxd/review-apps/tree/master/packages/gatsby-example)
 
-When building your app, we will provide a env var with the correct path prefix:
+When building your app, we will provide an env var with the correct path prefix:
 ``` bash
-PUBLIC_URL=`/{ repositoryName }/{ slug }/{ branchName }/{ headCommit }`);
+PUBLIC_URL=`/{ repositoryName }/{ slug }/{ branchName }/{ headCommit }`;
 ```
 
 So you can consume it in your app, like:
@@ -117,9 +154,7 @@ Probably this will be automated in next releases.
 
 4. It's taking too long to update the index page for my new commit!
 
-When the action just finished, it might take some time to the github pages reflect that.
-Even though the correct index.html was generated and is inside the updated github pages branch.
-I'm not sure how to burst the cache immediatly :/
+When the action just finished, it might take some time to the github pages reflect that, but you can follow the deploy to gh-pages in your actions page, since Github will trigger an action of its own named "pages build and deployment"
 
 # Contributing
 
