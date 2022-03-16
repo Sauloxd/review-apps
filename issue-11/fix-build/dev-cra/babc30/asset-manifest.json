@@ -1,0 +1,25 @@
+{
+  "files": {
+    "main.css": "/review-apps/issue-11/fix-build/dev-cra/babc30/static/css/main.5ecd60fb.chunk.css",
+    "main.js": "/review-apps/issue-11/fix-build/dev-cra/babc30/static/js/main.4c32b84d.chunk.js",
+    "main.js.map": "/review-apps/issue-11/fix-build/dev-cra/babc30/static/js/main.4c32b84d.chunk.js.map",
+    "runtime-main.js": "/review-apps/issue-11/fix-build/dev-cra/babc30/static/js/runtime-main.71c411e3.js",
+    "runtime-main.js.map": "/review-apps/issue-11/fix-build/dev-cra/babc30/static/js/runtime-main.71c411e3.js.map",
+    "static/js/2.a2a6c264.chunk.js": "/review-apps/issue-11/fix-build/dev-cra/babc30/static/js/2.a2a6c264.chunk.js",
+    "static/js/2.a2a6c264.chunk.js.map": "/review-apps/issue-11/fix-build/dev-cra/babc30/static/js/2.a2a6c264.chunk.js.map",
+    "index.html": "/review-apps/issue-11/fix-build/dev-cra/babc30/index.html",
+    "precache-manifest.9488dd650a8eb248e0d670179576f700.js": "/review-apps/issue-11/fix-build/dev-cra/babc30/precache-manifest.9488dd650a8eb248e0d670179576f700.js",
+    "service-worker.js": "/review-apps/issue-11/fix-build/dev-cra/babc30/service-worker.js",
+    "static/css/main.5ecd60fb.chunk.css.map": "/review-apps/issue-11/fix-build/dev-cra/babc30/static/css/main.5ecd60fb.chunk.css.map",
+    "static/js/2.a2a6c264.chunk.js.LICENSE.txt": "/review-apps/issue-11/fix-build/dev-cra/babc30/static/js/2.a2a6c264.chunk.js.LICENSE.txt",
+    "static/media/fox-combo-1.gif": "/review-apps/issue-11/fix-build/dev-cra/babc30/static/media/fox-combo-1.b8000ebc.gif",
+    "static/media/fox-multishine.gif": "/review-apps/issue-11/fix-build/dev-cra/babc30/static/media/fox-multishine.90b071d4.gif",
+    "static/media/fox-waveshine.gif": "/review-apps/issue-11/fix-build/dev-cra/babc30/static/media/fox-waveshine.7ec8b809.gif"
+  },
+  "entrypoints": [
+    "static/js/runtime-main.71c411e3.js",
+    "static/js/2.a2a6c264.chunk.js",
+    "static/css/main.5ecd60fb.chunk.css",
+    "static/js/main.4c32b84d.chunk.js"
+  ]
+}
