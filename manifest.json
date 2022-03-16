@@ -1,1 +1,30 @@
-{}
+{
+  "ft-properly-cleanup-manifest": {
+    "apps": [
+      {
+        "name": "dev-cra",
+        "headCommitId": "9b4c2d0a2053448ddd5ab7806328af90b1b9251a",
+        "updatedAt": "2022-03-16T13:39:51.235Z",
+        "href": "ft-properly-cleanup-manifest/dev-cra/9b4c2d",
+        "pullRequestUrl": "https://github.com/Sauloxd/review-apps/pull/24",
+        "githubPagesUrl": "https://Sauloxd.github.io/review-apps/ft-properly-cleanup-manifest/dev-cra/9b4c2d"
+      },
+      {
+        "name": "dev-cra-storybook",
+        "headCommitId": "9b4c2d0a2053448ddd5ab7806328af90b1b9251a",
+        "updatedAt": "2022-03-16T13:39:51.235Z",
+        "href": "ft-properly-cleanup-manifest/dev-cra-storybook/9b4c2d",
+        "pullRequestUrl": "https://github.com/Sauloxd/review-apps/pull/24",
+        "githubPagesUrl": "https://Sauloxd.github.io/review-apps/ft-properly-cleanup-manifest/dev-cra-storybook/9b4c2d"
+      },
+      {
+        "name": "dev-gatsby",
+        "headCommitId": "9b4c2d0a2053448ddd5ab7806328af90b1b9251a",
+        "updatedAt": "2022-03-16T13:39:51.235Z",
+        "href": "ft-properly-cleanup-manifest/dev-gatsby/9b4c2d",
+        "pullRequestUrl": "https://github.com/Sauloxd/review-apps/pull/24",
+        "githubPagesUrl": "https://Sauloxd.github.io/review-apps/ft-properly-cleanup-manifest/dev-gatsby/9b4c2d"
+      }
+    ]
+  }
+}
