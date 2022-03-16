@@ -1,0 +1,30 @@
+{
+  "files": {
+    "main.css": "/review-apps/issue-11/fix-build/dev-cra-storybook/aca579/static/css/main.cc6f50a5.chunk.css",
+    "main.js": "/review-apps/issue-11/fix-build/dev-cra-storybook/aca579/main.09a5b3bc30847b600512.bundle.js",
+    "main.css.map": "/review-apps/issue-11/fix-build/dev-cra-storybook/aca579/static/css/main.cc6f50a5.chunk.css.map",
+    "main.js.map": "/review-apps/issue-11/fix-build/dev-cra-storybook/aca579/main.09a5b3bc30847b600512.bundle.js.map",
+    "runtime~main.js": "/review-apps/issue-11/fix-build/dev-cra-storybook/aca579/runtime~main.09a5b3bc30847b600512.bundle.js",
+    "runtime~main.js.map": "/review-apps/issue-11/fix-build/dev-cra-storybook/aca579/runtime~main.09a5b3bc30847b600512.bundle.js.map",
+    "vendors~main.js": "/review-apps/issue-11/fix-build/dev-cra-storybook/aca579/vendors~main.09a5b3bc30847b600512.bundle.js",
+    "vendors~main.js.map": "/review-apps/issue-11/fix-build/dev-cra-storybook/aca579/vendors~main.09a5b3bc30847b600512.bundle.js.map",
+    "iframe.html": "/review-apps/issue-11/fix-build/dev-cra-storybook/aca579/iframe.html",
+    "precache-manifest.1a74cc08f1cba357c2f1f04af5fe3297.js": "/review-apps/issue-11/fix-build/dev-cra-storybook/aca579/precache-manifest.1a74cc08f1cba357c2f1f04af5fe3297.js",
+    "service-worker.js": "/review-apps/issue-11/fix-build/dev-cra-storybook/aca579/service-worker.js",
+    "static/media/code-brackets.svg": "/review-apps/issue-11/fix-build/dev-cra-storybook/aca579/static/media/code-brackets.d43eb968.svg",
+    "static/media/colors.svg": "/review-apps/issue-11/fix-build/dev-cra-storybook/aca579/static/media/colors.8104e6f5.svg",
+    "static/media/comments.svg": "/review-apps/issue-11/fix-build/dev-cra-storybook/aca579/static/media/comments.3f9a1398.svg",
+    "static/media/direction.svg": "/review-apps/issue-11/fix-build/dev-cra-storybook/aca579/static/media/direction.d3dc567b.svg",
+    "static/media/flow.svg": "/review-apps/issue-11/fix-build/dev-cra-storybook/aca579/static/media/flow.e3812c4f.svg",
+    "static/media/plugin.svg": "/review-apps/issue-11/fix-build/dev-cra-storybook/aca579/static/media/plugin.5ba97e9b.svg",
+    "static/media/repo.svg": "/review-apps/issue-11/fix-build/dev-cra-storybook/aca579/static/media/repo.3452b916.svg",
+    "static/media/stackalt.svg": "/review-apps/issue-11/fix-build/dev-cra-storybook/aca579/static/media/stackalt.66f4b748.svg",
+    "vendors~main.09a5b3bc30847b600512.bundle.js.LICENSE.txt": "/review-apps/issue-11/fix-build/dev-cra-storybook/aca579/vendors~main.09a5b3bc30847b600512.bundle.js.LICENSE.txt"
+  },
+  "entrypoints": [
+    "runtime~main.09a5b3bc30847b600512.bundle.js",
+    "vendors~main.09a5b3bc30847b600512.bundle.js",
+    "static/css/main.cc6f50a5.chunk.css",
+    "main.09a5b3bc30847b600512.bundle.js"
+  ]
+}
